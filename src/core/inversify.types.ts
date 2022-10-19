@@ -1,5 +1,5 @@
 export const TYPES = {
-    App: Symbol('App'),
-    ///Service
-    LanguageFilter: Symbol('LanguageFilter')
-}
+	App: Symbol('App'),
+	///Service
+	LanguageFilter: Symbol('LanguageFilter')
+};
