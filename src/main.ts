@@ -6,6 +6,7 @@ import 'reflect-metadata';
 import container from './core/inversify.di';
 import { App } from './app/app';
 import { TYPES } from './core/inversify.types';
+import './core/awake';
 
 
 const server = new InversifyExpressServer(container);
@@ -15,9 +16,9 @@ server.setConfig((app) => {
 });
 
 async function bootstrap() {
+	//Start App
 	const _app = container.get<App>(TYPES.App);
 	_app.start();
-    
 }
 
 bootstrap();
