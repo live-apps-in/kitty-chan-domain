@@ -4,6 +4,7 @@
   "description": "A discord bot specifically designed for Gamer's Hub discord server. [TypeScript Version]",
   "main": "index.js",
   "scripts": {
+    "start": "tsc && node ./dist/main.js",
     "dev": "nodemon src/main.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts",

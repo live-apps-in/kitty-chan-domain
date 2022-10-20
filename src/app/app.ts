@@ -25,7 +25,7 @@ export class App{
 	async start() {
 		///Connect to Discord Server
 		client.on('ready', () => {
-			client.user.setActivity('with ppl who dont like me');
+			client.user.setActivity('with your Patience');
 			console.log('kitty chan connected');
 		});
         
