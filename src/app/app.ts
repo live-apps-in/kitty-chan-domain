@@ -15,7 +15,6 @@ const client = new Client({
 	],
 });
 
-
 @injectable()
 export class App{
 	constructor(

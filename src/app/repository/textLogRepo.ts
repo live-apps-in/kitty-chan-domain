@@ -10,22 +10,24 @@ export class TextLogRepository {
 		await saveData.save();
 	}
     
-	async getByUserId(userId: string) {
+	async getByUserId(userId: string, guildId: string) {
 		const textLog = await TextLog.find({
-			userId
+			userId,
+			guildId
 		});
 		return textLog;
 	}
 
-	async count_text_log(userId: string): Promise<number> {
+	async count_text_log(userId: string, guildId: string): Promise<number> {
 		const textLog = await TextLog.countDocuments({
-			userId
+			userId,
+			guildId
 		});
 		return textLog;
 	}
 
-	async update(userId: string) {
-		await TextLog.updateOne({ userId }, {
+	async update(userId: string, guildId: string) {
+		await TextLog.updateOne({ userId, guildId }, {
 			$inc: { count: 1 }
 		});
 	}

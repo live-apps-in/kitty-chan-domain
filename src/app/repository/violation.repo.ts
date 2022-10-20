@@ -16,7 +16,7 @@ export class ViolationRepository{
 		return violations;
 	}
 
-	async countViolationByType(userId: string, type: string): Promise<number> {
+	async countViolationByType(userId: string,guildId: string, type: string): Promise<number> {
 		const violations = await Violation.countDocuments({
 			userId,
 			type
@@ -24,7 +24,7 @@ export class ViolationRepository{
 		return violations;
 	}
 
-	async update(userId: string, type: string) {
+	async update(userId: string,guildId: string, type: string) {
 		const violations = await Violation.updateOne({ userId, type }, {
 			$inc: {count: 1}
 		});

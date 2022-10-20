@@ -2,12 +2,14 @@ import { model, Schema } from 'mongoose';
 
 
 export interface TextLog{
-    userId: string
+	userId: string
+	guildId: string
     count: number
 }
 
 const TextLog: Schema = new Schema({
 	userId: String,
+	guildId: String,
 	count: {
 		type: Number,
 		default: 1
