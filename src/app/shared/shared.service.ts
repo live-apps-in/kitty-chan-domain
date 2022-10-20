@@ -39,12 +39,14 @@ export class SharedService{
 
 	////Extract users and channel info
 	async extractGuildInfo(content: any) {
+		console.log(content);
 		const guild = new IGuild(
 			content.guildId,
 			content.channelId,
 			content.id,
-			content.content,
 			content.author.id,
+			content.author.username,
+			content.content,
 			content.author.bot,
 		);
 

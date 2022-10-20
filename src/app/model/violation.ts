@@ -3,6 +3,7 @@ import { model, Schema } from 'mongoose';
 
 export interface IViolation{
 	userId: string
+	username: string
 	guildId: string
     type: string
     count: number
@@ -10,6 +11,7 @@ export interface IViolation{
 
 const ViolationSchema: Schema = new Schema({
 	userId: String,
+	username: String,
 	guildId: String,
 	type: String,
 	count: {
