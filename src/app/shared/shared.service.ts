@@ -34,7 +34,7 @@ export class SharedService{
 
 		await axios(axiosConfig)
 			.catch(err => {
-				console.log(err);
+				console.log(err.message);
 			});
 	}
 

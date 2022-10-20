@@ -37,13 +37,17 @@ export class LanguageFilter {
 			if (hinglish_words.includes(e)) isNonEnglish = true;
 		});
 
-		await this.responseService.respond({
-			type: REPLY.sendMessage,
-			guild,
-			body: {
-				content: guild.messageContent
-			}
-		});
+		if (isNonEnglish) {
+			
+			await this.responseService.respond({
+				type: REPLY.addReaction,
+				guild,
+				body: {
+					emoji: '%E2%9A%A0%EF%B8%8F'
+				}
+			});
+		}
+
 		
 		return isNonEnglish;
 	}
@@ -58,13 +62,18 @@ export class LanguageFilter {
 		messageChunk.map((e) => {
 			if (bad_words.includes(e)) isStrongLanguage = true;
 		});
+
+		if (isStrongLanguage) {
+			await this.responseService.respond({
+				type: REPLY.addReaction,
+				guild,
+				body: {
+					emoji: '%E2%9A%A0%EF%B8%8F'
+				}
+			});
+		}
 		
 		return isStrongLanguage;
 	}
-    
 
-	///Rice ball detection
-	async rice_ball_detection(reaction: string): Promise<any> {
-		
-	}
 }

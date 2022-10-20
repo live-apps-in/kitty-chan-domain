@@ -18,7 +18,7 @@ export class ResponseService{
 	) { }
     
 	async respond(payload: RespondConfig): Promise<void> {
-		const config: any = await new ResponseFactory().getResponseConfig(payload.type, payload.guild);
+		const config: any = await new ResponseFactory().getResponseConfig(payload.type, payload.guild, payload.body);
         
 		await this.sharedService.axiosInstance({
 			method: config.method,
@@ -31,8 +31,8 @@ export class ResponseService{
 
 
 class ResponseFactory{
-	async getResponseConfig(type: string, guild: IGuild) {
-		const {channelId, userId, messageId} = guild;
+	async getResponseConfig(type: string, guild: IGuild, body: any) {
+		const {channelId, messageId} = guild;
 		const config: any = {};
 
 		switch (type) {
@@ -42,7 +42,8 @@ class ResponseFactory{
 			break;
              
 		case REPLY.addReaction:
-			config.route = `/channels/${channelId}/messages`;
+			config.route = `/channels/${channelId}/messages/${messageId}/reactions/${body.emoji}/@me`;
+			config.method = 'put';
 			break;
          
 		default:
