@@ -4,5 +4,7 @@ export const TYPES = {
 	LanguageFilter: Symbol('LanguageFilter'),
 	ResponseService: Symbol('ResponseService'),
 	SharedService: Symbol('SharedService'),
-	ViolationRepository: Symbol('ViolationRepository')
+	LoggerService: Symbol('LoggerService'),
+	ViolationRepository: Symbol('ViolationRepository'),
+	TextLogRepository: Symbol('TextLogRepository')
 };

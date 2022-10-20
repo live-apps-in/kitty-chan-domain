@@ -1,4 +1,3 @@
-import { Guild } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { REPLY } from '../enum/reply';
@@ -18,7 +17,7 @@ export class ResponseService{
 	) { }
     
 	async respond(payload: RespondConfig): Promise<void> {
-		const config: any = await new ResponseFactory().getResponseConfig(payload.type, payload.guild, payload.body);
+		const config = await new ResponseFactory().getResponseConfig(payload.type, payload.guild, payload.body);
         
 		await this.sharedService.axiosInstance({
 			method: config.method,

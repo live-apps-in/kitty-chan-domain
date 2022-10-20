@@ -11,11 +11,10 @@ interface axiosConfig{
 
 @injectable()
 export class SharedService{
-	constructor(){}
 
 	/////Global Axios Config
 	async axiosInstance(payload: axiosConfig): Promise<void> {
-		const { method, route, body } = payload;
+		const { method, route } = payload;
         
 		const headers = {
 			Authorization: `Bot ${process.env.KITTY_CHAN_TOKEN}`

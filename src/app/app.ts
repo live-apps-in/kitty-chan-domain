@@ -1,9 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../core/inversify.types';
 import { LanguageFilter } from './service/languageFilter.service';
-import { Client, GatewayIntentBits, TextChannel } from 'discord.js';
+import { Client, GatewayIntentBits } from 'discord.js';
 import 'dotenv/config';
 import { SharedService } from './shared/shared.service';
+import { LoggerService } from './service/logger.service';
 
 const client = new Client({
 	intents: [
@@ -19,7 +20,8 @@ const client = new Client({
 export class App{
 	constructor(
 		@inject(TYPES.LanguageFilter) private readonly langFilter: LanguageFilter,
-		@inject(TYPES.SharedService) private readonly sharedService: SharedService
+		@inject(TYPES.SharedService) private readonly sharedService: SharedService,
+		@inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
 	){}
 
 	async start() {
@@ -43,6 +45,10 @@ export class App{
 
 			///Strong Language Detection
 			const isStrongLang = await this.langFilter.strong_language_detection(guildInfo);
+			if (isStrongLang) return;
+
+			///Log Good Text Count
+			await this.loggerService.text_count_logger(guildInfo);
 
 		});
 
