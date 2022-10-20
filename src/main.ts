@@ -7,7 +7,7 @@ import container from './core/inversify.di';
 import { App } from './app/app';
 import { TYPES } from './core/inversify.types';
 import './core/awake';
-
+import './database/mongo';
 
 const server = new InversifyExpressServer(container);
 server.setConfig((app) => {

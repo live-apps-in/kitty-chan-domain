@@ -4,9 +4,9 @@ import { bad_words } from '../data/strong_language';
 import { hinglish_words } from '../data/hinglish';
 import { TYPES } from '../../core/inversify.types';
 import { ResponseService } from './response.service';
-import { SharedService } from '../shared/shared.service';
 import { IGuild } from '../interface/shared.interface';
 import { REPLY } from '../enum/reply';
+import { ViolationRepository } from '../repository/violation.repo';
 require('dotenv/config');
 
 const client = new Client({
@@ -23,7 +23,7 @@ const client = new Client({
 export class LanguageFilter {
 	constructor(
 		@inject(TYPES.ResponseService) private readonly responseService: ResponseService,
-		@inject(TYPES.SharedService) private readonly sharedService: SharedService
+		@inject(TYPES.ViolationRepository) private readonly violationRepo: ViolationRepository
 	) { }
     
 	///Non-English Detection
@@ -71,6 +71,14 @@ export class LanguageFilter {
 					emoji: '%E2%9A%A0%EF%B8%8F'
 				}
 			});
+
+			///Log Violation
+			const getViolation = await this.violationRepo.countViolationByType(guild.userId, 'strong_language');
+			if (getViolation === 0) {
+				await this.violationRepo.create({ userId: guild.userId, type: 'strong_language' });
+			} else {
+				await this.violationRepo.update(guild.userId, 'strong_language');
+			}
 		}
 		
 		return isStrongLanguage;

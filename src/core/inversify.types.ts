@@ -3,5 +3,6 @@ export const TYPES = {
 	///Service
 	LanguageFilter: Symbol('LanguageFilter'),
 	ResponseService: Symbol('ResponseService'),
-	SharedService: Symbol('SharedService')
+	SharedService: Symbol('SharedService'),
+	ViolationRepository: Symbol('ViolationRepository')
 };
