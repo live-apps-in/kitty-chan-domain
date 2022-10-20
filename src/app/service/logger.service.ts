@@ -17,7 +17,8 @@ export class LoggerService{
 			await this.textLogRepo.create({
 				userId: guild.userId,
 				username: guild.username,
-				guildId: guild.guildId
+				guildId: guild.guildId,
+				channelId: guild.channelId
 			});
 		} else {
 			await this.textLogRepo.update(guild.userId, guild.guildId);
@@ -29,7 +30,8 @@ export class LoggerService{
 			await this.violationRepo.create({
 				userId: guild.userId,
 				username: guild.username,
-				guildId: guild.guildId, type: type
+				guildId: guild.guildId, type: type,
+				channelId: guild.channelId
 			});
 		} else {
 			await this.violationRepo.update(guild.userId, guild.guildId, type);
