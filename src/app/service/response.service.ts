@@ -17,7 +17,6 @@ export class ResponseService{
 	) { }
     
 	async respond(payload: RespondConfig): Promise<void> {
-		console.log(payload, 'Payload');
 		const config = await new ResponseFactory().getResponseConfig(payload.type, payload.guild, payload.body);
 		await this.sharedService.axiosInstance({
 			method: config.method,
