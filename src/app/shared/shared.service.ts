@@ -15,11 +15,9 @@ export class SharedService{
 	/////Global Axios Config
 	async axiosInstance(payload: axiosConfig): Promise<void> {
 		const { method, route } = payload;
-        
 		const headers = {
 			Authorization: `Bot ${process.env.KITTY_CHAN_TOKEN}`
 		};
-
 		const data = {
 			...payload.body    
 		};
@@ -32,6 +30,7 @@ export class SharedService{
 		};
 
 		await axios(axiosConfig)
+			// .then(res=> console.log(res))
 			.catch(err => {
 				console.log(err.message);
 			});
@@ -39,7 +38,6 @@ export class SharedService{
 
 	////Extract users and channel info
 	async extractGuildInfo(content: any) {
-		console.log(content);
 		const guild = new IGuild(
 			content.guildId,
 			content.channelId,

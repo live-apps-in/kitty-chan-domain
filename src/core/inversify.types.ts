@@ -6,5 +6,6 @@ export const TYPES = {
 	SharedService: Symbol('SharedService'),
 	LoggerService: Symbol('LoggerService'),
 	ViolationRepository: Symbol('ViolationRepository'),
-	TextLogRepository: Symbol('TextLogRepository')
+	TextLogRepository: Symbol('TextLogRepository'),
+	WhiteListService: Symbol('WhiteListService')
 };
