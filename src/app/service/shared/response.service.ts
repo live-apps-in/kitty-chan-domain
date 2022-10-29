@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../core/inversify.types';
-import { REPLY } from '../enum/reply';
-import { IGuild } from '../interface/shared.interface';
-import { SharedService } from '../shared/shared.service';
+import { TYPES } from '../../../core/inversify.types';
+import { REPLY } from '../../enum/reply';
+import { IGuild } from '../../interface/shared.interface';
+import { SharedService } from '../../shared/shared.service';
 
 interface RespondConfig{
     type: string
@@ -42,6 +42,11 @@ class ResponseFactory{
 		case REPLY.addReaction:
 			config.route = `/channels/${channelId}/messages/${messageId}/reactions/${body.emoji}/@me`;
 			config.method = 'put';
+			break;
+			
+		case REPLY.replyMessage:
+			config.route = `/channels/${channelId}/messages`;
+			config.method = 'post';
 			break;
          
 		default:

@@ -44,6 +44,7 @@ export class SharedService{
 			content.id,
 			content.author.id,
 			content.author.username,
+			content.author.avatar,
 			content.content,
 			content.author.bot,
 		);

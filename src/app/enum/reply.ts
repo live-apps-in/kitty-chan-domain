@@ -1,4 +1,5 @@
 export enum REPLY{
     sendMessage='sendMessage',
-    addReaction='addReaction'
+    addReaction = 'addReaction',
+    replyMessage= 'replyMessage'
 }

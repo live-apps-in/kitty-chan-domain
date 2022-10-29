@@ -3,7 +3,7 @@ import { inject } from 'inversify';
 import { controller, httpPost } from 'inversify-express-utils';
 import { REPLY } from '../../app/enum/reply';
 import { IGuild } from '../../app/interface/shared.interface';
-import { ResponseService } from '../../app/service/response.service';
+import { ResponseService } from '../../app/service/shared/response.service';
 import { TYPES } from '../../core/inversify.types';
 
 @controller('/client')

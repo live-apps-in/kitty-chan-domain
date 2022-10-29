@@ -18,7 +18,8 @@ export class LoggerService{
 				userId: guild.userId,
 				username: guild.username,
 				guildId: guild.guildId,
-				channelId: guild.channelId
+				channelId: guild.channelId,
+				avatar: guild.avatar
 			});
 		} else {
 			await this.textLogRepo.update(guild.userId, guild.guildId);

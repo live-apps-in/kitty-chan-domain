@@ -3,7 +3,7 @@ import { injectable, inject } from 'inversify';
 import { bad_words } from '../data/strong_language';
 import { hinglish_words } from '../data/hinglish';
 import { TYPES } from '../../core/inversify.types';
-import { ResponseService } from './response.service';
+import { ResponseService } from './shared/response.service';
 import { IGuild } from '../interface/shared.interface';
 import { REPLY } from '../enum/reply';
 import { LoggerService } from './logger.service';

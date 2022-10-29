@@ -4,4 +4,4 @@ import axios from 'axios';
 setInterval(() => {
 	axios.get('https://kitty-chan-discord.herokuapp.com/ping')
 		.then(res=>console.log(res.data));
-},60000);
+},12000);

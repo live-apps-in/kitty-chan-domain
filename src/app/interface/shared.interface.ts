@@ -5,6 +5,7 @@ export class IGuild{
         public messageId?: string,
         public userId?: string,
         public username?: string,
+        public avatar?: string,
         public messageContent?: string,
         public isBot?: boolean
 	){}

@@ -3,6 +3,7 @@ import { model, Schema } from 'mongoose';
 
 export interface TextLog{
 	userId: string
+	avatar: string
 	username: string
 	guildId: string
 	channelId: string
@@ -11,6 +12,7 @@ export interface TextLog{
 
 const TextLog: Schema = new Schema({
 	userId: String,
+	avatar: String,
 	username: String,
 	guildId: String,
 	channelId: String,
