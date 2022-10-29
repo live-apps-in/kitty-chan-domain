@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { Container } from 'inversify';
 
 ///Controller
-import '../app/controller/app.controller';
+import '../api/controller/app.controller';
 import '../api/texts/text.controller';
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';

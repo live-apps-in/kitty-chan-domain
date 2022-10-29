@@ -1,4 +1,5 @@
 export enum VALORANT_RANK_ROLES {
+    Unranked = '1035936823974842459',
     Iron = '1035901587433984031',
     Bronze = '1035901947611451423',
     Silver = '1035902127584837742',
@@ -8,5 +9,5 @@ export enum VALORANT_RANK_ROLES {
     Ascendant = '1035902526781931550',
     Immortal = '1035902507366498375',
     Radiant = '1035902742553710602',
-    Dummy = '1035925777427992606'
+    Dummy = '1035925777427992606' ///Mock - testing
 }

@@ -20,12 +20,15 @@ export class CommandService{
 	///Validate and Filter Command
 	async validateCommand(guild: IGuild) {
 		const message = (guild.messageContent).trim().toLowerCase();
-		const messageChunk = message.split(' ');
-		console.log(messageChunk);
+		let messageChunk = message.split(' ');
 
+		messageChunk = messageChunk.filter(element => {
+  				return element !== '';
+		});
+		console.log(messageChunk);
 		///Check if kitty tagged
 		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return;
-		console.log('Tagged');
+
 		///Check Rank Set Command
 		if (messageChunk[1] === 'rank') {
 			await this.set_rank(guild, messageChunk[2]);
@@ -63,11 +66,10 @@ export class CommandService{
 					}
 				});
 				isRoleValid = true;
-				return;
+				break;
 			}
 		}
 
-		console.log(isRoleValid);
 		if (!isRoleValid) {
 			await this.responseService.respond({
 				type: REPLY.replyMessage,
@@ -79,6 +81,20 @@ export class CommandService{
 					}
 				}
 			});
+			return;
+		} else {
+			console.log('tif');
+			await this.responseService.respond({
+				type: REPLY.replyMessage,
+				guild,
+				body: {
+					content: RANK_MESSAGES.after_setRank,
+					message_reference: {
+						message_id: guild.messageId
+					}
+				}
+			});
+			return;
 		}
 
         
