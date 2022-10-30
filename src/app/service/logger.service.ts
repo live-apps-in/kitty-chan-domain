@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { IGuild } from '../interface/shared.interface';
+import text_log from '../model/text_log';
 import { TextLogRepository } from '../repository/textLogRepo';
 import { ViolationRepository } from '../repository/violation.repo';
 
@@ -23,6 +24,9 @@ export class LoggerService{
 			});
 		} else {
 			await this.textLogRepo.update(guild.userId, guild.guildId);
+			await text_log.updateOne({ guildId: guild.guildId, userId: guild.userId }, {
+				avatar: guild.avatar
+			})
 		}
 	}
 	async violation_logger(guild: IGuild, type: string) {

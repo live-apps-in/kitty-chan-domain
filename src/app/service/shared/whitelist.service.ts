@@ -11,6 +11,6 @@ export class WhiteListService{
 export function middleware() {
 	return function(target: any, propertyKey: string) {
 		// exec middleware
-		console.log('middleware');
+		// console.log('middleware');
 	};
 }

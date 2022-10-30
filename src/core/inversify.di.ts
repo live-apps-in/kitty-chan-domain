@@ -3,7 +3,9 @@ import { Container } from 'inversify';
 
 ///Controller
 import '../api/controller/app.controller';
-import '../api/texts/text.controller';
+import '../api/controller/text.controller';
+import '../api/controller/dashboard.controller'
+
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
 import { App } from '../app/app';
@@ -15,18 +17,22 @@ import { TextLogRepository } from '../app/repository/textLogRepo';
 import { WhiteListService } from '../app/service/shared/whitelist.service';
 import { CommandService } from '../app/service/commands.service';
 import { ActionService } from '../app/service/shared/action.service';
+import { AnalyticsService } from '../api/service/analytics.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
 });
 
-///Service
+///App Service
 container.bind<App>(TYPES.App).to(App);
 container.bind<LanguageFilter>(TYPES.LanguageFilter).to(LanguageFilter);
 container.bind<ResponseService>(TYPES.ResponseService).to(ResponseService);
 container.bind<ViolationRepository>(TYPES.ViolationRepository).to(ViolationRepository);
 container.bind<TextLogRepository>(TYPES.TextLogRepository).to(TextLogRepository);
 container.bind<CommandService>(TYPES.CommandService).to(CommandService);
+
+///API Service
+container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);
 
 ///Shared Service
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);
