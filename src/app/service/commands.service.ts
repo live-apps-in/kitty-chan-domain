@@ -3,7 +3,7 @@ import { IGuild } from '../interface/shared.interface';
 import 'dotenv/config';
 import { TYPES } from '../../core/inversify.types';
 import { ActionService } from './shared/action.service';
-import { VALORANT_RANK } from '../data/valorant_ranks';
+import { VALORANT_RANK } from '../data/valorant/valorant_ranks';
 import { VALORANT_RANK_ROLES } from '../data/server_roles';
 import { ResponseService } from './shared/response.service';
 import { REPLY } from '../enum/reply';
@@ -25,7 +25,7 @@ export class CommandService{
 		messageChunk = messageChunk.filter(element => {
   				return element !== '';
 		});
-		console.log(messageChunk);
+
 		///Check if kitty tagged
 		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return;
 
@@ -83,7 +83,6 @@ export class CommandService{
 			});
 			return;
 		} else {
-			console.log('tif');
 			await this.responseService.respond({
 				type: REPLY.replyMessage,
 				guild,

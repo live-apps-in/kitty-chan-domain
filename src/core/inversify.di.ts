@@ -4,7 +4,7 @@ import { Container } from 'inversify';
 ///Controller
 import '../api/controller/app.controller';
 import '../api/controller/text.controller';
-import '../api/controller/dashboard.controller'
+import '../api/controller/dashboard.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
@@ -18,6 +18,7 @@ import { WhiteListService } from '../app/service/shared/whitelist.service';
 import { CommandService } from '../app/service/commands.service';
 import { ActionService } from '../app/service/shared/action.service';
 import { AnalyticsService } from '../api/service/analytics.service';
+import { WakeService } from '../app/service/wake.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -30,6 +31,7 @@ container.bind<ResponseService>(TYPES.ResponseService).to(ResponseService);
 container.bind<ViolationRepository>(TYPES.ViolationRepository).to(ViolationRepository);
 container.bind<TextLogRepository>(TYPES.TextLogRepository).to(TextLogRepository);
 container.bind<CommandService>(TYPES.CommandService).to(CommandService);
+container.bind<WakeService>(TYPES.WakeService).to(WakeService);
 
 ///API Service
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);

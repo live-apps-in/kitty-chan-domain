@@ -18,7 +18,6 @@ export class ActionService{
     
 	async call(payload: RespondConfig): Promise<void> {
 		const config = await new ActionFactory().getActionConfig(payload.type, payload.guild, payload.body);
-		console.log(config);
 		await this.sharedService.axiosInstance({
 			method: config.method,
 			route: config.route,

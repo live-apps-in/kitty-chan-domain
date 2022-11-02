@@ -6,6 +6,7 @@ import 'dotenv/config';
 import { SharedService } from './shared/shared.service';
 import { LoggerService } from './service/logger.service';
 import { CommandService } from './service/commands.service';
+import { WakeService } from './service/wake.service';
 
 const client = new Client({
 	intents: [
@@ -23,6 +24,7 @@ export class App{
 		@inject(TYPES.SharedService) private readonly sharedService: SharedService,
 		@inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
 		@inject(TYPES.CommandService) private readonly commandService: CommandService,
+		@inject(TYPES.WakeService) private readonly wakeService: WakeService,
 	){}
 
 	async start() {
@@ -50,6 +52,9 @@ export class App{
 
 			///Commands
 			await this.commandService.validateCommand(guildInfo);
+
+			///Wake Words
+			await this.wakeService.validate(guildInfo);
 
 			///Log Good Text Count
 			await this.loggerService.text_count_logger(guildInfo);

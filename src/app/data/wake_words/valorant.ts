@@ -1,0 +1,1 @@
+export const valorant_call_signs = ['valorant', 'val', 'valorant?', 'val?'];

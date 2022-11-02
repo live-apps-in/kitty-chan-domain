@@ -26,7 +26,7 @@ export class LoggerService{
 			await this.textLogRepo.update(guild.userId, guild.guildId);
 			await text_log.updateOne({ guildId: guild.guildId, userId: guild.userId }, {
 				avatar: guild.avatar
-			})
+			});
 		}
 	}
 	async violation_logger(guild: IGuild, type: string) {

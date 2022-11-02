@@ -6,6 +6,7 @@ export const TYPES = {
 	ViolationRepository: Symbol('ViolationRepository'),
 	TextLogRepository: Symbol('TextLogRepository'),
 	CommandService: Symbol('CommandsService'),
+	WakeService: Symbol('WakeService'),
 
 	///API Service
 	AnalyticsService: Symbol('AnalyticsService'), 
