@@ -30,7 +30,7 @@ export class App{
 	async start() {
 		///Connect to Discord Server
 		client.on('ready', () => {
-			client.user.setActivity('with Jaga');
+			client.user.setActivity('with Alexa');
 			console.log('kitty chan connected 😸');
 		});
         
