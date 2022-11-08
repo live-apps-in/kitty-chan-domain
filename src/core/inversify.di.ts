@@ -5,6 +5,7 @@ import { Container } from 'inversify';
 import '../api/controller/app.controller';
 import '../api/controller/text.controller';
 import '../api/controller/dashboard.controller';
+import '../api/controller/alexa.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
@@ -19,6 +20,7 @@ import { CommandService } from '../app/service/commands.service';
 import { ActionService } from '../app/service/shared/action.service';
 import { AnalyticsService } from '../api/service/analytics.service';
 import { WakeService } from '../app/service/wake.service';
+import { AlexaService } from '../api/service/alexa.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -35,6 +37,7 @@ container.bind<WakeService>(TYPES.WakeService).to(WakeService);
 
 ///API Service
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);
+container.bind<AlexaService>(TYPES.AlexaService).to(AlexaService);
 
 ///Shared Service
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);

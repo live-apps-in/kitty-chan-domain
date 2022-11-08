@@ -9,7 +9,8 @@ export const TYPES = {
 	WakeService: Symbol('WakeService'),
 
 	///API Service
-	AnalyticsService: Symbol('AnalyticsService'), 
+	AnalyticsService: Symbol('AnalyticsService'),
+	AlexaService: Symbol('AlexaService'),
 	
 	///Shared Service
 	SharedService: Symbol('SharedService'),
