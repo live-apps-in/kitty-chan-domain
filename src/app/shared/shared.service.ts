@@ -28,7 +28,7 @@ export class SharedService{
 			data,
 			headers
 		};
-
+		
 		await axios(axiosConfig)
 			// .then(res=> console.log(res))
 			.catch(err => {
