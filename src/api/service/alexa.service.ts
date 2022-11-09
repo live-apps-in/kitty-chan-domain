@@ -11,9 +11,9 @@ export class AlexaService{
 	) { }
     
 	async textServer(message: string, username: string, messageType: string) {
-        
+        console.log('text service')
 		const buildMessage = await this.buildMessage(message, username, messageType);
-
+		console.log(buildMessage, 'build message')
 		await this.responseService.respond({
 			type: REPLY.sendMessage,
 			guild: {
