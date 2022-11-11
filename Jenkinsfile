@@ -4,17 +4,17 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building 1..'
+                sh docker build -t kitty-chan
             }
         }
-        stage('Test') {
+        stage('Stop old container') {
             steps {
-                echo 'Testing..'
+                sh docker container stop kitty-chan
             }
         }
-        stage('Deploy') {
+        stage('Start New Container') {
             steps {
-                echo 'Deploying....'
+                sh docker run -p 5000:5000 -t kitty-chan -d kitty-chan 
             }
         }
     }
