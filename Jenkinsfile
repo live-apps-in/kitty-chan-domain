@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t kitty-chan'
+                sh 'docker build -t kitty-chan .'
             }
         }
         stage('Stop old container') {
