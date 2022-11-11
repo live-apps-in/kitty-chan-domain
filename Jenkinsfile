@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Stop old container') {
             steps {
-                sh 'docker container stop kitty-chan'
+                sh 'docker rm kitty-chan --force'
             }
         }
         stage('Start New Container') {
