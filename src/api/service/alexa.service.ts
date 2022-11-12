@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { VALORANT_ROLE_ID } from '../../app/data/id';
 import { REPLY } from '../../app/enum/reply';
 import { ResponseService } from '../../app/service/shared/response.service';
 import { TYPES } from '../../core/inversify.types';
@@ -34,7 +35,7 @@ export class AlexaService{
 				break;
 		
 			case TEXT.playGame:
-				buildMessage = `[ ${username} from Alexa ]: ${username} wants to play VALORANT now!`
+				buildMessage = `[ ${username} from Alexa ]: <@&${VALORANT_ROLE_ID}> ${username} wants to play VALORANT now!`
 				break;
 		
 			default:
