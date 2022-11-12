@@ -21,6 +21,7 @@ import { ActionService } from '../app/service/shared/action.service';
 import { AnalyticsService } from '../api/service/analytics.service';
 import { WakeService } from '../app/service/wake.service';
 import { AlexaService } from '../api/service/alexa.service';
+import { ValorantService } from '../app/service/valorant/valorant.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -34,6 +35,9 @@ container.bind<ViolationRepository>(TYPES.ViolationRepository).to(ViolationRepos
 container.bind<TextLogRepository>(TYPES.TextLogRepository).to(TextLogRepository);
 container.bind<CommandService>(TYPES.CommandService).to(CommandService);
 container.bind<WakeService>(TYPES.WakeService).to(WakeService);
+
+///VALORANT Service
+container.bind<ValorantService>(TYPES.ValorantService).to(ValorantService);
 
 ///API Service
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);

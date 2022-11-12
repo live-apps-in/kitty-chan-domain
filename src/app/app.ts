@@ -38,7 +38,7 @@ export class App{
 		client.on('messageCreate', async (message) => {
 			///Extract Guild Info
 			const guildInfo = await this.sharedService.extractGuildInfo(message);
-
+			
 			///Validate if Bot message
 			if(guildInfo.isBot) return;
 			

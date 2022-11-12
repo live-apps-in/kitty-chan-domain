@@ -1,3 +1,5 @@
+import { Message } from 'discord.js';
+
 export class IGuild{
 	constructor(
         public guildId?: string,
@@ -7,6 +9,7 @@ export class IGuild{
         public username?: string,
         public avatar?: string,
         public messageContent?: string,
-        public isBot?: boolean
+        public isBot?: boolean,
+        public payload?: Message,
 	){}
 }

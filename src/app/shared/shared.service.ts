@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Message } from 'discord.js';
 import { injectable } from 'inversify';
 import { IGuild } from '../interface/shared.interface';
 
@@ -37,7 +38,7 @@ export class SharedService{
 	}
 
 	////Extract users and channel info
-	async extractGuildInfo(content: any) {
+	async extractGuildInfo(content: Message) {
 		const guild = new IGuild(
 			content.guildId,
 			content.channelId,
@@ -47,6 +48,7 @@ export class SharedService{
 			content.author.avatar,
 			content.content,
 			content.author.bot,
+			content
 		);
 
 		return guild;

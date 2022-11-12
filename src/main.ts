@@ -12,7 +12,6 @@ import './core/awake';
 import './database/mongo';
 
 const server = new InversifyExpressServer(container);
-// var viewEngine = hbs.create({ /* config */ });
 server.setConfig((app) => {
 	app.use(express.json());
 	app.use(cors());

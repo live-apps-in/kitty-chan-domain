@@ -8,6 +8,9 @@ export const TYPES = {
 	CommandService: Symbol('CommandsService'),
 	WakeService: Symbol('WakeService'),
 
+	///VALORANT Service
+	ValorantService: Symbol('ValorantService'),
+	
 	///API Service
 	AnalyticsService: Symbol('AnalyticsService'),
 	AlexaService: Symbol('AlexaService'),
