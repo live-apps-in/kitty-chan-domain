@@ -35,7 +35,7 @@ export class AlexaService{
 				break;
 		
 			case TEXT.playGame:
-				buildMessage = `[ ${username} from Alexa ]: <@&${VALORANT_ROLE_ID}> ${username} wants to play VALORANT now!`
+				buildMessage = `[ ${username} from Alexa ]: ${username} wants to play VALORANT now!`
 				break;
 		
 			default:
