@@ -17,7 +17,7 @@ export class AlexaService{
 		await this.responseService.respond({
 			type: REPLY.sendMessage,
 			guild: {
-				channelId: '1039519997778739250' ///Need to change to dynamic - TODO
+				channelId: '928902191983517717' ///Need to change to dynamic - TODO
 			},
 			body: {
 				content: buildMessage
