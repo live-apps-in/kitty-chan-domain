@@ -13,7 +13,7 @@ export class ValorantService{
 		///Check current role of user
 		let currentRank: string;
 		VALORANT_RANK.map(rank => {
-			if (userRoles.some(role => role.name === rank)) {
+			if (userRoles.some(role => (role.name).split('-')[0] === rank)) {
 				currentRank = rank;
 			}
 			return;
