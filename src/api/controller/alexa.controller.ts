@@ -13,7 +13,7 @@ export class AlexaController{
     @httpPost('/server/text')
 	async textServer(req: Request) {
 		const { message, username, messageType } = req.body;
-		console.log(req.body, 'REQUEST BODY')
+		console.log(req.body, 'REQUEST BODY');
 		await this.alexaService.textServer(message, username, messageType);
 		return {
 			message: 'Message Sent'

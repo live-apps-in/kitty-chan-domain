@@ -12,9 +12,9 @@ export class AlexaService{
 	) { }
     
 	async textServer(message: string, username: string, messageType: string) {
-        console.log('text service')
+		console.log('text service');
 		const buildMessage = await this.buildMessage(message, username, messageType);
-		console.log(buildMessage, 'build message')
+		console.log(buildMessage, 'build message');
 		await this.responseService.respond({
 			type: REPLY.sendMessage,
 			guild: {
@@ -30,18 +30,18 @@ export class AlexaService{
 		let buildMessage: string;
 
 		switch (messageType) {
-			case TEXT.message:
-				buildMessage = `[ ${username} from Alexa ]: ${message}`
-				break;
+		case TEXT.message:
+			buildMessage = `[ ${username} from Alexa ]: ${message}`;
+			break;
 		
-			case TEXT.playGame:
-				buildMessage = `[ ${username} from Alexa ]: ${username} wants to play VALORANT now!`
-				break;
+		case TEXT.playGame:
+			buildMessage = `[ ${username} from Alexa ]: ${username} wants to play VALORANT now!`;
+			break;
 		
-			default:
-				break;
+		default:
+			break;
 		}
 
-		return buildMessage
+		return buildMessage;
 	}
 }

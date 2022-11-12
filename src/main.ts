@@ -6,13 +6,24 @@ import 'reflect-metadata';
 import container from './core/inversify.di';
 import { App } from './app/app';
 import { TYPES } from './core/inversify.types';
+import * as hbs from 'express-handlebars';
+import path from 'path';
 import './core/awake';
 import './database/mongo';
 
 const server = new InversifyExpressServer(container);
+// var viewEngine = hbs.create({ /* config */ });
 server.setConfig((app) => {
 	app.use(express.json());
 	app.use(cors());
+
+	// Register `hbs.engine` with the Express app.
+	app.engine('.hbs', hbs.engine({
+		extname: '.hbs',
+		defaultLayout: false,
+		layoutsDir: path.join(__dirname,'../views')
+	}));
+	app.set('view engine', '.hbs');
 });
 
 async function bootstrap() {
@@ -25,4 +36,10 @@ bootstrap();
 const app = server.build();
 app.listen(process.env.PORT || 5000, () => {
 	console.log('App Started');
+});
+
+
+/////* PUBLIC PAGES *//////
+app.get('/privacy-policy', (req,res) => {
+	res.render('privacy-policy.hbs');
 });

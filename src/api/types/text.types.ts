@@ -1,5 +1,5 @@
 ///Discord Message Types
 export const TEXT = {
-    message: 'message',
-    playGame: 'playGame'
-}
+	message: 'message',
+	playGame: 'playGame'
+};
