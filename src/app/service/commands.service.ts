@@ -33,6 +33,12 @@ export class CommandService{
 			await this.set_rank(guild, messageChunk[2]);
 			return;
 		}
+
+		///Flip a coin
+		if (messageChunk[1] === 'flip') {
+			await this.flip_a_coin(guild, messageChunk);
+			return;
+		}
 	}
 
 	async set_rank(guild: IGuild, rank: string) {
@@ -96,5 +102,36 @@ export class CommandService{
 		}
 
         
+	}
+
+	private async flip_a_coin(guild: IGuild, messageChunk: string[]) {
+		if (messageChunk[2] !== "a" && messageChunk[3] !== "coin") return;
+
+		let response: any= {}
+		if(Math.random() < 0.50) {
+			response = {
+				outcome: 'heads',
+				message: 'It\'s Heads!'
+			}
+        } else {
+            response = {
+				outcome: 'tails',
+				message: 'It\'s Tails!'
+			}
+		}
+
+		await this.responseService.respond({
+				type: REPLY.replyMessage,
+				guild,
+				body: {
+					content: response.message,
+					message_reference: {
+						message_id: guild.messageId
+					}
+				}
+			});
+		
+		return;
+
 	}
 }
