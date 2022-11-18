@@ -7,6 +7,8 @@ import { VALORANT_RANK, VALORANT_RANK_ROLES } from '../data/valorant/valorant_ra
 import { ResponseService } from './shared/response.service';
 import { REPLY } from '../enum/reply';
 import { RANK_MESSAGES } from '../content/rank.content';
+import { UtilityService } from './shared/utils.service';
+import { flip_coin_wake_word } from '../data/wake_words/general';
 
 @injectable()
 export class CommandService{
@@ -14,6 +16,7 @@ export class CommandService{
 	constructor(
         @inject(TYPES.ActionService) private readonly actionService: ActionService,
         @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
+        @inject(TYPES.UtilityService) private readonly utilityService: UtilityService,
 	) { }
     
 	///Validate and Filter Command
@@ -106,7 +109,9 @@ export class CommandService{
 
 	private async flip_a_coin(guild: IGuild, messageChunk: string[]) {
 		if (messageChunk[2] !== "a" && messageChunk[3] !== "coin") return;
-
+		// const dummy = await this.utilityService.match_wake_phrase(messageChunk, flip_coin_wake_word)
+		// console.log(dummy)
+		// return;
 		let response: any= {}
 		if(Math.random() < 0.50) {
 			response = {

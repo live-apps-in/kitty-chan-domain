@@ -20,5 +20,6 @@ export const TYPES = {
 	ResponseService: Symbol('ResponseService'),
 	ActionService: Symbol('ActionService'),
 	LoggerService: Symbol('LoggerService'),
+	UtilityService: Symbol('UtilityService'),
 	WhiteListService: Symbol('WhiteListService')
 };
