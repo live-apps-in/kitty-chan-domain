@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message } from 'discord.js';
+import { ChatInputCommandInteraction, Message } from 'discord.js';
 import { injectable } from 'inversify';
 import { IGuild } from '../interface/shared.interface';
 
@@ -53,4 +53,20 @@ export class SharedService{
 
 		return guild;
 	}
+
+	// async extractGuildInfoFromInteraction(interaction: ChatInputCommandInteraction) {
+	// 	const guild = new IGuild(
+	// 		interaction.guildId,
+	// 		interaction.channelId,
+	// 		interaction.id,
+	// 		interaction.author.id,
+	// 		interaction.author.username,
+	// 		interaction.author.avatar,
+	// 		interaction.content,
+	// 		interaction.author.bot,
+	// 		interaction
+	// 	);
+
+	// 	return guild;
+	// }
 }

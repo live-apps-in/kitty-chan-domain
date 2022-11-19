@@ -1,9 +1,9 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 
 @injectable()
 export class UtilityService{
-    async match_wake_phrase(messageChunk: string[], phraseLib: string[][]) {
-        let isMatch = false;
+	async match_wake_phrase(messageChunk: string[], phraseLib: string[][]) {
+		let isMatch = false;
 
 	
 		for (let index = 0; index < phraseLib.length; index++) {
@@ -11,8 +11,8 @@ export class UtilityService{
 
 			//Length of single wake word array
 			const wakeWordCount = phraseLib[index].length;
-            let matchCount = 0;
-            const temp_wake_words = [...phraseLib[index]];
+			let matchCount = 0;
+			const temp_wake_words = [...phraseLib[index]];
 
 			//Loop Single Wake word array
 			for (let i = 0; i < temp_wake_words.length; i++) {
@@ -31,8 +31,8 @@ export class UtilityService{
                 
 			}
             
-        }
+		}
         
-        return isMatch;
-    }
+		return isMatch;
+	}
 }

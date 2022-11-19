@@ -108,33 +108,33 @@ export class CommandService{
 	}
 
 	private async flip_a_coin(guild: IGuild, messageChunk: string[]) {
-		if (messageChunk[2] !== "a" && messageChunk[3] !== "coin") return;
+		if (messageChunk[2] !== 'a' && messageChunk[3] !== 'coin') return;
 		// const dummy = await this.utilityService.match_wake_phrase(messageChunk, flip_coin_wake_word)
 		// console.log(dummy)
 		// return;
-		let response: any= {}
+		let response: any= {};
 		if(Math.random() < 0.50) {
 			response = {
 				outcome: 'heads',
 				message: 'It\'s Heads!'
-			}
-        } else {
-            response = {
+			};
+		} else {
+			response = {
 				outcome: 'tails',
 				message: 'It\'s Tails!'
-			}
+			};
 		}
 
 		await this.responseService.respond({
-				type: REPLY.replyMessage,
-				guild,
-				body: {
-					content: response.message,
-					message_reference: {
-						message_id: guild.messageId
-					}
+			type: REPLY.replyMessage,
+			guild,
+			body: {
+				content: response.message,
+				message_reference: {
+					message_id: guild.messageId
 				}
-			});
+			}
+		});
 		
 		return;
 

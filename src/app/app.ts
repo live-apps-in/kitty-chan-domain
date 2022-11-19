@@ -1,12 +1,13 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../core/inversify.types';
 import { LanguageFilter } from './service/languageFilter.service';
-import { Client, GatewayIntentBits, Guild } from 'discord.js';
+import { Client, GatewayIntentBits, SlashCommandBuilder } from 'discord.js';
 import 'dotenv/config';
 import { SharedService } from './shared/shared.service';
 import { LoggerService } from './service/logger.service';
 import { CommandService } from './service/commands.service';
 import { WakeService } from './service/wake.service';
+import './config/command_init';
 
 const client = new Client({
 	intents: [
@@ -32,6 +33,16 @@ export class App{
 		client.on('ready', () => {
 			client.user.setActivity('with Alexa');
 			console.log('kitty chan connected 😸');
+				
+		});
+
+		client.on('interactionCreate', async interaction => {
+  			if (!interaction.isChatInputCommand()) return;
+			///Extract Guild Info
+			// const guildInfo = await this.sharedService.extractGuildInfo(interaction);
+  			if (interaction.commandName === 'ping') {
+    		await interaction.reply('Pong!');
+			}
 		});
         
 		/////READ Messages & Respond
