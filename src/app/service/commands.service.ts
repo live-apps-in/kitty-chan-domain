@@ -9,6 +9,7 @@ import { REPLY } from '../enum/reply';
 import { RANK_MESSAGES } from '../content/rank.content';
 import { UtilityService } from './shared/utils.service';
 import { flip_coin_wake_word } from '../data/wake_words/general';
+import { ACTIONS } from '../enum/action';
 
 @injectable()
 export class CommandService{
@@ -60,6 +61,28 @@ export class CommandService{
             
 			return;
 		}
+
+		///Check if roles exists
+		const userRoles = guild.payload.member.roles.cache;
+		let currentRank;
+		VALORANT_RANK.map(rank => {
+			if (userRoles.some(role => (role.name).split('-')[0] === rank)) {
+				currentRank = rank;
+				return;
+			}
+			return;
+		});
+
+		if (currentRank) {
+			await this.actionService.call({
+				type: ACTIONS.deleteRole,
+				guild,
+				body: {
+					roleId: VALORANT_RANK_ROLES[currentRank]
+				}
+			});
+		}
+
 		///Validate & Assign Roles
 		let isRoleValid = false;
 		for (let index = 0; index < VALORANT_RANK.length; index++) {
@@ -67,7 +90,7 @@ export class CommandService{
 			if (element.toLowerCase() === rank.toLowerCase()) {
 				///Call API
 				await this.actionService.call({
-					type: 'setRole',
+					type: ACTIONS.setRole,
 					guild,
 					body: {
 						roleId: VALORANT_RANK_ROLES[element]

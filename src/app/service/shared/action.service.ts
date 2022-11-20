@@ -38,6 +38,10 @@ class ActionFactory{
 			config.route = `/guilds/${guildId}/members/${userId}/roles/${body.roleId}`;
 			config.method = 'put';
 			break;
+		case ACTIONS.deleteRole:
+			config.route = `/guilds/${guildId}/members/${userId}/roles/${body.roleId}`;
+			config.method = 'delete';
+			break;
          
 		default:
 			break;

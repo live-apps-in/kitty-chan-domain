@@ -34,6 +34,7 @@ export class SharedService{
 			// .then(res=> console.log(res))
 			.catch(err => {
 				console.log(err.message);
+				// console.log(err);
 			});
 	}
 

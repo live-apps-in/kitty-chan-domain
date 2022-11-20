@@ -1,3 +1,4 @@
 export enum ACTIONS{
-    setRole = 'setRole'
+    setRole = 'setRole',
+    deleteRole = 'deleteRole'
 }
