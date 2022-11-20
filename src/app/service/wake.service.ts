@@ -6,6 +6,7 @@ import { valorant_call_signs, valorant_comp_calls, valorant_unranked_calls } fro
 import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';
 import { ResponseService } from './shared/response.service';
+import { UtilityService } from './shared/utils.service';
 import { ValorantService } from './valorant/valorant.service';
 
 
@@ -13,7 +14,8 @@ import { ValorantService } from './valorant/valorant.service';
 export class WakeService{
 	constructor(
         @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
-        @inject(TYPES.ValorantService) private readonly valorantService: ValorantService,
+		@inject(TYPES.ValorantService) private readonly valorantService: ValorantService,
+		@inject(TYPES.UtilityService) private readonly utilityService: UtilityService,
 	) { }
     
 	async validate(guild: IGuild) {
@@ -25,6 +27,7 @@ export class WakeService{
         
 	}
 
+	///Detect phrase for VALORANT Ranked and Unranked
 	private async find_val_players(messageChunk: string[], guild: IGuild) {
 		let isValidCalSign = false;
 		let isComp = false;
@@ -37,38 +40,10 @@ export class WakeService{
 		if (!isValidCalSign) return false;
 
 		///Check for Wake words
-		let isMatch = false;
 		const valorant_wake_sentence: string[][] = isComp? valorant_find_player_comp : valorant_find_player_unranked;
-	
-		for (let index = 0; index < valorant_wake_sentence.length; index++) {
-			if (isMatch) break;
-
-			//Length of single wake word array
-			const wakeWordCount = valorant_wake_sentence[index].length;
-			let matchCount = 0;
-			const temp_wake_words = [...valorant_wake_sentence[index]];
-
-			//Loop Single Wake word array
-			for (let i = 0; i < temp_wake_words.length; i++) {
-				if (isMatch) break;
-				const wakeWord = temp_wake_words[i];
-
-				//Loop message chunk
-				for (let j = 0; j < messageChunk.length; j++) {
-					const element = messageChunk[j].toLowerCase();
-					if (wakeWord === element) {
-						temp_wake_words[i] = '';
-						matchCount += 1;
-					}
-				}
-				if (matchCount >= wakeWordCount) isMatch = true;
-                
-			}
-            
-		}
+		const {isMatch} = await this.utilityService.match_wake_phrase(messageChunk, valorant_wake_sentence);
 
 		
-        
 		if (!isMatch) return false;
 		///Notify content for Unranked and Comp
 		let replyContent = find_valo_unranked_template(guild);

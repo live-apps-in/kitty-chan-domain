@@ -15,6 +15,7 @@ export const valorant_find_player_unranked = [
 ];
 
 export const valorant_find_player_comp = [
+	['val', 'comp?'],
 	['anyone', 'val', 'comp'],
 	['anyone', 'valo', 'comp'],
 	['anyone', 'valorant', 'comp'],

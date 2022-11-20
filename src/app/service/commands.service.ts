@@ -131,10 +131,9 @@ export class CommandService{
 	}
 
 	private async flip_a_coin(guild: IGuild, messageChunk: string[]) {
-		if (messageChunk[2] !== 'a' && messageChunk[3] !== 'coin') return;
-		// const dummy = await this.utilityService.match_wake_phrase(messageChunk, flip_coin_wake_word)
-		// console.log(dummy)
-		// return;
+		const { isMatch } = await this.utilityService.match_wake_phrase(messageChunk, flip_coin_wake_word);
+		if (!isMatch) return;
+
 		let response: any= {};
 		if(Math.random() < 0.50) {
 			response = {

@@ -33,6 +33,8 @@ export class UtilityService{
             
 		}
         
-		return isMatch;
+		return {
+			isMatch
+		};
 	}
 }
