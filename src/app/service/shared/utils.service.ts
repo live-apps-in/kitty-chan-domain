@@ -3,11 +3,14 @@ import { injectable } from 'inversify';
 @injectable()
 export class UtilityService{
 	async match_wake_phrase(messageChunk: string[], phraseLib: string[][]) {
-		let isMatch = false;
+		const res = {
+			isMatch: false,
+			libIndex: 0
+		};
 
 	
 		for (let index = 0; index < phraseLib.length; index++) {
-			if (isMatch) break;
+			if (res.isMatch) break;
 
 			//Length of single wake word array
 			const wakeWordCount = phraseLib[index].length;
@@ -16,7 +19,7 @@ export class UtilityService{
 
 			//Loop Single Wake word array
 			for (let i = 0; i < temp_wake_words.length; i++) {
-				if (isMatch) break;
+				if (res.isMatch) break;
 				const wakeWord = temp_wake_words[i];
 
 				//Loop message chunk
@@ -27,14 +30,17 @@ export class UtilityService{
 						matchCount += 1;
 					}
 				}
-				if (matchCount >= wakeWordCount) isMatch = true;
+				if (matchCount >= wakeWordCount) {
+					res.isMatch = true;
+					res.libIndex = index;
+				}
                 
 			}
             
 		}
         
 		return {
-			isMatch
+			...res
 		};
 	}
 }

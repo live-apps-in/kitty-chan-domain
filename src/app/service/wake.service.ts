@@ -1,7 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { find_valo_comp_template, find_valo_unranked_template } from '../content/rank.content';
+import { sad_phrase_response_builder } from '../content/sad_phrase.content';
 import { valorant_find_player_comp, valorant_find_player_unranked } from '../data/valorant/valorant_call';
+import { sad_phrase, sad_phrase_response } from '../data/wake_phrase/sad_phrase';
 import { valorant_call_signs, valorant_comp_calls, valorant_unranked_calls } from '../data/wake_words/valorant';
 import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';
@@ -24,6 +26,9 @@ export class WakeService{
 		///Find Valorant Players
 		const isFindValPlayerCommand = await this.find_val_players(messageChunk, guild);
 		if (isFindValPlayerCommand) return;
+
+		const detectSadPhrase = await this.detect_sad_phrase(messageChunk, guild);
+		if (detectSadPhrase) return;
         
 	}
 
@@ -62,5 +67,27 @@ export class WakeService{
 
 		return true;
 
+	}
+
+
+	////Detect sad phrase
+	private async detect_sad_phrase(messageChunk: string[], guild: IGuild) {
+		
+		////Check Wake Phrase
+		const { isMatch, libIndex } = await this.utilityService.match_wake_phrase(messageChunk, sad_phrase);
+		if (!isMatch) return;
+		const buildResponse = await sad_phrase_response_builder(libIndex);
+
+		await this.responseService.respond({
+			guild,
+			type: REPLY.replyMessage,
+			body: {
+				content: buildResponse,
+				message_reference: {
+					message_id: guild.messageId
+				}
+			}
+		});
+		return true;
 	}
 }
