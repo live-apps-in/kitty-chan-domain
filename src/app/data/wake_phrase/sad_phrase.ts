@@ -17,8 +17,8 @@ export const sad_phrase_response = [
 	['nah it doesn\'t'], //4
 	['it ain\'t that hard, you just need to grind harder'], //5
 	['means you still didn\'t start exploring'], //6
-	['it not that annoying like this server notifications... jk jaga'], //7
-	['please dont! jaga will be sad', 'i\'ve never seen jaga cry, i dont want to see that'], //8
-	['please dont! jaga will be sad', 'i\'ve never seen jaga cry, i dont want to see that'], //8
+	['it\'s not that annoying like this server notifications... jk jk'], //7
+	['please don\'t! jaga will be sad', 'i\'ve never seen jaga cry, i don\'t wanna see that'], //8
+	['please don\'t! jaga will be sad', 'i\'ve never seen jaga cry, i don\'t wanna to see that'], //8
 
 ];
