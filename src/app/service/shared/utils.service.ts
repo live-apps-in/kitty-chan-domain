@@ -16,6 +16,7 @@ export class UtilityService{
 			const wakeWordCount = phraseLib[index].length;
 			let matchCount = 0;
 			const temp_wake_words = [...phraseLib[index]];
+			let temp_block_list = []
 
 			//Loop Single Wake word array
 			for (let i = 0; i < temp_wake_words.length; i++) {
@@ -25,7 +26,8 @@ export class UtilityService{
 				//Loop message chunk
 				for (let j = 0; j < messageChunk.length; j++) {
 					const element = messageChunk[j].toLowerCase();
-					if (wakeWord === element) {
+					if (wakeWord === element && !temp_block_list.includes(wakeWord)) {
+						temp_block_list.push(wakeWord)
 						temp_wake_words[i] = '';
 						matchCount += 1;
 					}
