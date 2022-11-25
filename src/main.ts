@@ -8,7 +8,6 @@ import { App } from './app/app';
 import { TYPES } from './core/inversify.types';
 import * as hbs from 'express-handlebars';
 import path from 'path';
-import './core/awake';
 import './database/mongo';
 
 const server = new InversifyExpressServer(container);
