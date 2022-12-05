@@ -11,6 +11,9 @@ export const TYPES = {
 	///VALORANT Service
 	ValorantService: Symbol('ValorantService'),
 	
+	///Conversation Service
+	ConversationService: Symbol('ConversationService'),
+
 	///API Service
 	AnalyticsService: Symbol('AnalyticsService'),
 	AlexaService: Symbol('AlexaService'),

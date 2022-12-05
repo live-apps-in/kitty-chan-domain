@@ -27,8 +27,8 @@ export class WakeService{
 		const isFindValPlayerCommand = await this.find_val_players(messageChunk, guild);
 		if (isFindValPlayerCommand) return;
 
-		const detectSadPhrase = await this.detect_sad_phrase(messageChunk, guild);
-		if (detectSadPhrase) return;
+		// const detectSadPhrase = await this.detect_sad_phrase(messageChunk, guild);
+		// if (detectSadPhrase) return;
         
 	}
 

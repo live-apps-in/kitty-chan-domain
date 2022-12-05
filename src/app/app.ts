@@ -62,7 +62,8 @@ export class App{
 			if (isStrongLang) return;
 
 			///Commands
-			await this.commandService.validateCommand(guildInfo);
+			const isCommand = await this.commandService.validateCommand(guildInfo);
+			if (isCommand) return;
 
 			///Wake Words
 			await this.wakeService.validate(guildInfo);

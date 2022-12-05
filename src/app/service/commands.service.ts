@@ -10,6 +10,7 @@ import { RANK_MESSAGES } from '../content/rank.content';
 import { UtilityService } from './shared/utils.service';
 import { flip_coin_wake_word } from '../data/wake_words/general';
 import { ACTIONS } from '../enum/action';
+import { ConversationService } from './conversation/conversation.service';
 
 @injectable()
 export class CommandService{
@@ -18,6 +19,7 @@ export class CommandService{
         @inject(TYPES.ActionService) private readonly actionService: ActionService,
         @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
         @inject(TYPES.UtilityService) private readonly utilityService: UtilityService,
+        @inject(TYPES.ConversationService) private readonly conversationService: ConversationService,
 	) { }
     
 	///Validate and Filter Command
@@ -30,19 +32,23 @@ export class CommandService{
 		});
 
 		///Check if kitty tagged
-		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return;
+		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return true;
 
 		///Check Rank Set Command
 		if (messageChunk[1] === 'rank') {
 			await this.set_rank(guild, messageChunk[2]);
-			return;
+			return true;
 		}
 
 		///Flip a coin
 		if (messageChunk[1] === 'flip') {
 			await this.flip_a_coin(guild, messageChunk);
-			return;
+			return true;
 		}
+
+		///Detect conversation
+		const checkConversation = await this.conversationService.filter(messageChunk, guild);
+		if (checkConversation) return true;
 	}
 
 	async set_rank(guild: IGuild, rank: string) {
