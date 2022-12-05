@@ -32,7 +32,7 @@ export class CommandService{
 		});
 
 		///Check if kitty tagged
-		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return true;
+		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return false;
 
 		///Check Rank Set Command
 		if (messageChunk[1] === 'rank') {

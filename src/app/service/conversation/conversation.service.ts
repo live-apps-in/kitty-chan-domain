@@ -15,7 +15,8 @@ export class ConversationService{
         @inject(TYPES.UtilityService) private readonly utilService: UtilityService,
         @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
 	){}
-	async filter(messageChunk: string[], guild:IGuild) {
+	async filter(messageChunk: string[], guild: IGuild) {
+		console.log('IN');
 		const filter = await this.utilService.match_wake_phrase(messageChunk, conversation_phrase);
 		if (!filter.isMatch) return;
 		return await this.reply(filter.libIndex, guild);
