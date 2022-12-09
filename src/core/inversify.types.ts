@@ -1,28 +1,32 @@
 export const TYPES = {
-	App: Symbol('App'),
+	App: Symbol.for('App'),
 
 	///App Service
-	LanguageFilter: Symbol('LanguageFilter'),
-	ViolationRepository: Symbol('ViolationRepository'),
-	TextLogRepository: Symbol('TextLogRepository'),
-	CommandService: Symbol('CommandsService'),
-	WakeService: Symbol('WakeService'),
+	LanguageFilter: Symbol.for('LanguageFilter'),
+	ViolationRepository: Symbol.for('ViolationRepository'),
+	TextLogRepository: Symbol.for('TextLogRepository'),
+	CommandService: Symbol.for('CommandsService'),
+	WakeService: Symbol.for('WakeService'),
 
 	///VALORANT Service
-	ValorantService: Symbol('ValorantService'),
+	ValorantService: Symbol.for('ValorantService'),
 	
 	///Conversation Service
-	ConversationService: Symbol('ConversationService'),
+	ConversationService: Symbol.for('ConversationService'),
 
 	///API Service
-	AnalyticsService: Symbol('AnalyticsService'),
-	AlexaService: Symbol('AlexaService'),
+	AnalyticsService: Symbol.for('AnalyticsService'),
+	AlexaService: Symbol.for('AlexaService'),
+	ConversationAPIService: Symbol.for('ConversationAPIService'),
+
+	///Repository
+	ConversationRepository: Symbol.for('ConversationRepository'),
 	
 	///Shared Service
-	SharedService: Symbol('SharedService'),
-	ResponseService: Symbol('ResponseService'),
-	ActionService: Symbol('ActionService'),
-	LoggerService: Symbol('LoggerService'),
-	UtilityService: Symbol('UtilityService'),
-	WhiteListService: Symbol('WhiteListService')
+	SharedService: Symbol.for('SharedService'),
+	ResponseService: Symbol.for('ResponseService'),
+	ActionService: Symbol.for('ActionService'),
+	LoggerService: Symbol.for('LoggerService'),
+	UtilityService: Symbol.for('UtilityService'),
+	WhiteListService: Symbol.for('WhiteListService')
 };
