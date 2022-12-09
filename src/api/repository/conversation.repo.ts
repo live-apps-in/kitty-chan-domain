@@ -26,6 +26,11 @@ export class ConversationRepository{
 		return getPhrase;
 	}
 
+	async regex_phrase(phrase: string) {
+		const getPhrase = await ConversationPhrase.findOne({ phrase: {'$regex': phrase, '$options': 'i'} });
+		return getPhrase;
+	}
+
 	///Update
 	async update_phrase(_id: Types.ObjectId, payload: any) {
 		await ConversationPhrase.updateOne({ _id }, {
@@ -47,6 +52,11 @@ export class ConversationRepository{
 		return conversation_phrase;
 	}
 
+	///View conversation response by _id
+	async get_convo_res_by_id(_id: Types.ObjectId) {
+		const getPhrase = await ConversationResponse.findOne({ _id });
+		return getPhrase;
+	}
 	///View conversation response by phrase
 	async get_convo_res_by_phrase(phrase: string) {
 		const getPhrase = await ConversationResponse.findOne({ phrase });
