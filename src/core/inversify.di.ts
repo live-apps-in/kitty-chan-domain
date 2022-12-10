@@ -6,6 +6,7 @@ import '../api/controller/app.controller';
 import '../api/controller/text.controller';
 import '../api/controller/dashboard.controller';
 import '../api/controller/alexa.controller';
+import '../api/controller/conversation/conversation.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
@@ -24,6 +25,9 @@ import { AlexaService } from '../api/service/alexa.service';
 import { ValorantService } from '../app/service/valorant/valorant.service';
 import { UtilityService } from '../app/service/shared/utils.service';
 import { ConversationService } from '../app/service/conversation/conversation.service';
+import { ConversationController } from '../api/controller/conversation/conversation.controller';
+import { ConversationAPIService } from '../api/service/conversation/conversation_api.service';
+import { ConversationRepository } from '../api/repository/conversation.repo';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -47,6 +51,11 @@ container.bind<ConversationService>(TYPES.ConversationService).to(ConversationSe
 ///API Service
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);
 container.bind<AlexaService>(TYPES.AlexaService).to(AlexaService);
+container.bind<ConversationAPIService>(TYPES.ConversationAPIService).to(ConversationAPIService);
+
+///Repository
+container.bind<ConversationRepository>(TYPES.ConversationRepository).to(ConversationRepository);
+
 
 ///Shared Service
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);

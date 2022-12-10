@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import express from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 import cors from 'cors';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import 'reflect-metadata';
@@ -9,6 +9,7 @@ import { TYPES } from './core/inversify.types';
 import * as hbs from 'express-handlebars';
 import path from 'path';
 import './database/mongo';
+import { HttpException, ValidationException } from './core/exception';
 
 const server = new InversifyExpressServer(container);
 server.setConfig((app) => {
@@ -22,6 +23,22 @@ server.setConfig((app) => {
 		layoutsDir: path.join(__dirname,'../views')
 	}));
 	app.set('view engine', '.hbs');
+});
+
+////Global Error Config
+server.setErrorConfig((app) => {
+	app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+
+		if (err instanceof HttpException) {
+			res.status(err.statusCode).json({ error: err.message });
+		} else if (err instanceof ValidationException) {
+			res.status(err.statusCode).json({ error: 'Validation Exception', errorInfo: err.error});
+		}
+		else {
+			console.log(err);
+			res.status(500).json({ error: 'Internal Server Exception' });
+		}
+	});
 });
 
 async function bootstrap() {

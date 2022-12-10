@@ -26,14 +26,14 @@ export class CommandService{
 	async validateCommand(guild: IGuild) {
 		const message = (guild.messageContent).trim().toLowerCase();
 		let messageChunk = message.split(' ');
-
+		
 		messageChunk = messageChunk.filter(element => {
-  				return element !== '';
+			return element !== '';
 		});
-
+		
 		///Check if kitty tagged
 		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return false;
-
+		
 		///Check Rank Set Command
 		if (messageChunk[1] === 'rank') {
 			await this.set_rank(guild, messageChunk[2]);
@@ -45,9 +45,16 @@ export class CommandService{
 			await this.flip_a_coin(guild, messageChunk);
 			return true;
 		}
-
+		
 		///Detect conversation
-		const checkConversation = await this.conversationService.filter(messageChunk, guild);
+		let tempChunk = [...messageChunk]
+		let cleanMessage = '';
+		for (let index = 1; index < tempChunk.length; index++) {
+			cleanMessage += tempChunk[index] + " "
+			
+		}
+		cleanMessage = cleanMessage.trim()
+		const checkConversation = await this.conversationService.filter(messageChunk, cleanMessage, guild);
 		if (checkConversation) return true;
 	}
 
