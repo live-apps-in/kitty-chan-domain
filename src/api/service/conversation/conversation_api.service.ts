@@ -20,9 +20,14 @@ export class ConversationAPIService{
 		return this.conversationRepo.create_phrase(payload);
 	}
 
-	///View COnversation Wake Phrase
+	///View Conversation Wake Phrase
 	async view_conversation_phrase() {
 		return this.conversationRepo.get_phrase();
+	}
+
+	///View Conversation Wake Phrase
+	async view_conversation_phrase_by_tag(tag: string) {
+		return this.conversationRepo.get_phrase_by_query({tag});
 	}
 
 	///Update Conversation Wake Phrase
@@ -38,9 +43,14 @@ export class ConversationAPIService{
 		return this.conversationRepo.create_response(payload);
 	}
 
-	///View COnversation Response Phrase
+	///View Conversation Response Phrase
 	async view_conversation_response() {
 		return this.conversationRepo.get_response();
+	}
+
+	///View Conversation Response Phrase
+	async view_conversation_response_by_tag(tag: string) {
+		return this.conversationRepo.get_response_by_query({tag});
 	}
 
 	///Update Conversation Response Phrase

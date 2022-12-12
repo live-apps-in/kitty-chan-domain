@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { inject } from 'inversify';
-import { controller, httpGet, httpPatch, httpPost } from 'inversify-express-utils';
+import { controller, httpGet, httpPatch, httpPost, requestParam } from 'inversify-express-utils';
 import { TYPES } from '../../../core/inversify.types';
 import { ConversationAPIService } from '../../service/conversation/conversation_api.service';
 
@@ -27,6 +27,13 @@ export class ConversationController{
     	return getPhrase;
     }
 
+    ///View Conversation wake phrase
+    @httpGet('/phrase/tag/:tagName')
+    async getConversationPhraseByTag(@requestParam('tagName') tag: string) {
+    	const getPhrase = await this.conversationService.view_conversation_phrase_by_tag(tag);
+    	return getPhrase;
+    }
+
     ///Update Conversation wake phrase
     @httpPatch('/phrase')
     async updateConversationPhrase(req: Request) {
@@ -45,6 +52,13 @@ export class ConversationController{
     @httpGet('/response')
     async getConversationResponse() {
     	const getPhrase = await this.conversationService.view_conversation_response();
+    	return getPhrase;
+    }
+
+    ///View Conversation wake phrase
+    @httpGet('/response/tag/:tagName')
+    async getConversationResponseByTag(@requestParam('tagName') tag: string) {
+    	const getPhrase = await this.conversationService.view_conversation_response_by_tag(tag);
     	return getPhrase;
     }
 

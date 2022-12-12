@@ -20,6 +20,12 @@ export class ConversationRepository{
 		return conversation_phrase;
 	}
 
+	///View
+	async get_phrase_by_query(query: any) {
+		const conversation_phrase = await ConversationPhrase.find({ ...query });
+		return conversation_phrase;
+	}
+
 	///View conversation phrase by phrase
 	async get_convo_phrase_by_phrase(phrase: string) {
 		const getPhrase = await ConversationPhrase.findOne({ phrase: phrase.toLowerCase() });
@@ -40,7 +46,8 @@ export class ConversationRepository{
 		});
 	}
 
-	///Conversation Response Phrase
+
+	/////Conversation Response Phrase//////
 	async create_response(payload: any) {
 		const savePhrase = await ConversationResponse.insertMany(payload);
 		return savePhrase;
@@ -49,6 +56,12 @@ export class ConversationRepository{
 	///View
 	async get_response() {
 		const conversation_phrase = await ConversationResponse.find({});
+		return conversation_phrase;
+	}
+
+	///View
+	async get_response_by_query(query: any) {
+		const conversation_phrase = await ConversationResponse.find({...query});
 		return conversation_phrase;
 	}
 

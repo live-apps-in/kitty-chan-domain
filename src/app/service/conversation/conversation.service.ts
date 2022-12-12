@@ -19,16 +19,16 @@ export class ConversationService{
         @inject(TYPES.ConversationRepository) private readonly conversationRepo: ConversationRepository,
 	){}
 	async filter(messageChunk: string[], cleanMessage: string, guild: IGuild) {
-		const matchWakePhrase: any = await this.conversationRepo.regex_phrase(cleanMessage)
+		const matchWakePhrase: any = await this.conversationRepo.regex_phrase(cleanMessage);
 		if (!matchWakePhrase) return;
 
-		let matchPhraseChunk = matchWakePhrase.phrase.split(" ")
-		let resPhraseIds = matchWakePhrase.resPhraseId
+		const matchPhraseChunk = matchWakePhrase.phrase.split(' ');
+		const resPhraseIds = matchWakePhrase.resPhraseId;
 		let resPhraseId;
+		let resPhrase;
 
 		///Validate Full Match
-		const validatePhraseMatch = await this.utilService.match_wake_phrase_db(messageChunk, matchPhraseChunk)
-		console.log(validatePhraseMatch)
+		const validatePhraseMatch = await this.utilService.match_wake_phrase_db(messageChunk, matchPhraseChunk);
 
 		///Randomize response
 		if (resPhraseIds === 1) {
@@ -37,13 +37,30 @@ export class ConversationService{
 			const randomResponse = randomNumber(1, resPhraseIds.length);
 			resPhraseId = resPhraseIds[randomResponse - 1]; 
 		}
-		const getResPhrase = await this.conversationRepo.get_convo_res_by_id(resPhraseId)
-		if (!getResPhrase) return;
 
-		
+		///Randomize response
+		if (resPhraseIds === 1) {
+		    resPhraseId = resPhraseIds[0];
+		} else {
+			const randomResponse = randomNumber(1, resPhraseIds.length);
+			resPhraseId = resPhraseIds[randomResponse - 1]; 
+		}
 		const filter = await this.utilService.match_wake_phrase(messageChunk, conversation_phrase);
 		if (!filter.isMatch) return;
-		return await this.reply(getResPhrase.phrase, guild);
+
+		///Randomize response
+		const getResPhrase = await this.conversationRepo.get_convo_res_by_id(resPhraseId);
+		if (!getResPhrase?.phrase) return;
+
+		if (getResPhrase.phrase.length === 1) {
+			resPhrase = getResPhrase.phrase[0];
+		} else {
+			const randomResponse = randomNumber(1, getResPhrase.phrase.length);
+			resPhrase = getResPhrase.phrase[randomResponse - 1];
+		}
+
+		if (!resPhrase) return;
+		return await this.reply(resPhrase, guild);
 	}
 
 	private async reply(phrase: string, guild: IGuild) {

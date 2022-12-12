@@ -46,16 +46,17 @@ export class CommandService{
 			return true;
 		}
 		
-		///Detect conversation
-		let tempChunk = [...messageChunk]
+		///Detect conversation (One Way)
+		const tempChunk = [...messageChunk];
 		let cleanMessage = '';
 		for (let index = 1; index < tempChunk.length; index++) {
-			cleanMessage += tempChunk[index] + " "
+			cleanMessage += tempChunk[index] + ' ';
 			
 		}
-		cleanMessage = cleanMessage.trim()
+		cleanMessage = cleanMessage.trim();
 		const checkConversation = await this.conversationService.filter(messageChunk, cleanMessage, guild);
 		if (checkConversation) return true;
+		return;
 	}
 
 	async set_rank(guild: IGuild, rank: string) {

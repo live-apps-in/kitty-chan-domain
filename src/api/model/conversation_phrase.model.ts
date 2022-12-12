@@ -16,4 +16,4 @@ const ConversationSchema = new Schema({
 
 
 const conversationModel = model<IConversationPhrase>('conversation_phrase', ConversationSchema);
-export default conversationModel
+export default conversationModel;
