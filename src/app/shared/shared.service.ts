@@ -42,6 +42,7 @@ export class SharedService{
 	async extractGuildInfo(content: Message) {
 		const guild = new IGuild(
 			content.guildId,
+			content.guild.name,
 			content.channelId,
 			content.id,
 			content.author.id,

@@ -24,4 +24,10 @@ export class FeatureFlagRepo{
 			$set: { ...payload }
 		});
 	}
+
+	async update_by_guildId(guildId: string, payload: any) {
+		await FeatureFlag.updateOne({ guildId }, {
+			$set: { ...payload }
+		});
+	}
 }

@@ -3,6 +3,7 @@ import { Message } from 'discord.js';
 export class IGuild{
 	constructor(
         public guildId?: string,
+        public guildName?: string,
         public channelId?: string,
         public messageId?: string,
         public userId?: string,

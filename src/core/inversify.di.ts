@@ -31,6 +31,7 @@ import { ConversationAPIService } from '../api/service/conversation/conversation
 import { ConversationRepository } from '../api/repository/conversation.repo';
 import { FeatureFlagRepo } from '../app/repository/feature_flag.repo';
 import { FeatureFlagService } from '../app/service/shared/featureFlag.service';
+import { PortalService } from '../app/service/portal.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -44,6 +45,7 @@ container.bind<ViolationRepository>(TYPES.ViolationRepository).to(ViolationRepos
 container.bind<TextLogRepository>(TYPES.TextLogRepository).to(TextLogRepository);
 container.bind<CommandService>(TYPES.CommandService).to(CommandService);
 container.bind<WakeService>(TYPES.WakeService).to(WakeService);
+container.bind<PortalService>(TYPES.PortalService).to(PortalService);
 
 ///VALORANT Service
 container.bind<ValorantService>(TYPES.ValorantService).to(ValorantService);

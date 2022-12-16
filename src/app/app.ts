@@ -9,6 +9,7 @@ import { CommandService } from './service/commands.service';
 import { WakeService } from './service/wake.service';
 import './config/command_init';
 import { FeatureFlagService } from './service/shared/featureFlag.service';
+import { PortalService } from './service/portal.service';
 
 const client = new Client({
 	intents: [
@@ -28,6 +29,7 @@ export class App{
 		@inject(TYPES.WakeService) private readonly wakeService: WakeService,
 		@inject(TYPES.CommandService) private readonly commandService: CommandService,
 		@inject(TYPES.FeatureFlagService) private readonly featureFlagService: FeatureFlagService,
+		@inject(TYPES.PortalService) private readonly portalService: PortalService,
 	){}
 
 	async start() {
@@ -50,6 +52,9 @@ export class App{
 			const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
 			if (!featureFlag) return;
 			guildInfo.featureFlag = { ...featureFlag.features };
+
+			///Portal
+			const isPortal = await this.portalService.validate_channel(guildInfo);
 
 			///Non-English Detection (Only Detects Hindi)
 			if (guildInfo.featureFlag.hindi) {

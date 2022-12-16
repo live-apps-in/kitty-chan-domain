@@ -7,6 +7,7 @@ export const TYPES = {
 	TextLogRepository: Symbol.for('TextLogRepository'),
 	CommandService: Symbol.for('CommandsService'),
 	WakeService: Symbol.for('WakeService'),
+	PortalService: Symbol.for('PortalService'),
 
 	///VALORANT Service
 	ValorantService: Symbol.for('ValorantService'),
