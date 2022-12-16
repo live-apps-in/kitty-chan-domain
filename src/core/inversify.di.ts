@@ -7,6 +7,7 @@ import '../api/controller/text.controller';
 import '../api/controller/dashboard.controller';
 import '../api/controller/alexa.controller';
 import '../api/controller/conversation/conversation.controller';
+import '../api/controller/feature_flag.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
@@ -28,6 +29,8 @@ import { ConversationService } from '../app/service/conversation/conversation.se
 import { ConversationController } from '../api/controller/conversation/conversation.controller';
 import { ConversationAPIService } from '../api/service/conversation/conversation_api.service';
 import { ConversationRepository } from '../api/repository/conversation.repo';
+import { FeatureFlagRepo } from '../app/repository/feature_flag.repo';
+import { FeatureFlagService } from '../app/service/shared/featureFlag.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -55,6 +58,7 @@ container.bind<ConversationAPIService>(TYPES.ConversationAPIService).to(Conversa
 
 ///Repository
 container.bind<ConversationRepository>(TYPES.ConversationRepository).to(ConversationRepository);
+container.bind<FeatureFlagRepo>(TYPES.FeatureFlagRepository).to(FeatureFlagRepo);
 
 
 ///Shared Service
@@ -63,6 +67,7 @@ container.bind<ActionService>(TYPES.ActionService).to(ActionService);
 container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
 container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService);
 container.bind<WhiteListService>(TYPES.WhiteListService).to(WhiteListService);
+container.bind<FeatureFlagService>(TYPES.FeatureFlagService).to(FeatureFlagService);
 
 
 export default container;

@@ -35,7 +35,7 @@ export class CommandService{
 		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return false;
 		
 		///Check Rank Set Command
-		if (messageChunk[1] === 'rank') {
+		if (messageChunk[1] === 'rank' && guild?.featureFlag?.valorant_set_rank) {
 			await this.set_rank(guild, messageChunk[2]);
 			return true;
 		}

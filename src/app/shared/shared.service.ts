@@ -49,7 +49,8 @@ export class SharedService{
 			content.author.avatar,
 			content.content,
 			content.author.bot,
-			content
+			content,
+			{}
 		);
 
 		return guild;

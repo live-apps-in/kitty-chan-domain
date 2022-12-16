@@ -11,5 +11,6 @@ export class IGuild{
         public messageContent?: string,
         public isBot?: boolean,
         public payload?: Message,
+        public featureFlag?: any,
 	){}
 }

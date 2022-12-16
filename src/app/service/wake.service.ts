@@ -24,12 +24,16 @@ export class WakeService{
 		const messageChunk = guild.messageContent.split(' ');
 
 		///Find Valorant Players
-		const isFindValPlayerCommand = await this.find_val_players(messageChunk, guild);
-		if (isFindValPlayerCommand) return;
+		if (guild?.featureFlag?.valorant_find_players) {
+			const isFindValPlayerCommand = await this.find_val_players(messageChunk, guild);
+			if (isFindValPlayerCommand) return;
+		}
 
 		///Detect Sad phrase
 		const detectSadPhrase = await this.detect_sad_phrase(messageChunk, guild);
 		if (detectSadPhrase) return;
+
+		return;
         
 	}
 

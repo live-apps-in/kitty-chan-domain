@@ -21,6 +21,7 @@ export const TYPES = {
 
 	///Repository
 	ConversationRepository: Symbol.for('ConversationRepository'),
+	FeatureFlagRepository: Symbol.for('FeatureFlagRepository'),
 	
 	///Shared Service
 	SharedService: Symbol.for('SharedService'),
@@ -28,5 +29,6 @@ export const TYPES = {
 	ActionService: Symbol.for('ActionService'),
 	LoggerService: Symbol.for('LoggerService'),
 	UtilityService: Symbol.for('UtilityService'),
-	WhiteListService: Symbol.for('WhiteListService')
+	WhiteListService: Symbol.for('WhiteListService'),
+	FeatureFlagService: Symbol.for('FeatureFlagService'),
 };
