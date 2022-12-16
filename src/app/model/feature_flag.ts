@@ -1,12 +1,14 @@
 import { model, Schema } from 'mongoose';
 
 export interface IFeatureFlag{
+    name: string
     guildId: string,
     features: any
 }
 
 const FeatureFlag = new Schema({
-	guidId: String,
+    name: String,
+	guildId: String,
 	features: Object
 });
 
