@@ -44,28 +44,17 @@ export class PortalService{
 
 		if (server?.portal?.channel !== channelId) return;
         
-		const portal = await Portal.findOne({guild: guildId});
+		const portal = await Portal.findOne({'guild.guildId': guildId});
 		if (!portal || portal?.guild?.length === 1) return;
 
-		const guilds: any[] = [];
-       
-		for (let index = 0; index < portal.guild.length; index++) {
-			const e = portal.guild[index];
 
-			if (e !== guildId) {
-				const temp_server = await FeatureFlag.findOne({ guildId: e.toString() });
-				guilds.push({
-					guildId: e,
-					channelId: temp_server.portal.channel,
-					message: `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent}`
-				});
-			}
-            
-		}
+		///Notify Other Portal Members
+		const getSessionGuild = await this.getSessionMembers(guild);
+		if (!getSessionGuild || getSessionGuild.length === 0) return;
 
-		console.log(guilds);
-		if (guilds.length === 0) return;
-		await this.message(guilds);
+		getSessionGuild.map(e => e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent}`);
+
+		await this.message(getSessionGuild);
 		return true;
 
 	}
@@ -84,42 +73,6 @@ export class PortalService{
 		await this.reply('I have updated your Portal! 💫. This channel will receive messages from other portals!', guild);
 	}
 
-	///Create a new Portal Connection
-	private async create(guild: IGuild) {
-		const guildId = guild.guildId.toString();
-		const channelId = guild.channelId.toString();
-
-		///Get Server Info
-		const server = await FeatureFlag.findOne({ guildId });
-
-		///Check if Portal Channel set
-		if (!server?.portal?.channel) {
-			await this.reply('You should be set portal Channel First', guild);
-			return;
-		}
-
-		///Check for valid Portal Channel
-		if (server?.portal?.channel !== channelId) {
-			await this.reply('You should be in the Portal channel to create Connections!', guild);
-			return;
-		}
-
-		///Check for existing Portal Session
-		const getPortal = await Portal.findOne({ guild: guildId });
-		if (getPortal) {
-			await this.reply('A session is already active', guild);
-			return;
-		}
-        
-		///Create new Connection
-		await Portal.insertMany({
-			guild: [guildId],
-			pass: randomNumber(1000, 9999)
-		});
-
-		await this.reply('Session Created! Waiting for people from other servers to accept connection!', guild);
-
-	}
 
 	///Join an existing Portal Connection
 	private async join(guild: IGuild, pass: string) {
@@ -143,7 +96,11 @@ export class PortalService{
 		///Join Session
 		await Portal.updateOne({ pass }, {
 			$push: {
-				guild: guildId
+				guild: {
+					serverName: guild.guildName,
+					guildId,
+					channelId
+				}
 			}
 		});
 		await this.reply('Successfully Joined the Portal!', guild);
@@ -162,16 +119,21 @@ export class PortalService{
 		const guildId = guild.guildId.toString();
 
 		///Get Current Portal session
-		const portal = await Portal.findOne({ guild: guildId });
-		if (!portal) await this.reply('No current sessions found!', guild);
+		const portal = await Portal.findOne({ 'guild.guildId': guildId });
+		if (!portal) {
+			await this.reply('No current sessions found!', guild);
+			return;
+		}
 	
-		await Portal.updateOne({ guild: guildId }, {
+		await Portal.updateOne({ 'guild.guildId': guildId }, {
 			$pull: {
-				guild: guildId
+				guild: {
+					guildId
+				}
 			}
 		});
 		
-		await this.reply('Portal Session Ended', guild);
+		await this.reply('Portal Session Ended ❌', guild);
 
 		///Notify other portal members if any
 		const getSessionGuild = await this.getSessionMembers(guild);
@@ -186,27 +148,22 @@ export class PortalService{
 
 	private async getSessionMembers(guild: IGuild) {
 		const guildId = guild.guildId.toString();
-		const channelId = guild.channelId.toString();
-		const server = await FeatureFlag.findOne({ guildId });
 
-		if (server?.portal?.channel !== channelId) return;
-        
-		const portal = await Portal.findOne({guild: guildId});
-		if (!portal || portal?.guild?.length === 1) return;
+		const portal = await Portal.findOne({ 'guild.guildId': guildId });
+		if (!portal || portal?.guild?.length === 1) return [];
 
 		const guilds: any[] = [];
        
 		for (let index = 0; index < portal.guild.length; index++) {
 			const e = portal.guild[index];
 
-			if (e !== guildId) {
-				const temp_server = await FeatureFlag.findOne({ guildId: e.toString() });
+			if (e.guildId !== guildId) {
 				guilds.push({
-					guildId: e,
-					channelId: temp_server.portal.channel
+					serverName: e.serverName,
+					guildId: e.guildId,
+					channelId: e.channelId
 				});
 			}
-            
 		}
 
 		return guilds;
