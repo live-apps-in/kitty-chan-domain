@@ -3,7 +3,7 @@ import { TYPES } from '../../core/inversify.types';
 import { randomNumber } from '../../utils/calc';
 import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';
-import FeatureFlag from '../model/server';
+import Server from '../model/server';
 import Portal from '../model/portal';
 import { ServerRepo } from '../repository/server.repo';
 import { ResponseService } from './shared/response.service';
@@ -36,7 +36,7 @@ export class PortalService{
 	async validate_channel(guild: IGuild) {
 		const guildId = guild.guildId.toString();
 		const channelId = guild.channelId.toString();
-		const server = await FeatureFlag.findOne({ guildId });
+		const server = await Server.findOne({ guildId });
 
 		///Check if portal command
 		const messageChunk = guild.messageContent.split(' ');
@@ -70,7 +70,7 @@ export class PortalService{
 			}
 		});
 
-		await this.reply('I have updated your Portal! 💫. This channel will receive messages from other portals!', guild);
+		await this.reply('I have updated the Portal! 💫. This channel will receive messages from other server Portals!', guild);
 	}
 
 
@@ -78,18 +78,18 @@ export class PortalService{
 	private async join(guild: IGuild, pass: string) {
 		const guildId = guild.guildId.toString();
 		const channelId = guild.channelId.toString();
-		const server = await FeatureFlag.findOne({ guildId });
+		const server = await Server.findOne({ guildId });
 
 		///Check for valid Portal Channel
 		if (server?.portal?.channel !== channelId) {
-			await this.reply('You should be in the Portal channel to Join a Session!', guild);
+			await this.reply('You should be in the Portal channel to Join a Session!  ⭕', guild);
 			return;
 		}
 
 		///Check for existing Portal Session
-		const getPortal = await Portal.findOne({ guild: guildId });
+		const getPortal = await Portal.findOne({ 'guild.guildId': guildId });
 		if (getPortal) {
-			await this.reply('A session is already active', guild);
+			await this.reply('A Portal session is already active!  ⭕', guild);
 			return;
 		}
 
@@ -103,12 +103,12 @@ export class PortalService{
 				}
 			}
 		});
-		await this.reply('Successfully Joined the Portal!', guild);
+		await this.reply('Successfully Joined the Portal! ✔', guild);
 
 		///Notify Other Portal Members
 		const getSessionGuild = await this.getSessionMembers(guild);
 		if (!getSessionGuild || getSessionGuild.length === 0) return;
-		getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Joined the Portal!`);
+		getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Joined the Portal! 🎉`);
 
 		await this.message(getSessionGuild);
 
@@ -121,10 +121,18 @@ export class PortalService{
 		///Get Current Portal session
 		const portal = await Portal.findOne({ 'guild.guildId': guildId });
 		if (!portal) {
-			await this.reply('No current sessions found!', guild);
+			await this.reply('No current sessions found! ⭕', guild);
 			return;
 		}
 	
+		///Notify other portal members if any
+		const getSessionGuild = await this.getSessionMembers(guild);
+		if (getSessionGuild || getSessionGuild.length !== 0) { 
+			getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Left the Portal! ❌`);
+		}
+
+		await this.message(getSessionGuild);
+
 		await Portal.updateOne({ 'guild.guildId': guildId }, {
 			$pull: {
 				guild: {
@@ -134,15 +142,6 @@ export class PortalService{
 		});
 		
 		await this.reply('Portal Session Ended ❌', guild);
-
-		///Notify other portal members if any
-		const getSessionGuild = await this.getSessionMembers(guild);
-		
-		if (!getSessionGuild || getSessionGuild.length === 0) return;
-		getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Left the Portal!`);
-
-		await this.message(getSessionGuild);
-
 		return;
 	}
 
@@ -150,7 +149,7 @@ export class PortalService{
 		const guildId = guild.guildId.toString();
 
 		const portal = await Portal.findOne({ 'guild.guildId': guildId });
-		if (!portal || portal?.guild?.length === 1) return [];
+		if (!portal) return [];
 
 		const guilds: any[] = [];
        
