@@ -52,9 +52,9 @@ export class App{
 			const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
 			if (!featureFlag) return;
 			guildInfo.featureFlag = { ...featureFlag.features };
-
 			///Portal
 			const isPortal = await this.portalService.validate_channel(guildInfo);
+			if (isPortal) return;
 
 			///Non-English Detection (Only Detects Hindi)
 			if (guildInfo.featureFlag.hindi) {

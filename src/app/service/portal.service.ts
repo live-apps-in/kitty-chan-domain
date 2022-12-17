@@ -23,10 +23,6 @@ export class PortalService{
 			await this.setPortal(guild);
 		}
 
-		if (messageChunk[2] === 'create') {
-			await this.create(guild);
-		}
-
 		if (messageChunk[2] === 'join') {
 			await this.join(guild, messageChunk[3]);
 		}
@@ -67,8 +63,10 @@ export class PortalService{
             
 		}
 
+		console.log(guilds);
 		if (guilds.length === 0) return;
 		await this.message(guilds);
+		return true;
 
 	}
 
@@ -83,7 +81,7 @@ export class PortalService{
 			}
 		});
 
-		await this.reply('I have updated your Portal!', guild);
+		await this.reply('I have updated your Portal! 💫. This channel will receive messages from other portals!', guild);
 	}
 
 	///Create a new Portal Connection
@@ -125,13 +123,6 @@ export class PortalService{
 
 	///Join an existing Portal Connection
 	private async join(guild: IGuild, pass: string) {
-		//Validate Portal Pass
-		const getPortalByPass = await Portal.findOne({ pass });
-		if (!pass || !getPortalByPass) {
-			await this.reply('Invalid Portal Pass!', guild);
-			return;
-		}
-
 		const guildId = guild.guildId.toString();
 		const channelId = guild.channelId.toString();
 		const server = await FeatureFlag.findOne({ guildId });
@@ -155,7 +146,14 @@ export class PortalService{
 				guild: guildId
 			}
 		});
-		await this.reply('Successfully Joined the Session!', guild);
+		await this.reply('Successfully Joined the Portal!', guild);
+
+		///Notify Other Portal Members
+		const getSessionGuild = await this.getSessionMembers(guild);
+		if (!getSessionGuild || getSessionGuild.length === 0) return;
+		getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Joined the Portal!`);
+
+		await this.message(getSessionGuild);
 
 	}
 
@@ -166,24 +164,23 @@ export class PortalService{
 		///Get Current Portal session
 		const portal = await Portal.findOne({ guild: guildId });
 		if (!portal) await this.reply('No current sessions found!', guild);
-        
-		if (portal.guild.length === 1) {
-			await Portal.deleteOne({guild: guildId});
-		} else {
-			const getSessionGuild = await this.getSessionMembers(guild);
-			if (!getSessionGuild || getSessionGuild.length === 0) return;
-			getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Left the Portal!`);
-
-			await this.message(getSessionGuild);
-			await Portal.updateOne({ guild: guildId }, {
-				$pull: {
-					guild: guildId
-				}
-			});
-            
-		}
-
+	
+		await Portal.updateOne({ guild: guildId }, {
+			$pull: {
+				guild: guildId
+			}
+		});
+		
 		await this.reply('Portal Session Ended', guild);
+
+		///Notify other portal members if any
+		const getSessionGuild = await this.getSessionMembers(guild);
+		
+		if (!getSessionGuild || getSessionGuild.length === 0) return;
+		getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Left the Portal!`);
+
+		await this.message(getSessionGuild);
+
 		return;
 	}
 
