@@ -22,7 +22,7 @@ export const TYPES = {
 
 	///Repository
 	ConversationRepository: Symbol.for('ConversationRepository'),
-	FeatureFlagRepository: Symbol.for('FeatureFlagRepository'),
+	ServerRepo: Symbol.for('ServerRepo'),
 	
 	///Shared Service
 	SharedService: Symbol.for('SharedService'),

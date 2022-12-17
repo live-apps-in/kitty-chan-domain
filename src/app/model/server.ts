@@ -1,13 +1,13 @@
 import { model, Schema } from 'mongoose';
 
-export interface IFeatureFlag{
+export interface IServer{
     name: string
     guildId: string,
     features: any,
     portal: any
 }
 
-const FeatureFlag = new Schema({
+const Server = new Schema({
 	name: String,
 	guildId: String,
 	features: Object,
@@ -15,4 +15,4 @@ const FeatureFlag = new Schema({
 });
 
 
-export default model<IFeatureFlag>('feature_flag', FeatureFlag);
+export default model<IServer>('server', Server);

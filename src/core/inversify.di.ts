@@ -29,7 +29,7 @@ import { ConversationService } from '../app/service/conversation/conversation.se
 import { ConversationController } from '../api/controller/conversation/conversation.controller';
 import { ConversationAPIService } from '../api/service/conversation/conversation_api.service';
 import { ConversationRepository } from '../api/repository/conversation.repo';
-import { FeatureFlagRepo } from '../app/repository/feature_flag.repo';
+import { ServerRepo } from '../app/repository/server.repo';
 import { FeatureFlagService } from '../app/service/shared/featureFlag.service';
 import { PortalService } from '../app/service/portal.service';
 
@@ -60,7 +60,7 @@ container.bind<ConversationAPIService>(TYPES.ConversationAPIService).to(Conversa
 
 ///Repository
 container.bind<ConversationRepository>(TYPES.ConversationRepository).to(ConversationRepository);
-container.bind<FeatureFlagRepo>(TYPES.FeatureFlagRepository).to(FeatureFlagRepo);
+container.bind<ServerRepo>(TYPES.ServerRepo).to(ServerRepo);
 
 
 ///Shared Service

@@ -1,32 +1,32 @@
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
-import FeatureFlag from '../model/feature_flag';
+import Server from '../model/server';
 
 @injectable()
-export class FeatureFlagRepo{
+export class ServerRepo{
 
 	async create(payload: any): Promise<void> {
-		await FeatureFlag.insertMany(payload);
+		await Server.insertMany(payload);
 	}
 
 	async getByGuildId(guildId: string) {
-		const features = await FeatureFlag.findOne({guildId});
+		const features = await Server.findOne({guildId});
 		return features;
 	}
 
 	async get() {
-		const features = await FeatureFlag.findOne({});
+		const features = await Server.findOne({});
 		return features;
 	}
 
 	async update(_id: Types.ObjectId, payload: any) {
-		await FeatureFlag.updateOne({ _id }, {
+		await Server.updateOne({ _id }, {
 			$set: { ...payload }
 		});
 	}
 
 	async update_by_guildId(guildId: string, payload: any) {
-		await FeatureFlag.updateOne({ guildId }, {
+		await Server.updateOne({ guildId }, {
 			$set: { ...payload }
 		});
 	}

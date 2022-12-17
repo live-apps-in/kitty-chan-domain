@@ -3,16 +3,16 @@ import { TYPES } from '../../core/inversify.types';
 import { randomNumber } from '../../utils/calc';
 import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';
-import FeatureFlag from '../model/feature_flag';
+import FeatureFlag from '../model/server';
 import Portal from '../model/portal';
-import { FeatureFlagRepo } from '../repository/feature_flag.repo';
+import { ServerRepo } from '../repository/server.repo';
 import { ResponseService } from './shared/response.service';
 
 
 @injectable()
 export class PortalService{
 	constructor(
-        @inject(TYPES.FeatureFlagRepository) private readonly featureFlagRepo: FeatureFlagRepo,
+        @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
         @inject(TYPES.ResponseService) private readonly responseService: ResponseService
 	) {}
 
@@ -75,7 +75,7 @@ export class PortalService{
 		const guildId = guild.guildId.toString();
 
 		///Update Portal Channel
-		await this.featureFlagRepo.update_by_guildId(guildId, {
+		await this.serverRepo.update_by_guildId(guildId, {
 			portal: {
 				channel: guild.channelId.toString()
 			}
