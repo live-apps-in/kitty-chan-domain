@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../core/inversify.types';
 import { LanguageFilter } from './service/languageFilter.service';
-import { Client, GatewayIntentBits, SlashCommandBuilder } from 'discord.js';
+import { ActivityType, Client, GatewayIntentBits, SlashCommandBuilder } from 'discord.js';
 import 'dotenv/config';
 import { SharedService } from './shared/shared.service';
 import { LoggerService } from './service/logger.service';
@@ -35,7 +35,8 @@ export class App{
 	async start() {
 		///Connect to Discord Server
 		client.on('ready', () => {
-			client.user.setActivity('with Messi 🐐');
+			// client.user.setActivity('with Messi 🐐');
+			client.user.setActivity('Jaga\'s rants', { type: ActivityType.Listening});
 			console.log('kitty chan connected 😸');
 				
 		});
