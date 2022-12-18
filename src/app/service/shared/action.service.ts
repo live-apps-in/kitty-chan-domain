@@ -42,6 +42,10 @@ class ActionFactory{
 			config.route = `/guilds/${guildId}/members/${userId}/roles/${body.roleId}`;
 			config.method = 'delete';
 			break;
+		case ACTIONS.editChannel:
+			config.route = `/channels/${guild.channelId}`;
+			config.method = 'patch';
+			break;
          
 		default:
 			break;

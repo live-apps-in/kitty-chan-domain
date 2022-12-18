@@ -1,4 +1,6 @@
 export enum ACTIONS{
     setRole = 'setRole',
-    deleteRole = 'deleteRole'
+    deleteRole = 'deleteRole',
+
+    editChannel = 'editChannel'
 }

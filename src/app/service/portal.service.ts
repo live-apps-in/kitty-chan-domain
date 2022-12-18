@@ -7,13 +7,17 @@ import Server from '../model/server';
 import Portal from '../model/portal';
 import { ServerRepo } from '../repository/server.repo';
 import { ResponseService } from './shared/response.service';
+import { ActionService } from './shared/action.service';
+import { ACTIONS } from '../enum/action';
+import { portal_active_description, portal_inactive_description } from '../content/descriptions';
 
 
 @injectable()
 export class PortalService{
 	constructor(
         @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
-        @inject(TYPES.ResponseService) private readonly responseService: ResponseService
+        @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
+        @inject(TYPES.ActionService) private readonly actionService: ActionService,
 	) {}
 
 	/////VALIDATION
@@ -94,7 +98,7 @@ export class PortalService{
 		}
 
 		///Join Session
-		await Portal.updateOne({ pass }, {
+		await Portal.updateOne({}, {
 			$push: {
 				guild: {
 					serverName: guild.guildName,
@@ -104,6 +108,15 @@ export class PortalService{
 			}
 		});
 		await this.reply('Successfully Joined the Portal! ✔', guild);
+
+		///Update Channel Topic
+		await this.actionService.call({
+			type: ACTIONS.editChannel,
+			guild: guild,
+			body: {
+				topic: portal_active_description
+			}
+		});
 
 		///Notify Other Portal Members
 		const getSessionGuild = await this.getSessionMembers(guild);
@@ -138,6 +151,15 @@ export class PortalService{
 				guild: {
 					guildId
 				}
+			}
+		});
+
+		///Update Channel Topic
+		await this.actionService.call({
+			type: ACTIONS.editChannel,
+			guild: guild,
+			body: {
+				topic: portal_inactive_description
 			}
 		});
 		
