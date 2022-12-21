@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { IGuild } from '../interface/shared.interface';
-import text_log from '../model/text_log';
+import text_log from '../../model/text_log';
 import { TextLogRepository } from '../repository/textLogRepo';
 import { ViolationRepository } from '../repository/violation.repo';
 

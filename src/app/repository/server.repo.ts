@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
-import Server from '../model/server';
+import Server from '../../model/server';
 
 @injectable()
 export class ServerRepo{

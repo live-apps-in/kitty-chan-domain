@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import Violation from '../model/violation';
+import Violation from '../../model/violation';
 
 @injectable()
 export class ViolationRepository{

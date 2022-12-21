@@ -1,4 +1,4 @@
-import TextLog from '../../app/model/text_log';
+import TextLog from '../../model/text_log';
 import 'dotenv/config';
 import { injectable } from 'inversify';
 
