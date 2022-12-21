@@ -26,12 +26,13 @@ import { AlexaService } from '../api/service/alexa.service';
 import { ValorantService } from '../app/service/valorant/valorant.service';
 import { UtilityService } from '../app/service/shared/utils.service';
 import { ConversationService } from '../app/service/conversation/conversation.service';
-import { ConversationController } from '../api/controller/conversation/conversation.controller';
 import { ConversationAPIService } from '../api/service/conversation/conversation_api.service';
 import { ConversationRepository } from '../api/repository/conversation.repo';
 import { ServerRepo } from '../app/repository/server.repo';
 import { FeatureFlagService } from '../app/service/shared/featureFlag.service';
 import { PortalService } from '../app/service/portal.service';
+import { GamesService } from '../app/service/games/games.service';
+import { RPSGameService } from '../app/service/games/RPSGame.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -49,6 +50,10 @@ container.bind<PortalService>(TYPES.PortalService).to(PortalService);
 
 ///VALORANT Service
 container.bind<ValorantService>(TYPES.ValorantService).to(ValorantService);
+
+///Game Service
+container.bind<GamesService>(TYPES.GameService).to(GamesService);
+container.bind<RPSGameService>(TYPES.RPSGameService).to(RPSGameService);
 
 ///Conversation Service
 container.bind<ConversationService>(TYPES.ConversationService).to(ConversationService);

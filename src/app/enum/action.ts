@@ -1,6 +1,11 @@
 export enum ACTIONS{
+    ///Role
     setRole = 'setRole',
     deleteRole = 'deleteRole',
 
-    editChannel = 'editChannel'
+    ///Channel
+    editChannel = 'editChannel',
+
+    ///Thread
+    createThreadFromMessage = 'createThreadFromMessage'
 }

@@ -10,7 +10,7 @@ import { WakeService } from './service/wake.service';
 import './config/command_init';
 import { FeatureFlagService } from './service/shared/featureFlag.service';
 import { PortalService } from './service/portal.service';
-
+import { GamesService } from './service/games/games.service';
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -30,6 +30,7 @@ export class App{
 		@inject(TYPES.CommandService) private readonly commandService: CommandService,
 		@inject(TYPES.FeatureFlagService) private readonly featureFlagService: FeatureFlagService,
 		@inject(TYPES.PortalService) private readonly portalService: PortalService,
+		@inject(TYPES.GameService) private readonly gameService: GamesService,
 	){}
 
 	async start() {
@@ -55,9 +56,13 @@ export class App{
 
 			guildInfo.featureFlag = { ...featureFlag.features };
 
-			///Portal
+			///Check Portal Intent
 			const isPortal = await this.portalService.validate_channel(guildInfo);
 			if (isPortal) return;
+
+			///Check Game Intent
+			const isGame = await this.gameService.validateGame(guildInfo);
+			if (isGame) return;
 
 			///Non-English Detection (Only Detects Hindi)
 			if (guildInfo.featureFlag.hindi) {
@@ -77,6 +82,9 @@ export class App{
 
 			///Wake Words
 			await this.wakeService.validate(guildInfo);
+
+			///Games
+			await this.gameService.call(guildInfo);
 
 			///Log Good Text Count
 			await this.loggerService.text_count_logger(guildInfo);

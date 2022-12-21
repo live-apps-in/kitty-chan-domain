@@ -12,6 +12,10 @@ export const TYPES = {
 	///VALORANT Service
 	ValorantService: Symbol.for('ValorantService'),
 	
+	///Game Service
+	GameService: Symbol.for('GameService'),
+	RPSGameService: Symbol.for('RPSGameService'),
+	
 	///Conversation Service
 	ConversationService: Symbol.for('ConversationService'),
 

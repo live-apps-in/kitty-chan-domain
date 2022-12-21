@@ -16,9 +16,9 @@ export class ActionService{
         @inject(TYPES.SharedService) private readonly sharedService: SharedService
 	) { }
     
-	async call(payload: RespondConfig): Promise<void> {
+	async call(payload: RespondConfig): Promise<any> {
 		const config = await new ActionFactory().getActionConfig(payload.type, payload.guild, payload.body);
-		await this.sharedService.axiosInstance({
+		return await this.sharedService.axiosInstance({
 			method: config.method,
 			route: config.route,
 			body: payload.body
@@ -34,6 +34,7 @@ class ActionFactory{
 		const config: any = {};
 
 		switch (type) {
+		///Roles
 		case ACTIONS.setRole:
 			config.route = `/guilds/${guildId}/members/${userId}/roles/${body.roleId}`;
 			config.method = 'put';
@@ -42,9 +43,17 @@ class ActionFactory{
 			config.route = `/guilds/${guildId}/members/${userId}/roles/${body.roleId}`;
 			config.method = 'delete';
 			break;
+			
+		///Channel
 		case ACTIONS.editChannel:
 			config.route = `/channels/${guild.channelId}`;
 			config.method = 'patch';
+			break;
+			
+		///Thread
+		case ACTIONS.createThreadFromMessage:
+			config.route = `/channels/${guild.channelId}/messages/${guild.messageId}/threads`;
+			config.method = 'post';
 			break;
          
 		default:

@@ -8,8 +8,6 @@ export class UtilityService{
 			libIndex: 0
 		};
 
-		console.log(messageChunk, phraseLib);
-
 		for (let index = 0; index < phraseLib.length; index++) {
 			if (res.isMatch) break;
 

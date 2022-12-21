@@ -14,7 +14,7 @@ interface axiosConfig{
 export class SharedService{
 
 	/////Global Axios Config
-	async axiosInstance(payload: axiosConfig): Promise<void> {
+	async axiosInstance(payload: axiosConfig): Promise<any> {
 		const { method, route } = payload;
 		const headers = {
 			Authorization: `Bot ${process.env.KITTY_CHAN_TOKEN}`
@@ -30,12 +30,15 @@ export class SharedService{
 			headers
 		};
 		
+		let resData: any;
 		await axios(axiosConfig)
-			// .then(res=> console.log(res))
+			.then(res=> resData = res.data)
 			.catch(err => {
 				console.log(err.message);
-				// console.log(err);
+				console.log(err);
 			});
+		
+		return resData;
 	}
 
 	////Extract users and channel info
