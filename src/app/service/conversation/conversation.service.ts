@@ -29,8 +29,9 @@ export class ConversationService{
 
 		///Validate Full Match
 		const validatePhraseMatch = await this.utilService.match_wake_phrase_db(messageChunk, matchPhraseChunk);
+		if (!validatePhraseMatch.isMatch) return;
 
-		///Randomize response
+		///Randomize response document
 		if (resPhraseIds === 1) {
 		    resPhraseId = resPhraseIds[0];
 		} else {
@@ -38,17 +39,7 @@ export class ConversationService{
 			resPhraseId = resPhraseIds[randomResponse - 1]; 
 		}
 
-		///Randomize response
-		if (resPhraseIds === 1) {
-		    resPhraseId = resPhraseIds[0];
-		} else {
-			const randomResponse = randomNumber(1, resPhraseIds.length);
-			resPhraseId = resPhraseIds[randomResponse - 1]; 
-		}
-		const filter = await this.utilService.match_wake_phrase(messageChunk, conversation_phrase);
-		if (!filter.isMatch) return;
-
-		///Randomize response
+		///Randomize response from document
 		const getResPhrase = await this.conversationRepo.get_convo_res_by_id(resPhraseId);
 		if (!getResPhrase?.phrase) return;
 
