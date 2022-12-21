@@ -37,7 +37,7 @@ export class App{
 		///Connect to Discord Server
 		client.on('ready', () => {
 			// client.user.setActivity('with Messi 🐐');
-			client.user.setActivity('to Jaga\'s rants', { type: ActivityType.Listening});
+			client.user.setActivity('rock paper scissors', { type: ActivityType.Playing});
 			console.log('kitty chan connected 😸');
 				
 		});
