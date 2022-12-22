@@ -18,49 +18,65 @@ export class RPSGameService{
     
 	async initiate(guild: IGuild) {
         
-		const createThread = await this.actionService.call({
-			type: ACTIONS.createThreadFromMessage,
-			guild,
-			body: {
-				name: `kitty chan VS ${guild.username}`,
-				auto_archive_duration: 60
+		const thread = await guild.payload.startThread({
+			name: `kitty chan VS ${guild.username}`,
+			autoArchiveDuration: 60,
+			reason: `An insane Rock Paper Scissors battle between kitty chan & ${guild.username}`,
+		});
+
+
+		///Check Ongoing session
+		if (!thread) return;
+		const getOngoingSession = await GameSession.findOne({ userId: guild.userId, guildId: guild.guildId });
+		
+		if (getOngoingSession) {
+			await GameSession.deleteOne({ _id: getOngoingSession._id }).then(async res => {
+				if (res.deletedCount === 1) {
+					const thisThread = guild.payload.guild.channels.cache.find(x => x.id === getOngoingSession.threadId);
+					await thisThread.delete();
+				}
+			});
+		}
+		
+	
+		///Create Session
+		await GameSession.insertMany({
+			userId: guild.userId,
+			threadId: thread.id,
+			guildId: guild.guildId,
+			game_data: {
+				rounds_completed: 0,
+				user_win_count: 0,
+				kitty_win_count: 0
 			}
 		});
 
-        
-		///Send Game info
-		if (createThread) {
-			///Create Session
-			await GameSession.insertMany({
-				userId: guild.userId,
-				threadId: createThread.id,
-				game_data: {
-					rounds_completed: 0,
-					user_win_count: 0,
-					kitty_win_count: 0
-				}
-			});
-
-			await this.reply(
-				REPLY.sendMessage,
-				{ channelId: createThread.id },
-				RPS_GAME_Content.start
-			);
-		}
+		await this.reply(
+			REPLY.sendMessage,
+			{ channelId: thread.id },
+			RPS_GAME_Content.start
+		);
+		
 
 		return;
 	}
 
 	async actions(guild: IGuild, action: string) {
 		switch (action) {
+		///Shoot
 		case 'rock':
 		case 'paper':
 		case 'scissors':
 			await this.shoot(action, guild);
 			break;
-            
+        
+		///Restart Game
+		case 'restart':
+			await this.restart(guild);
+			break;
+			
+		///End game
 		case 'stop':
-		case 'bye':
 			await this.delete(guild);
 			break;
 		default:
@@ -120,6 +136,31 @@ export class RPSGameService{
 			RPS_GAME_Content.shoot(resContent)
 		);
         
+	}
+
+	private async restart(guild: IGuild) {
+		await GameSession.updateOne({ threadId: guild.channelId, guildId: guild.guildId }, {
+			$set: {
+				'game_data.rounds_completed': 0,
+				'game_data.user_win_count': 0,
+				'game_data.kitty_win_count': 0,
+				status: 'started'
+			}
+		});
+
+		await this.reply(
+			REPLY.sendMessage,
+			{ channelId: guild.channelId },
+			RPS_GAME_Content.start
+		);
+
+		return;
+	}
+
+	///Delete Game Session
+	 async deleteSession(threadId: string) {
+		///Delete Game Session
+		await GameSession.deleteOne({ threadId });
 	}
 
 	///End Game

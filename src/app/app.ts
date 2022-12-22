@@ -11,6 +11,7 @@ import './config/command_init';
 import { FeatureFlagService } from './service/shared/featureFlag.service';
 import { PortalService } from './service/portal.service';
 import { GamesService } from './service/games/games.service';
+import { RPSGameService } from './service/games/RPSGame.service';
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -31,12 +32,12 @@ export class App{
 		@inject(TYPES.FeatureFlagService) private readonly featureFlagService: FeatureFlagService,
 		@inject(TYPES.PortalService) private readonly portalService: PortalService,
 		@inject(TYPES.GameService) private readonly gameService: GamesService,
+		@inject(TYPES.RPSGameService) private readonly rpsGameService:RPSGameService,
 	){}
 
 	async start() {
 		///Connect to Discord Server
 		client.on('ready', () => {
-			// client.user.setActivity('with Messi 🐐');
 			client.user.setActivity('rock paper scissors', { type: ActivityType.Playing});
 			console.log('kitty chan connected 😸');
 				
@@ -91,6 +92,13 @@ export class App{
 
 		});
 
+		/////Handle Thread Delete
+		// client.on('threadDelete', async message => {
+		// 	const threadId = message.id
+		// 	await this.rpsGameService.deleteSession(threadId)
+		// })
+
+		///Login kitty chan
 		client.login(process.env.KITTY_CHAN_TOKEN);
 
 	}
