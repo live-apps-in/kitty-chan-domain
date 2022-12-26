@@ -60,19 +60,14 @@ export class SharedService{
 		return guild;
 	}
 
-	// async extractGuildInfoFromInteraction(interaction: ChatInputCommandInteraction) {
-	// 	const guild = new IGuild(
-	// 		interaction.guildId,
-	// 		interaction.channelId,
-	// 		interaction.id,
-	// 		interaction.author.id,
-	// 		interaction.author.username,
-	// 		interaction.author.avatar,
-	// 		interaction.content,
-	// 		interaction.author.bot,
-	// 		interaction
-	// 	);
-
-	// 	return guild;
-	// }
+	async filterMentions(guild: IGuild) {
+		const mentions = guild.payload.mentions;
+		return {
+			everyone: mentions.everyone,
+			user: mentions.members,
+			channel: mentions.channels,
+			role: mentions.roles
+		};
+		
+	}
 }

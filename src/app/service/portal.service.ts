@@ -10,6 +10,7 @@ import { ResponseService } from './shared/response.service';
 import { ActionService } from './shared/action.service';
 import { ACTIONS } from '../enum/action';
 import { portal_active_description, portal_inactive_description } from '../content/descriptions';
+import { SharedService } from '../shared/shared.service';
 
 
 @injectable()
@@ -18,6 +19,7 @@ export class PortalService{
         @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
         @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
         @inject(TYPES.ActionService) private readonly actionService: ActionService,
+        @inject(TYPES.SharedService) private readonly sharedService: SharedService,
 	) {}
 
 	/////VALIDATION
@@ -45,12 +47,19 @@ export class PortalService{
 		///Check if portal command
 		const messageChunk = guild.messageContent.split(' ');
 		if (messageChunk[1] === 'portal') return;
-
 		if (server?.portal?.channel !== channelId) return;
         
+		
+		///Check for active portal members
 		const portal = await Portal.findOne({'guild.guildId': guildId});
 		if (!portal || portal?.guild?.length === 1) return;
-
+		
+		///Check if message contains mentions
+		const { everyone, user, channel, role } = await this.sharedService.filterMentions(guild);
+		if (everyone || user.size !== 0 || channel.size !== 0 || role.size !== 0) {
+			await this.reply('You cannot use mentions in Portal ⚠. This message will not be delivered to other Portals but can be seen by members within this server.', guild);
+			return;
+		}
 
 		///Notify Other Portal Members
 		const getSessionGuild = await this.getSessionMembers(guild);
