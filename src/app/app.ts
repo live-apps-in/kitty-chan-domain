@@ -38,7 +38,7 @@ export class App{
 	async start() {
 		///Connect to Discord Server
 		client.on('ready', () => {
-			client.user.setActivity('to people\'s wishes!', { type: ActivityType.Listening});
+			client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
 			console.log('kitty chan connected 😸');
 				
 		});
