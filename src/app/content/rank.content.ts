@@ -13,7 +13,7 @@ export const RANK_MESSAGES = {
 };
 
 export const find_valo_unranked_template = (guild: IGuild) => {
-	return `<@&${VALORANT_ROLE_ID}> Hello, <@${guild.userId}> wants to play VALORANT now!`;
+	return `Hello, <@${guild.userId}> wants to play VALORANT now!`;
 };
 
 export const find_valo_comp_template = async (guild: IGuild) => {
