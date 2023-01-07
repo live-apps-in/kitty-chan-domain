@@ -4,6 +4,7 @@ import { IGuild } from '../interface/shared.interface';
 import text_log from '../../model/text_log';
 import { TextLogRepository } from '../repository/textLogRepo';
 import { ViolationRepository } from '../repository/violation.repo';
+import kitty_chan from '../../model/kitty_chan';
 
 @injectable()
 export class LoggerService{
@@ -11,6 +12,12 @@ export class LoggerService{
         @inject(TYPES.ViolationRepository) private readonly violationRepo: ViolationRepository,
         @inject(TYPES.TextLogRepository) private readonly textLogRepo:TextLogRepository,
 	) { }
+
+	async log_message_count() {
+		await kitty_chan.updateOne({}, {
+			$inc: {messageCount: 1}
+		});
+	}
 
 	async text_count_logger(guild: IGuild) {
 		const getTextLog = await this.textLogRepo.count_text_log(guild.userId, guild.guildId);

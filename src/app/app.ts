@@ -32,7 +32,6 @@ export class App{
 		@inject(TYPES.FeatureFlagService) private readonly featureFlagService: FeatureFlagService,
 		@inject(TYPES.PortalService) private readonly portalService: PortalService,
 		@inject(TYPES.GameService) private readonly gameService: GamesService,
-		@inject(TYPES.RPSGameService) private readonly rpsGameService:RPSGameService,
 	){}
 
 	async start() {
@@ -47,6 +46,9 @@ export class App{
 		client.on('messageCreate', async (message) => {
 			///Extract Guild Info
 			const guildInfo = await this.sharedService.extractGuildInfo(message);
+			
+			///Log
+			await this.loggerService.log_message_count();
 			
 			///Validate if Bot message
 			if (guildInfo.isBot) return;
