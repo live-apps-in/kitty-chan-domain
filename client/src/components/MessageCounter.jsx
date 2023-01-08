@@ -1,27 +1,25 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import '../css/MessageCounter.css'
 import { comma_separate_number } from '../helper/helper';
+import { fetchMessageCount } from '../service/analytics';
+
 
 export const MessageCounter = () => {
     const [count, setCount] = useState(0);
-    const countText = count
-    // const kitty_url = 'http://localhost:5000'
-    const kitty_url = 'https://kittychan.jagalive.in'
 
-    const fetchCount = async () => {
-        const countData = await axios.get(kitty_url + '/analytics/message_count')
-        if (countData.data)  return countData.data.messageCount 
-        return 0
-        
-    }
-
+    //Fetch Initial Message Count
+    useEffect(() => {        
+        const fetchCount = async() => {
+            const initialCount = await fetchMessageCount() || 0
+            setCount(initialCount)
+        }
+        fetchCount()
+    }, [])
+    
+    ///Fetch count in an interval of time
     useEffect(() => {
-        document.title = `kitty chan`;
-        
-        /// seconds Interval
         const interval = setInterval(async () => {
-        const countApi = await fetchCount()
+        const countApi = await fetchMessageCount()
       setCount(countApi || 0);
     }, 3000);
 
