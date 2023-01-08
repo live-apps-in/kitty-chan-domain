@@ -10,6 +10,12 @@ export class DashboardController{
         @inject(TYPES.AnalyticsService) private readonly analyticsService: AnalyticsService
 	) { }
     
+	///Get Message Count
+	@httpGet('/message_count')
+	async messageCount() {
+		return this.analyticsService.messageCount()
+	}
+
     @httpGet('/text_leaderboard')
 	async text_leaderboard(){
 		const leaderboard = await this.analyticsService.text_leaderboard();
