@@ -4,7 +4,7 @@ import '../css/MessageCounter.css'
 import { comma_separate_number } from '../helper/helper';
 
 export const MessageCounter = () => {
-    const [count, setCount] = useState(1939494394);
+    const [count, setCount] = useState(0);
     const countText = count
     // const kitty_url = 'http://localhost:5000'
     const kitty_url = 'https://kittychan.jagalive.in'
