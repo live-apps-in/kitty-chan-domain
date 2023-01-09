@@ -7,7 +7,8 @@ export interface IKittyChan{
 }
 
 const KittyChan: Schema = new Schema({
-	messageCount: Number
+	messageCount: { type: Number, bigint: true, default: 0 }
+    
 });
 
 export default model<IKittyChan>('kitty_chan', KittyChan);

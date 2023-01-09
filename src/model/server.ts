@@ -11,9 +11,17 @@ export interface IServer{
 const Server = new Schema({
 	name: String,
 	guildId: String,
-	features: Object,
+	features: {
+		type: Object,
+		default: {
+			strongLanguage: false,
+			hindi: false,
+			valorant_find_players: false,
+			valorant_set_rank: false
+		}
+	},
 	portal: Object,
-	messageCount: Number
+	messageCount: { type: Number, bigint: true, default: 0 }
 });
 
 

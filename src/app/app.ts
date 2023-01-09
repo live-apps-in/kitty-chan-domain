@@ -12,6 +12,7 @@ import { FeatureFlagService } from './service/shared/featureFlag.service';
 import { PortalService } from './service/portal.service';
 import { GamesService } from './service/games/games.service';
 import { RPSGameService } from './service/games/RPSGame.service';
+import server from '../model/server';
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -94,11 +95,37 @@ export class App{
 
 		});
 
-		/////Handle Thread Delete
-		// client.on('threadDelete', async message => {
-		// 	const threadId = message.id
-		// 	await this.rpsGameService.deleteSession(threadId)
-		// })
+		///Handle bot added to new Server
+		client.on('guildCreate', async (guild) => {
+			///Register Guild
+			await server.insertMany({
+				name: guild.name,
+				guildId: guild.id
+			});
+
+			///Jaga's Discord ID
+			const userId = '516438995824017420';
+
+			client.users.fetch(userId)
+  			.then(user => {
+    			user.send(`I've been added to ${guild.name} - ${guild.id}`);
+  			})
+  			.catch(console.error);
+		});
+
+		///Handle bot added to new Server
+		client.on('guildDelete', async (guild) => {
+	
+			///Jaga's Discord ID
+			const userId = '516438995824017420';
+
+			client.users.fetch(userId)
+  			.then(user => {
+    			user.send(`I've been removed from to ${guild.name} - ${guild.id}`);
+  			})
+  			.catch(console.error);
+		});
+
 
 		///Login kitty chan
 		client.login(process.env.KITTY_CHAN_TOKEN);
