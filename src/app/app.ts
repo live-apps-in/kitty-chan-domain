@@ -48,7 +48,7 @@ export class App{
 			const guildInfo = await this.sharedService.extractGuildInfo(message);
 			
 			///Log
-			await this.loggerService.log_message_count();
+			await this.loggerService.log_message_count(guildInfo);
 			
 			///Validate if Bot message
 			if (guildInfo.isBot) return;

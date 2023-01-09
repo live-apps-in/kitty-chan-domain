@@ -13,7 +13,7 @@ export class DashboardController{
 	///Get Message Count
 	@httpGet('/message_count')
 	async messageCount() {
-		return this.analyticsService.messageCount()
+		return this.analyticsService.messageCount();
 	}
 
     @httpGet('/text_leaderboard')

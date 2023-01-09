@@ -10,7 +10,7 @@ export class AnalyticsService{
     
 
 	async messageCount() {
-		const count = await kitty_chan.findOne({})
+		const count = await kitty_chan.findOne({});
 		return count;
 	}
 	

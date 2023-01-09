@@ -5,6 +5,7 @@ import text_log from '../../model/text_log';
 import { TextLogRepository } from '../repository/textLogRepo';
 import { ViolationRepository } from '../repository/violation.repo';
 import kitty_chan from '../../model/kitty_chan';
+import server from '../../model/server';
 
 @injectable()
 export class LoggerService{
@@ -13,10 +14,19 @@ export class LoggerService{
         @inject(TYPES.TextLogRepository) private readonly textLogRepo:TextLogRepository,
 	) { }
 
-	async log_message_count() {
+	async log_message_count(guild: IGuild) {
+		///Global Count
 		await kitty_chan.updateOne({}, {
 			$inc: {messageCount: 1}
 		});
+
+		///Individual Guild
+		if (!guild.isBot) {
+			await server.updateOne({ guildId: guild.guildId }, {
+				$inc: { messageCount: 1 }
+			});
+		}
+		return;
 	}
 
 	async text_count_logger(guild: IGuild) {
