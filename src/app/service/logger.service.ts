@@ -20,7 +20,9 @@ export class LoggerService{
 			$inc: {messageCount: 1}
 		});
 
-		io.emit('messageCount', {count: 11});
+		///Update all Listeners
+		io.emit('messageCount', { isMessageEvent: true });
+		
 		///Individual Guild
 		if (!guild.isBot) {
 			await server.updateOne({ guildId: guild.guildId }, {
