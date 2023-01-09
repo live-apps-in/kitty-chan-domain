@@ -18,5 +18,8 @@ pipeline {
                 sh 'docker run -p 5000:5000 -d --name kitty-chan kitty-chan'
             }
         }
+        stage('Notify GitHub') {
+            githubStatus color: 'SUCCESS', context: 'jenkins/build'
+        }
     }
 }
