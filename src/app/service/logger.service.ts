@@ -6,7 +6,7 @@ import { TextLogRepository } from '../repository/textLogRepo';
 import { ViolationRepository } from '../repository/violation.repo';
 import kitty_chan from '../../model/kitty_chan';
 import server from '../../model/server';
-
+import io from '../../main';
 @injectable()
 export class LoggerService{
 	constructor(
@@ -20,6 +20,7 @@ export class LoggerService{
 			$inc: {messageCount: 1}
 		});
 
+		io.emit('messageCount', {count: 11});
 		///Individual Guild
 		if (!guild.isBot) {
 			await server.updateOne({ guildId: guild.guildId }, {

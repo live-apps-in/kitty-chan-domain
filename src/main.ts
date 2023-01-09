@@ -10,6 +10,9 @@ import * as hbs from 'express-handlebars';
 import path from 'path';
 import './database/mongo';
 import { HttpException, ValidationException } from './core/exception';
+import { createServer } from 'http';
+import './infrastructure/sockets';
+import { Server } from 'socket.io';
 
 const server = new InversifyExpressServer(container);
 server.setConfig((app) => {
@@ -53,12 +56,28 @@ async function bootstrap() {
 
 bootstrap();
 const app = server.build();
-app.listen(process.env.PORT || 5000, () => {
+
+//Use http server for Web Sockets
+const httpServer = createServer(app);	
+httpServer.listen(process.env.PORT || 5000, () => {
 	console.log('App Started');
 });
 
+
+const io = new Server(httpServer, {
+	cors: {
+		origin: '*'
+	}
+});
+
+io.on('connection', (socket) => {
+	console.log('Connected to Socket');
+ 		socket.emit('messageCount', {count: 12});
+});
 
 /////* PUBLIC PAGES *//////
 app.get('/privacy-policy', (req,res) => {
 	res.render('privacy-policy.hbs');
 });
+
+export default io;
