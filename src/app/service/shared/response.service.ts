@@ -25,6 +25,21 @@ export class ResponseService{
 		});
 	}
 
+	async replyMessage(content: string, guild: IGuild) {
+		await this.respond({
+			type: REPLY.replyMessage,
+			guild,
+			body: {
+				content,
+				message_reference: {
+					message_id: guild.messageId
+				}
+			}
+		});
+
+		return;
+	}
+
 }
 
 

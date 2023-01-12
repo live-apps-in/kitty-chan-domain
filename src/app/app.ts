@@ -13,7 +13,7 @@ import { PortalService } from './service/portal.service';
 import { GamesService } from './service/games/games.service';
 import { RPSGameService } from './service/games/RPSGame.service';
 import server from '../model/server';
-const client = new Client({
+export const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
@@ -125,7 +125,6 @@ export class App{
   			})
   			.catch(console.error);
 		});
-
 
 		///Login kitty chan
 		client.login(process.env.KITTY_CHAN_TOKEN);

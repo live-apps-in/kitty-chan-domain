@@ -8,6 +8,7 @@ import '../api/controller/dashboard.controller';
 import '../api/controller/alexa.controller';
 import '../api/controller/conversation/conversation.controller';
 import '../api/controller/feature_flag.controller';
+import '../api/controller/config.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
@@ -33,6 +34,7 @@ import { FeatureFlagService } from '../app/service/shared/featureFlag.service';
 import { PortalService } from '../app/service/portal.service';
 import { GamesService } from '../app/service/games/games.service';
 import { RPSGameService } from '../app/service/games/RPSGame.service';
+import { MathService } from '../app/service/math.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -57,6 +59,9 @@ container.bind<RPSGameService>(TYPES.RPSGameService).to(RPSGameService);
 
 ///Conversation Service
 container.bind<ConversationService>(TYPES.ConversationService).to(ConversationService);
+
+///Math Service
+container.bind<MathService>(TYPES.MathService).to(MathService);
 
 ///API Service
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);

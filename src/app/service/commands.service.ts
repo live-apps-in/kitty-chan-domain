@@ -12,6 +12,7 @@ import { flip_coin_wake_word } from '../data/wake_words/general';
 import { ACTIONS } from '../enum/action';
 import { ConversationService } from './conversation/conversation.service';
 import { PortalService } from './portal.service';
+import { MathService } from './math.service';
 
 @injectable()
 export class CommandService{
@@ -22,6 +23,7 @@ export class CommandService{
         @inject(TYPES.UtilityService) private readonly utilityService: UtilityService,
         @inject(TYPES.ConversationService) private readonly conversationService: ConversationService,
         @inject(TYPES.PortalService) private readonly portalService: PortalService,
+        @inject(TYPES.MathService) private readonly mathService:MathService,
 	) { }
     
 	///Validate and Filter Command
@@ -51,6 +53,12 @@ export class CommandService{
 		///Flip a coin
 		if (messageChunk[1] === 'portal') {
 			await this.portalService.validate(messageChunk, guild);
+			return true;
+		}
+
+		///Math Equation
+		if (messageChunk[1] === 'math') {
+			await this.mathService.evaluate(messageChunk[2], guild);
 			return true;
 		}
 		

@@ -34,6 +34,7 @@
     "express-handlebars": "^6.0.6",
     "inversify": "^6.0.1",
     "inversify-express-utils": "^6.4.3",
+    "mathjs": "^11.5.0",
     "mongoose": "^6.6.5",
     "reflect-metadata": "^0.1.13",
     "socket.io": "^4.5.4",

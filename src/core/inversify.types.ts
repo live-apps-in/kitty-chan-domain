@@ -19,6 +19,9 @@ export const TYPES = {
 	///Conversation Service
 	ConversationService: Symbol.for('ConversationService'),
 
+	///Math Service
+	MathService: Symbol.for('MathService'),
+
 	///API Service
 	AnalyticsService: Symbol.for('AnalyticsService'),
 	AlexaService: Symbol.for('AlexaService'),
