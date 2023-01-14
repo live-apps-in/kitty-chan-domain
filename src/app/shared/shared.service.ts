@@ -18,7 +18,7 @@ export class SharedService{
 		const { method, route } = payload;
 		const headers = {
 			Authorization: `Bot ${process.env.KITTY_CHAN_TOKEN}`,
-			'content-type': 'multipart/form-data'
+			'content-type': 'application/json'
 		};
 		const data = {
 			...payload.body    
