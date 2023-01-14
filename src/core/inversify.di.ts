@@ -35,6 +35,7 @@ import { PortalService } from '../app/service/portal.service';
 import { GamesService } from '../app/service/games/games.service';
 import { RPSGameService } from '../app/service/games/RPSGame.service';
 import { MathService } from '../app/service/math.service';
+import { imageService } from '../app/service/image.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -62,6 +63,9 @@ container.bind<ConversationService>(TYPES.ConversationService).to(ConversationSe
 
 ///Math Service
 container.bind<MathService>(TYPES.MathService).to(MathService);
+
+///image Service
+container.bind<imageService>(TYPES.imageService).to(imageService);
 
 ///API Service
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);

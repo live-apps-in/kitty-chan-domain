@@ -17,7 +17,8 @@ export class SharedService{
 	async axiosInstance(payload: axiosConfig): Promise<any> {
 		const { method, route } = payload;
 		const headers = {
-			Authorization: `Bot ${process.env.KITTY_CHAN_TOKEN}`
+			Authorization: `Bot ${process.env.KITTY_CHAN_TOKEN}`,
+			'content-type': 'multipart/form-data'
 		};
 		const data = {
 			...payload.body    

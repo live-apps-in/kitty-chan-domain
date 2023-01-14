@@ -13,6 +13,7 @@ import { ACTIONS } from '../enum/action';
 import { ConversationService } from './conversation/conversation.service';
 import { PortalService } from './portal.service';
 import { MathService } from './math.service';
+import { imageService } from './image.service';
 
 @injectable()
 export class CommandService{
@@ -23,7 +24,8 @@ export class CommandService{
         @inject(TYPES.UtilityService) private readonly utilityService: UtilityService,
         @inject(TYPES.ConversationService) private readonly conversationService: ConversationService,
         @inject(TYPES.PortalService) private readonly portalService: PortalService,
-        @inject(TYPES.MathService) private readonly mathService:MathService,
+        @inject(TYPES.MathService) private readonly mathService: MathService,
+        @inject(TYPES.imageService) private readonly imageService: imageService,
 	) { }
     
 	///Validate and Filter Command
@@ -59,6 +61,12 @@ export class CommandService{
 		///Math Equation
 		if (messageChunk[1] === 'math') {
 			await this.mathService.evaluate(messageChunk[2], guild);
+			return true;
+		}
+
+		///Image
+		if (messageChunk[1] === 'image') {
+			await this.imageService.validate(messageChunk, guild);
 			return true;
 		}
 		
