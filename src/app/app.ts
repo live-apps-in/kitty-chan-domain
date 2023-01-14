@@ -40,6 +40,17 @@ export class App{
 		client.on('ready', () => {
 			client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
 			console.log('kitty chan connected 😸');
+
+			  const serverCount = client.guilds.cache.size;
+  			  let memberCount = 0;
+  			  let botCount = 0;
+			
+  			client.guilds.cache.forEach(guild => {
+    			memberCount += guild.memberCount;
+    			botCount += guild.members.cache.filter(member => member.user.bot).size;
+  			});
+
+  			console.log(`Connected to ${serverCount} servers and serving ${memberCount + botCount} members`);
 				
 		});
         
