@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "639d5175b401aa6d292f64aa"
+  },
+  "guild": [
+    {
+      "serverName": "Gamer's Hub",
+      "guildId": "928902191505362955",
+      "channelId": "1053541781893034026"
+    },
+    {
+      "serverName": "Jaga's server",
+      "guildId": "1031566030507626607",
+      "channelId": "1053378636650131520"
+    }
+  ]
+}]

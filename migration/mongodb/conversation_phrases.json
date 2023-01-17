@@ -1,0 +1,312 @@
+[{
+  "_id": {
+    "$oid": "639335ffc445f9f59f1e1856"
+  },
+  "tag": "Greet",
+  "phrase": "how are you",
+  "__v": 0,
+  "resPhraseId": [
+    {
+      "$oid": "63ac0dfe37710a31e5569587"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "6393360dc445f9f59f1e185a"
+  },
+  "tag": "Greet",
+  "phrase": "are you fine",
+  "__v": 0,
+  "resPhraseId": [
+    {
+      "$oid": "639336c9daaca239c50767f2"
+    },
+    {
+      "$oid": "6393451b73e568f911185cbc"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "63943eb8d5ffde85396797da"
+  },
+  "tag": "Greet",
+  "phrase": "you good",
+  "resPhraseId": [
+    {
+      "$oid": "6393451b73e568f911185cbc"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "639441513965f4c5d3a08bdb"
+  },
+  "tag": "God",
+  "phrase": "believe in god",
+  "resPhraseId": [
+    {
+      "$oid": "63975116043efc6ebbe93bd6"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6394415a3965f4c5d3a08bde"
+  },
+  "tag": "God",
+  "phrase": "do you believe in god",
+  "resPhraseId": [
+    {
+      "$oid": "63975116043efc6ebbe93bd6"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "639443ba74b1ec2873483b47"
+  },
+  "tag": "Love",
+  "phrase": "do you believe in love",
+  "resPhraseId": [
+    {
+      "$oid": "639443ca74b1ec2873483b4a"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63972fed54334529230ed088"
+  },
+  "tag": "Meow",
+  "phrase": "meow",
+  "resPhraseId": [
+    {
+      "$oid": "6397558fd83d248376260ba4"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63974f59c5393e84e68eaaf8"
+  },
+  "tag": "Meow",
+  "phrase": "meow meow",
+  "resPhraseId": [
+    {
+      "$oid": "6397558fd83d248376260ba4"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63a2e9d57add3e58b6ae6a6d"
+  },
+  "tag": "Billie Jean",
+  "phrase": "is billie jean your lover",
+  "resPhraseId": [
+    {
+      "$oid": "63a2eadd7add3e58b6ae6a79"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63a2e9e27add3e58b6ae6a70"
+  },
+  "tag": "Billie Jean",
+  "phrase": "do you love billie jean",
+  "resPhraseId": [
+    {
+      "$oid": "63a2eadd7add3e58b6ae6a79"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63a3e7c42616c2f2580dc5b5"
+  },
+  "tag": "Play Games",
+  "phrase": "do you play games",
+  "resPhraseId": [
+    {
+      "$oid": "63a3e7e42616c2f2580dc5b8"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63b432ef95a67c5ba7bfd170"
+  },
+  "tag": "Love",
+  "phrase": "i love you",
+  "resPhraseId": [
+    {
+      "$oid": "63b4332595a67c5ba7bfd17a"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63bab6d806145cf2a5ed392a"
+  },
+  "tag": "Hello",
+  "phrase": "hello",
+  "resPhraseId": [
+    {
+      "$oid": "63baba7106145cf2a5ed3aa8"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63bab6db06145cf2a5ed392d"
+  },
+  "tag": "Hello",
+  "phrase": "hi",
+  "resPhraseId": [
+    {
+      "$oid": "63baba7106145cf2a5ed3aa8"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63bab6df06145cf2a5ed3930"
+  },
+  "tag": "Hello",
+  "phrase": "hey",
+  "resPhraseId": [],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63bab6e306145cf2a5ed3933"
+  },
+  "tag": "Hello",
+  "phrase": "hola",
+  "resPhraseId": [
+    {
+      "$oid": "63baba7106145cf2a5ed3aa8"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63bad48b06145cf2a5ed5653"
+  },
+  "tag": "Friend",
+  "phrase": "can you be my friend",
+  "resPhraseId": [
+    {
+      "$oid": "63bad4c506145cf2a5ed56e5"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63bad49406145cf2a5ed5664"
+  },
+  "tag": "Friend",
+  "phrase": "can we be friends",
+  "resPhraseId": [
+    {
+      "$oid": "63bad4c506145cf2a5ed56e5"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63bad53906145cf2a5ed5794"
+  },
+  "tag": "Friend",
+  "phrase": "can u be my friend",
+  "resPhraseId": [
+    {
+      "$oid": "63bad4c506145cf2a5ed56e5"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63c027a12dc3a761e20a7cc6"
+  },
+  "tag": "Ps Ps",
+  "phrase": "ps ps",
+  "resPhraseId": [
+    {
+      "$oid": "63c02a512dc3a761e20a7cfd"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63c02a842dc3a761e20a7d14"
+  },
+  "tag": "Ps Ps",
+  "phrase": "ps ps ps",
+  "resPhraseId": [
+    {
+      "$oid": "63c02a512dc3a761e20a7cfd"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63c02a8f2dc3a761e20a7d18"
+  },
+  "tag": "Ps Ps",
+  "phrase": "ps ps ps ps",
+  "resPhraseId": [
+    {
+      "$oid": "63c02a512dc3a761e20a7cfd"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63c187f32dc3a761e20a8783"
+  },
+  "tag": "Prune",
+  "phrase": "delete this server",
+  "resPhraseId": [
+    {
+      "$oid": "63c1896e2dc3a761e20a87ca"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63c188032dc3a761e20a8786"
+  },
+  "tag": "Prune",
+  "phrase": "nuke this server",
+  "resPhraseId": [
+    {
+      "$oid": "63c1896e2dc3a761e20a87ca"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63c2c761baa7eaf9f9d7bf38"
+  },
+  "tag": "Pat",
+  "phrase": "pat pat",
+  "resPhraseId": [
+    {
+      "$oid": "63c2c79fbaa7eaf9f9d7bf3e"
+    }
+  ],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "63c2c764baa7eaf9f9d7bf3b"
+  },
+  "tag": "Pat",
+  "phrase": "pat pat pat",
+  "resPhraseId": [
+    {
+      "$oid": "63c2c79fbaa7eaf9f9d7bf3e"
+    }
+  ],
+  "__v": 0
+}]
