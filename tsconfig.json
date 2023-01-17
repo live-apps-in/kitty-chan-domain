@@ -6,7 +6,7 @@
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
-    "types": ["reflect-metadata", "node"],
+    "types": ["reflect-metadata", "node", "jest"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false,
