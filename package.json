@@ -10,17 +10,11 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest",
-    "precommit": "npm run lint:fix",
     "prepare": "husky install"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jaga-live/kitty-chan-discord-ts.git"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
   },
   "keywords": [],
   "author": "",
