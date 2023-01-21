@@ -137,6 +137,15 @@ export class App{
   			.catch(console.error);
 		});
 
+
+		////Handle Disconnect
+		client.on('disconnect', (event) => {
+			console.log('Disconnect Event - ', event)
+			
+			client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
+			console.log('kitty chan Re-connected 😸');
+		})
+
 		///Login kitty chan
 		client.login(process.env.KITTY_CHAN_TOKEN);
 
