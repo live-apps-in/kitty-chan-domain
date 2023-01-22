@@ -50,7 +50,11 @@ export class App{
     			botCount += guild.members.cache.filter(member => member.user.bot).size;
   			});
 
-  			console.log(`Connected to ${serverCount} servers and serving ${memberCount + botCount} members`);
+			console.log(`Connected to ${serverCount} servers and serving ${memberCount + botCount} members`);
+			
+			setInterval(() => {
+				client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
+			},600000)
 				
 		});
         
@@ -135,15 +139,6 @@ export class App{
     			user.send(`I've been removed from to ${guild.name} - ${guild.id}`);
   			})
   			.catch(console.error);
-		});
-
-
-		////Handle Disconnect
-		client.on('disconnect', (event) => {
-			console.log('Disconnect Event - ', event);
-			
-			client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
-			console.log('kitty chan Re-connected 😸');
 		});
 
 		///Login kitty chan
