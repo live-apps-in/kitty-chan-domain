@@ -1,0 +1,14 @@
+config:
+  target: "https://kittychan.jagalive.in"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: "Test run"
+    - duration: 60
+      arrivalRate: 10
+      name: "Peak load"
+
+scenarios:
+  - flow:
+    - get:
+        url: "/analytics/message_count"
