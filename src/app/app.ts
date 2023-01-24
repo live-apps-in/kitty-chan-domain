@@ -54,7 +54,7 @@ export class App{
 			
 			setInterval(() => {
 				client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
-			},600000);
+			},300000);
 				
 		});
         
