@@ -1,4 +1,4 @@
 # kitty chan 😺
-A discord bot designed for Gamer's Hub discord server. [ TypeScript Version ]
+A discord bot designed for Gamer's Hub Discord server. [ TypeScript Version ]
 
 Code Owner - @Jaga
