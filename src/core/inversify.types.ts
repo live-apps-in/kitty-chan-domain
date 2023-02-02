@@ -29,6 +29,10 @@ export const TYPES = {
 	AnalyticsService: Symbol.for('AnalyticsService'),
 	AlexaService: Symbol.for('AlexaService'),
 	ConversationAPIService: Symbol.for('ConversationAPIService'),
+	
+	///LiveCord Service
+	UserService: Symbol.for('UserService'),
+	
 
 	///Repository
 	ConversationRepository: Symbol.for('ConversationRepository'),

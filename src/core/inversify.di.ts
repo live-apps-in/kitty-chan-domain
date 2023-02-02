@@ -9,6 +9,7 @@ import '../api/controller/alexa.controller';
 import '../api/controller/conversation/conversation.controller';
 import '../api/controller/feature_flag.controller';
 import '../api/controller/config.controller';
+import '../api/controller/live_cord/user.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
@@ -36,6 +37,7 @@ import { GamesService } from '../app/service/games/games.service';
 import { RPSGameService } from '../app/service/games/RPSGame.service';
 import { MathService } from '../app/service/math.service';
 import { imageService } from '../app/service/image.service';
+import { UserService } from '../api/service/live_cord/user.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -71,6 +73,9 @@ container.bind<imageService>(TYPES.imageService).to(imageService);
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);
 container.bind<AlexaService>(TYPES.AlexaService).to(AlexaService);
 container.bind<ConversationAPIService>(TYPES.ConversationAPIService).to(ConversationAPIService);
+
+///LiveCord Service
+container.bind<UserService>(TYPES.UserService).to(UserService);
 
 ///Repository
 container.bind<ConversationRepository>(TYPES.ConversationRepository).to(ConversationRepository);
