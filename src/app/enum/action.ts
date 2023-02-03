@@ -1,4 +1,7 @@
 export enum ACTIONS{
+    ///User
+    searchGuildUser = 'searchGuildUser',
+
     ///Role
     setRole = 'setRole',
     deleteRole = 'deleteRole',

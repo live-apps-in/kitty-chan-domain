@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { ChatInputCommandInteraction, Message } from 'discord.js';
 import { injectable } from 'inversify';
 import { IGuild } from '../interface/shared.interface';
@@ -21,22 +21,25 @@ export class SharedService{
 			'content-type': 'application/json'
 		};
 		const data = {
-			...payload.body    
+			...payload.body   
 		};
 
-		const axiosConfig = {
+		const axiosConfig: any = {
 			method,
-			url: `${process.env.DISCORD_API}/${route}`,
-			data,
+			url: `${process.env.DISCORD_API}${route}`,
 			headers
 		};
+
+		if(['put', 'post', 'patch'].includes(method)) axiosConfig.data = data;
+
+		// console.log(axiosConfig)
 		
 		let resData: any;
 		await axios(axiosConfig)
 			.then(res=> resData = res.data)
 			.catch(err => {
 				console.log(err.message);
-				console.log(err);
+				console.log(err.response);
 			});
 		
 		return resData;

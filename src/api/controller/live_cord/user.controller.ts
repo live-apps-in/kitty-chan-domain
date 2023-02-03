@@ -23,9 +23,13 @@ export class UserController{
     ///Send DM to a User
     @httpPost('/user/send_message', InternalAuthGuard)
     async sendMessage(req: Req) {
-    	const { discord_username } = req.userData;
-    	const { message } = req.body;
+    	const {discord_username, message } = req.body;
 
-    	return {discord_username};
+    	await this.userService.send_direct_message(discord_username, message);
+    	return {
+    		status: 'success',
+    		discord_username,
+    		message
+    	};
     }
 }

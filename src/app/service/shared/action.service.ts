@@ -34,6 +34,12 @@ class ActionFactory{
 		const config: any = {};
 
 		switch (type) {
+		///Guild User
+		case ACTIONS.searchGuildUser:
+			config.route = `/guilds/${guildId}/members/search?query=${body.username}&limit=1000`;
+			config.method = 'get';
+			break;
+			
 		///Roles
 		case ACTIONS.setRole:
 			config.route = `/guilds/${guildId}/members/${userId}/roles/${body.roleId}`;
