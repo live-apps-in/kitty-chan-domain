@@ -32,6 +32,7 @@ export const TYPES = {
 	
 	///LiveCord Service
 	UserService: Symbol.for('UserService'),
+	GuildService: Symbol.for('GuildService'),
 	
 
 	///Repository

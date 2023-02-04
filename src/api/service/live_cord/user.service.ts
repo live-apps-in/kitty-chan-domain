@@ -3,6 +3,7 @@ import { client } from '../../../app/app';
 import { ACTIONS } from '../../../app/enum/action';
 import { ActionService } from '../../../app/service/shared/action.service';
 import { ResponseService } from '../../../app/service/shared/response.service';
+import { HttpException } from '../../../core/exception';
 import { TYPES } from '../../../core/inversify.types';
 
 
@@ -26,7 +27,7 @@ export class UserService{
 		
 
 		///Fetch User info from Guild
-		let user: any;
+		let user: any = { isValid: false };
 		for (let index = 0; index < guilds.length; index++) {
 			const guildId = guilds[index].id;
 
@@ -53,36 +54,36 @@ export class UserService{
 		}
 
 
-		if (user) {
-			user.guilds = guilds;
-			const promises = user.guilds.map(async e => {
-				const guild = await client.guilds.cache.get(e.id);
-				const member = await guild.members.fetch(user.id);
-				if (member.guild.ownerId === user.id) {
-					e.isOwner = true;
-				}
-			});
+		// if (user) {
+		// 	user.guildsOwned = [];
+		// 	const promises = guilds.map(async e => {
+		// 		const guild = client.guilds.cache.get(e.id);
+		// 		try {
+		// 			var member = await guild.members.fetch(user.id)
+					
+		// 			if (member.guild.ownerId === user.id) {
+		// 				user.guildsOwned.push(e.id)
+		// 			}
+		// 		} catch (error) {};
 
-			await Promise.all(promises);
-		}
+		// 	});
 
+		// 	await Promise.all(promises);
+		// }
+		if(user.id) user.isValid = true;
 		return user;
 		
 	}
 
 	///Send Direct Message
-	async send_direct_message(discord_username: string, message: string) {
-		let user: any;
-		client.guilds.cache.forEach(guild => {
-			const member = guild.members.cache.find(member => member.user.username === discord_username);
-			console.log(member, discord_username);
-			if (member) {
-				user = member;
-				return;
-			}
-		});
-
-		console.log(user);
+	async send_direct_message(discord_id: string, message: string) {
 		
+		try {
+			const user = await client.users.fetch(discord_id);
+			await user.send(message);
+			
+		} catch (error) {
+			throw new HttpException('Discord User not found', 400);
+		}
 	}
 }

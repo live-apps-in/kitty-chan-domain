@@ -10,6 +10,7 @@ import '../api/controller/conversation/conversation.controller';
 import '../api/controller/feature_flag.controller';
 import '../api/controller/config.controller';
 import '../api/controller/live_cord/user.controller';
+import '../api/controller/live_cord/guild.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
@@ -38,6 +39,7 @@ import { RPSGameService } from '../app/service/games/RPSGame.service';
 import { MathService } from '../app/service/math.service';
 import { imageService } from '../app/service/image.service';
 import { UserService } from '../api/service/live_cord/user.service';
+import { GuildService } from '../api/service/live_cord/guild.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -76,6 +78,7 @@ container.bind<ConversationAPIService>(TYPES.ConversationAPIService).to(Conversa
 
 ///LiveCord Service
 container.bind<UserService>(TYPES.UserService).to(UserService);
+container.bind<GuildService>(TYPES.GuildService).to(GuildService);
 
 ///Repository
 container.bind<ConversationRepository>(TYPES.ConversationRepository).to(ConversationRepository);
