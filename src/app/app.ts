@@ -1,18 +1,18 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../core/inversify.types';
 import { LanguageFilter } from './service/languageFilter.service';
-import { ActivityType, Client, GatewayIntentBits, SlashCommandBuilder } from 'discord.js';
-import 'dotenv/config';
+import { ActivityType, Client, GatewayIntentBits } from 'discord.js';
 import { SharedService } from './shared/shared.service';
 import { LoggerService } from './service/logger.service';
 import { CommandService } from './service/commands.service';
 import { WakeService } from './service/wake.service';
-import './config/command_init';
 import { FeatureFlagService } from './service/shared/featureFlag.service';
 import { PortalService } from './service/portal.service';
 import { GamesService } from './service/games/games.service';
-import { RPSGameService } from './service/games/RPSGame.service';
 import server from '../model/server';
+import './config/command_init';
+import 'dotenv/config';
+
 export const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -54,7 +54,8 @@ export class App{
 			
 			setInterval(() => {
 				client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
-			},300000);
+				client.login(process.env.KITTY_CHAN_TOKEN);
+			},30000);
 				
 		});
         

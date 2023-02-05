@@ -22,13 +22,25 @@ export class GuildService{
 	}
     
 	///Update Guild Feature
-	async edit_guild_features(discord_id: string, guildId: string, permission: any) {
+	async edit_guild_features(discord_id: string, guildId: string, features: any) {
 		///Check Permission
 		const checkPermission = await this.check_user_permission(discord_id, guildId);
 		if (!checkPermission.hasPermission) throw new HttpException('Forbidden Guild Access', 403);
         
 		const guild = await this.serverRepo.getByGuildId(guildId);
-        
+		const _features = { ...guild.features };
+		
+		///Map new Permissions
+		Object.keys(features).forEach(key => {
+			if (key in _features) {
+				if(typeof features[key] !== 'boolean') throw new HttpException('Permission value should be Boolean', 400);
+    			_features[key] = features[key];
+  			}
+		});
+
+		await this.serverRepo.update_by_guildId(guildId, { features: _features });
+		return _features;
+		
 
 	}
 
@@ -39,7 +51,7 @@ export class GuildService{
 		try {
 			const guild = await client.guilds.fetch(guildId);
 
-			if (guild.ownerId !== discord_id) {
+			if ( !guild || guild.ownerId !== discord_id) {
 				userPermission.hasPermission = false;
 				return userPermission;
 			}

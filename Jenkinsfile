@@ -15,7 +15,8 @@ pipeline {
         }
         stage('Start New Container') {
             steps {
-                sh 'docker run -p 5000:5000 -d --name kitty-chan kitty-chan'
+                sh 'docker run -p 5000:5000 -d --restart always --name kitty-chan kitty-chan
+'
             }
         }
     }

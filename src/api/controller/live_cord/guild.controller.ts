@@ -26,9 +26,9 @@ export class GuildController {
     @httpPatch('/features', InternalAuthGuard)
     async edit_guild_features(req: Req) {
     	const { discord_id } = req.userData;
-    	const { guildId, permission } = req.body;
+    	const { guildId, features } = req.body;
     
-    	return await this.guildService.fetch_guild_profile(discord_id, guildId);
+    	return await this.guildService.edit_guild_features(discord_id, guildId, features);
         
     }
 }
