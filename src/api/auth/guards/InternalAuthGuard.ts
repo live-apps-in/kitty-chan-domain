@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { HttpException } from '../../../core/exception';
 import jwt from 'jsonwebtoken';
 import { Req } from '../../../core/custom_types';

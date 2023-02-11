@@ -39,7 +39,8 @@ import { RPSGameService } from '../app/service/games/RPSGame.service';
 import { MathService } from '../app/service/math.service';
 import { imageService } from '../app/service/image.service';
 import { UserService } from '../api/service/live_cord/user.service';
-import { GuildService } from '../api/service/live_cord/guild.service';
+import { GuildAPIService } from '../api/service/live_cord/guild.service';
+import { RolesAPIService } from '../api/service/live_cord/roles/roles.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -78,7 +79,8 @@ container.bind<ConversationAPIService>(TYPES.ConversationAPIService).to(Conversa
 
 ///LiveCord Service
 container.bind<UserService>(TYPES.UserService).to(UserService);
-container.bind<GuildService>(TYPES.GuildService).to(GuildService);
+container.bind<GuildAPIService>(TYPES.GuildAPIService).to(GuildAPIService);
+container.bind<RolesAPIService>(TYPES.RolesAPIService).to(RolesAPIService);
 
 ///Repository
 container.bind<ConversationRepository>(TYPES.ConversationRepository).to(ConversationRepository);

@@ -3,13 +3,14 @@ import { controller, httpPatch, httpPost } from 'inversify-express-utils';
 import { Req } from '../../../core/custom_types';
 import { TYPES } from '../../../core/inversify.types';
 import { InternalAuthGuard } from '../../auth/guards/InternalAuthGuard';
-import { GuildService } from '../../service/live_cord/guild.service';
+import { GuildAPIService } from '../../service/live_cord/guild.service';
+import { RolesAPIService } from '../../service/live_cord/roles/roles.service';
 
 
 @controller('/live_cord/guild')
 export class GuildController {
 	constructor(
-        @inject(TYPES.GuildService) private readonly guildService: GuildService
+        @inject(TYPES.GuildAPIService) private readonly guildService: GuildAPIService
 	) { }
     
     //**Profile**//
@@ -21,7 +22,7 @@ export class GuildController {
 		return await this.guildService.fetch_guild_profile(discord_id, guildId);
         
 	}
-    
+
     //**Feature**//
     @httpPatch('/features', InternalAuthGuard)
     async edit_guild_features(req: Req) {

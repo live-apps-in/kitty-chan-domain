@@ -6,11 +6,11 @@ import { TYPES } from '../../../core/inversify.types';
 
 
 @injectable()
-export class GuildService{
+export class GuildAPIService{
 	constructor(
         @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo
 	) { }
-    
+	//**Profile*//
 	///Guild Profile
 	async fetch_guild_profile(discord_id: string, guildId: string) {
 		///Check Permission
@@ -21,6 +21,7 @@ export class GuildService{
 		return guild;
 	}
     
+	//**Feature*//
 	///Update Guild Feature
 	async edit_guild_features(discord_id: string, guildId: string, features: any) {
 		///Check Permission

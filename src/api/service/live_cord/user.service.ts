@@ -53,23 +53,6 @@ export class UserService{
 			}
 		}
 
-
-		// if (user) {
-		// 	user.guildsOwned = [];
-		// 	const promises = guilds.map(async e => {
-		// 		const guild = client.guilds.cache.get(e.id);
-		// 		try {
-		// 			var member = await guild.members.fetch(user.id)
-					
-		// 			if (member.guild.ownerId === user.id) {
-		// 				user.guildsOwned.push(e.id)
-		// 			}
-		// 		} catch (error) {};
-
-		// 	});
-
-		// 	await Promise.all(promises);
-		// }
 		if(user.id) user.isValid = true;
 		return user;
 		

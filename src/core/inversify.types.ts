@@ -30,10 +30,10 @@ export const TYPES = {
 	AlexaService: Symbol.for('AlexaService'),
 	ConversationAPIService: Symbol.for('ConversationAPIService'),
 	
-	///LiveCord Service
+	///LiveCord API Service
 	UserService: Symbol.for('UserService'),
-	GuildService: Symbol.for('GuildService'),
-	
+	GuildAPIService: Symbol.for('GuildAPIService'),
+	RolesAPIService: Symbol.for('RolesAPIService'),
 
 	///Repository
 	ConversationRepository: Symbol.for('ConversationRepository'),
