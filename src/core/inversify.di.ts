@@ -9,8 +9,12 @@ import '../api/controller/alexa.controller';
 import '../api/controller/conversation/conversation.controller';
 import '../api/controller/feature_flag.controller';
 import '../api/controller/config.controller';
+/**
+ * LiveCord Controller
+ */
 import '../api/controller/live_cord/user.controller';
 import '../api/controller/live_cord/guild.controller';
+import '../api/controller/live_cord/roles/roles.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
