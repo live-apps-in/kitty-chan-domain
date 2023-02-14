@@ -8,7 +8,8 @@ export const TYPES = {
 	CommandService: Symbol.for('CommandsService'),
 	WakeService: Symbol.for('WakeService'),
 	PortalService: Symbol.for('PortalService'),
-
+	RolesService: Symbol.for('RolesService'),
+	
 	///VALORANT Service
 	ValorantService: Symbol.for('ValorantService'),
 	

@@ -9,7 +9,7 @@ import { RolesAPIService } from '../../../service/live_cord/roles/roles.service'
 @controller('/live_cord')
 export class RolesController{
 	constructor(
-        @inject(TYPES.RolesAPIService) private readonly rolesService: RolesAPIService
+        @inject(TYPES.RolesAPIService) private readonly rolesAPIService: RolesAPIService
 	) { }
 
     /**
@@ -19,8 +19,15 @@ export class RolesController{
 	async reactionRoleAction(req: Req) {
 		const { action } = req.params;
 		const { guildId } = req.userData;
+		const { channelId, reaction_role_message_ref, rolesMapping } = req.body;
         
-		return {action, guildId};
+		return this.rolesAPIService.reactionRoleFactory({
+			guildId,
+			channelId,
+			action,
+			reaction_role_message_ref,
+			rolesMapping
+		});
 	}
     
 }

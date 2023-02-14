@@ -36,12 +36,13 @@ export class SharedService{
 		
 		let resData: any;
 		await axios(axiosConfig)
-			.then(res=> resData = res.data)
+			.then(res => {
+				resData = res.data;
+			})
 			.catch(err => {
 				console.log(err.message);
 				console.log(err.response);
 			});
-		
 		return resData;
 	}
 

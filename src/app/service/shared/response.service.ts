@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../core/inversify.types';
+import { DiscordEmbeds } from '../../../types/discord.types';
 import { REPLY } from '../../enum/reply';
 import { IGuild } from '../../interface/shared.interface';
 import { SharedService } from '../../shared/shared.service';
@@ -18,13 +19,23 @@ export class ResponseService{
     
 	async respond(payload: RespondConfig): Promise<void> {
 		const config = await new ResponseFactory().getResponseConfig(payload.type, payload.guild, payload.body);
-		await this.sharedService.axiosInstance({
+		return await this.sharedService.axiosInstance({
 			method: config.method,
 			route: config.route,
 			body: payload.body
 		});
 	}
 
+	async embedMessage(embeds: DiscordEmbeds[], guild: IGuild) {
+		return await this.respond({
+			type: REPLY.sendEmbed,
+			guild,
+			body: {
+				embeds,
+			}
+		});
+
+	}
 	async replyMessage(content: string, guild: IGuild) {
 		await this.respond({
 			type: REPLY.replyMessage,
@@ -53,7 +64,10 @@ class ResponseFactory{
 			config.route = `/channels/${channelId}/messages`;
 			config.method = 'post';
 			break;
-             
+		case REPLY.sendEmbed:
+			config.route = `/channels/${channelId}/messages`;
+			config.method = 'post';
+			break;
 		case REPLY.addReaction:
 			config.route = `/channels/${channelId}/messages/${messageId}/reactions/${body.emoji}/@me`;
 			config.method = 'put';

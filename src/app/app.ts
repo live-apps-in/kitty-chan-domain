@@ -65,7 +65,7 @@ export class App{
 			const guildInfo = await this.sharedService.extractGuildInfo(message);
 			
 			///Log
-			await this.loggerService.log_message_count(guildInfo);
+			this.loggerService.log_message_count(guildInfo);
 			
 			///Validate if Bot message
 			if (guildInfo.isBot) return;
@@ -85,7 +85,7 @@ export class App{
 			if (isGame) return;
 
 			///Non-English Detection (Only Detects Hindi)
-			if (guildInfo.featureFlag.hindi) {
+			if (guildInfo?.featureFlag?.hindi) {
 				const isNonEnglish = await this.langFilter.non_english_detection(guildInfo);
 				if (isNonEnglish) return;
 			}

@@ -45,6 +45,7 @@ import { imageService } from '../app/service/image.service';
 import { UserService } from '../api/service/live_cord/user.service';
 import { GuildAPIService } from '../api/service/live_cord/guild.service';
 import { RolesAPIService } from '../api/service/live_cord/roles/roles.service';
+import { RolesService } from '../app/service/roles/roles.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -59,6 +60,7 @@ container.bind<TextLogRepository>(TYPES.TextLogRepository).to(TextLogRepository)
 container.bind<CommandService>(TYPES.CommandService).to(CommandService);
 container.bind<WakeService>(TYPES.WakeService).to(WakeService);
 container.bind<PortalService>(TYPES.PortalService).to(PortalService);
+container.bind<RolesService>(TYPES.RolesService).to(RolesService);
 
 ///VALORANT Service
 container.bind<ValorantService>(TYPES.ValorantService).to(ValorantService);
