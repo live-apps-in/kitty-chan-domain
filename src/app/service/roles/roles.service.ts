@@ -16,8 +16,7 @@ export class RolesService{
 	async createReactionRole(dto: ReactionRolesActionDto) {
     
 		const embed: DiscordEmbeds[] = [{
-			title: 'hello',
-			description: 'test'
+			...dto.discordEmbedConfig
 		}];
         
 		const res:any = await this.responseService.embedMessage(embed, {
