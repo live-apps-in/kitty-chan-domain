@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../core/inversify.types';
 import { LanguageFilter } from './service/languageFilter.service';
-import { ActivityType, Client, GatewayIntentBits } from 'discord.js';
+import { ActivityType, Client, GatewayIntentBits, MessageReaction } from 'discord.js';
 import { SharedService } from './shared/shared.service';
 import { LoggerService } from './service/logger.service';
 import { CommandService } from './service/commands.service';
@@ -18,6 +18,7 @@ export const client = new Client({
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMessageReactions,
 		GatewayIntentBits.GuildMessageReactions,
 	],
 });
@@ -109,6 +110,10 @@ export class App{
 			///Log Good Text Count
 			await this.loggerService.text_count_logger(guildInfo);
 
+		});
+
+		client.on('messageReactionAdd', async (reaction: MessageReaction, user) => {
+			console.log('Message');
 		});
 
 		///Handle bot added to new Server
