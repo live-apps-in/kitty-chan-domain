@@ -36,6 +36,17 @@ export class ResponseService{
 		});
 
 	}
+
+	async editEmbedMessage(embeds: DiscordEmbeds[], guild: IGuild) {
+		return await this.respond({
+			type: REPLY.editEmbed,
+			guild,
+			body: {
+				embeds,
+			}
+		});
+
+	}
 	async replyMessage(content: string, guild: IGuild) {
 		await this.respond({
 			type: REPLY.replyMessage,
@@ -67,6 +78,10 @@ class ResponseFactory{
 		case REPLY.sendEmbed:
 			config.route = `/channels/${channelId}/messages`;
 			config.method = 'post';
+			break;
+		case REPLY.editEmbed:
+			config.route = `/channels/${channelId}/messages/${messageId}`;
+			config.method = 'patch';
 			break;
 		case REPLY.addReaction:
 			config.route = `/channels/${channelId}/messages/${messageId}/reactions/${body.emoji}/@me`;

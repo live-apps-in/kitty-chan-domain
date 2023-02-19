@@ -18,6 +18,8 @@ export class RolesAPIService{
 		switch (action) {
 		case ReactionRoleActions.SET:
 			return await this.roleService.createReactionRole(dto);
+		case ReactionRoleActions.PATCH:
+			return await this.roleService.updateReactionRole(dto);
 		default:
 			throw new HttpException('Invalid Reaction Role Action', 400);
 		}

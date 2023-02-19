@@ -11,6 +11,7 @@ import ReactionRole from '../../../model/reaction_roles.model';
 import { ActionService } from '../shared/action.service';
 import { ACTIONS } from '../../enum/action';
 import { IGuild, IMessageReaction } from '../../interface/shared.interface';
+import { compareRolesMapping } from '../../../utils/roles_mapping';
 
 
 @injectable()
@@ -21,6 +22,7 @@ export class RolesService{
 	) { }
     
 	///Trigger from LiveCord
+	///Create Reaction Role
 	async createReactionRole(dto: ReactionRolesActionDto) {
 		const { guildId, channelId, rolesMapping } = dto;
 		const embed: DiscordEmbeds[] = [{
@@ -62,7 +64,49 @@ export class RolesService{
 		};
 	}
 
-	///Handle Role React
+	///Update Reaction Role
+	async updateReactionRole(dto: ReactionRolesActionDto) {
+		const { guildId, channelId, rolesMapping, reaction_role_message_ref } = dto;
+		const embed: DiscordEmbeds[] = [{
+			...dto.discordEmbedConfig
+		}];
+
+		const reaction_role = await ReactionRole.findOne({ messageId: reaction_role_message_ref });
+		if (!reaction_role) throw new HttpException('Cannot find Reaction Role', 400);
+		
+
+		///Update Message
+		await this.responseService.editEmbedMessage(embed, {
+			guildId,
+			channelId,
+			messageId: reaction_role_message_ref
+		});
+
+		///Update Roles Mapping Changes
+		await ReactionRole.updateOne({ _id: reaction_role._id }, {
+			$set: {
+				rolesMapping
+			}
+		});
+
+		const emojiToBeUpdated: any[] = compareRolesMapping(rolesMapping, reaction_role.rolesMapping);
+		
+		for (let index = 0; index < emojiToBeUpdated.length; index++) {
+			const emoji= emojiToBeUpdated[index].emoji;
+			await this.responseService.respond({
+				type: REPLY.addReaction,
+				guild: { guildId, channelId, messageId: reaction_role_message_ref },
+				body: {
+					emoji: emoji.type ===  'standard' ? encodeURIComponent(emoji.standardEmoji) :  encodeURIComponent(`${emoji.name}:${emoji.id}`)
+				}
+			});
+			
+		}
+	}
+
+	/**
+	 * Role Reactions
+	 */
 	async setReactionRole(reaction: MessageReaction, user) {
 		if (user.isBot) return false;
 		const reaction_role = await ReactionRole.findOne({ messageId: reaction.message.id });
