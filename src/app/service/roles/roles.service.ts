@@ -12,6 +12,7 @@ import { ActionService } from '../shared/action.service';
 import { ACTIONS } from '../../enum/action';
 import { IGuild, IMessageReaction } from '../../interface/shared.interface';
 import { compareRolesMapping } from '../../../utils/roles_mapping';
+import { ReactMessageLimiter } from '../../../jobs/rate-limiter';
 
 
 @injectable()
@@ -124,6 +125,7 @@ export class RolesService{
 
 		if (!role) return false;
 		///Add role to User
+		console.log('RUN');
 		this.actionService.call({
 			type: ACTIONS.setRole,
 			guild: {

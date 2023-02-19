@@ -68,9 +68,7 @@ export class App{
 			
 			setInterval(() => {
 				client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
-				client.login(process.env.KITTY_CHAN_TOKEN);
-			},30000);
-				
+			},60000);	
 		});
 
         
