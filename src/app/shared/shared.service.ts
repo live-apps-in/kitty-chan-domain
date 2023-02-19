@@ -1,7 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import { ChatInputCommandInteraction, Message } from 'discord.js';
 import { injectable } from 'inversify';
-import { IGuild } from '../interface/shared.interface';
+import { client } from '../app';
+import { IGuild, IMessageReaction } from '../interface/shared.interface';
 
 interface axiosConfig{
     method: string,
@@ -41,7 +42,7 @@ export class SharedService{
 			})
 			.catch(err => {
 				console.log(err.message);
-				console.log(err.response);
+				// console.log(err.response);
 			});
 		return resData;
 	}
@@ -61,6 +62,21 @@ export class SharedService{
 			content,
 			{}
 		);
+
+		return guild;
+	}
+
+	////Extract Info from raw events
+	async extractGuildFromRaw(event) {
+		const isBot = process.env.KITTY_CHAN_ID === event.d.user_id;
+		const guild = {
+			guildId: event.d.guild_id,
+			channelId: event.d.channel_id,
+			messageId: event.d.message_id,
+			userId: event.d.user_id,
+			emoji: event?.d?.emoji,
+			isBot
+		} as IMessageReaction;
 
 		return guild;
 	}

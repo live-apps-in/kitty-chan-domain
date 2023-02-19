@@ -15,3 +15,16 @@ export class IGuild{
         public featureFlag?: any,
 	){}
 }
+
+export class IMessageReaction{
+	constructor(
+        public guildId?: string,
+        public channelId?: string,
+        public messageId?: string,
+        public userId?: string,
+        public messageContent?: string,
+        public isBot?: boolean,
+        public emoji?: any,
+        public payload?: Message,
+	){}
+}

@@ -12,7 +12,12 @@ import { GamesService } from './service/games/games.service';
 import server from '../model/server';
 import './config/command_init';
 import 'dotenv/config';
+import { OnInit } from '../jobs/onInit';
+import { RolesService } from './service/roles/roles.service';
 
+/**
+ * Discord JS lib CLient Config
+ */
 export const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -21,6 +26,7 @@ export const client = new Client({
 		GatewayIntentBits.GuildMessageReactions,
 		GatewayIntentBits.GuildMessageReactions,
 	],
+	shards: 'auto',
 });
 
 @injectable()
@@ -34,24 +40,31 @@ export class App{
 		@inject(TYPES.FeatureFlagService) private readonly featureFlagService: FeatureFlagService,
 		@inject(TYPES.PortalService) private readonly portalService: PortalService,
 		@inject(TYPES.GameService) private readonly gameService: GamesService,
+		@inject(TYPES.RolesService) private readonly rolesService: RolesService,
 	){}
 
 	async start() {
-		////Connect to Discord Server
-		client.on('ready', () => {
+		/**
+		 * Client on Ready
+		 */
+		client.on('ready', async() => {
 			client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
-			console.log('kitty chan connected 😸');
-
-			  const serverCount = client.guilds.cache.size;
-  			  let memberCount = 0;
-  			  let botCount = 0;
 			
-  			client.guilds.cache.forEach(guild => {
-    			memberCount += guild.memberCount;
+			const serverCount = client.guilds.cache.size;
+			let memberCount = 0;
+			let botCount = 0;
+			
+			///Loaders
+			await new OnInit().bootstrap();
+			
+			///Log Server Stats
+			client.guilds.cache.forEach(guild => {
+				memberCount += guild.memberCount;
     			botCount += guild.members.cache.filter(member => member.user.bot).size;
-  			});
-
+			});
+			
 			console.log(`Connected to ${serverCount} servers and serving ${memberCount + botCount} members`);
+			console.log('kitty chan connected 😸');
 			
 			setInterval(() => {
 				client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
@@ -59,8 +72,11 @@ export class App{
 			},30000);
 				
 		});
+
         
-		/////READ Messages & Respond
+		/**
+		 * Message Create Event
+		 */
 		client.on('messageCreate', async (message) => {
 			///Extract Guild Info
 			const guildInfo = await this.sharedService.extractGuildInfo(message);
@@ -112,11 +128,30 @@ export class App{
 
 		});
 
+
+		/**
+		 * Message Reaction Add Event
+		 */
 		client.on('messageReactionAdd', async (reaction: MessageReaction, user) => {
-			console.log('Message');
+			this.rolesService.setReactionRole(reaction, user);
 		});
 
-		///Handle bot added to new Server
+
+		/**
+		 * All Events from Discord API
+		 * Currently using this for Message Reaction Remove
+		 */
+		client.on('raw', async (event) => {
+			if (event.t === 'MESSAGE_REACTION_REMOVE') {
+				const guild = await this.sharedService.extractGuildFromRaw(event);
+				this.rolesService.removeReactionRole(guild);
+			}
+		});
+
+
+		/**
+		 * Guild Create Event
+		 */
 		client.on('guildCreate', async (guild) => {
 			///Register Guild
 			await server.insertMany({
@@ -134,7 +169,10 @@ export class App{
   			.catch(console.error);
 		});
 
-		///Handle bot added to new Server
+
+		/**
+		 * Guild Delete Event
+		 */
 		client.on('guildDelete', async (guild) => {
 	
 			///Jaga's Discord ID
@@ -149,6 +187,5 @@ export class App{
 
 		///Login kitty chan
 		client.login(process.env.KITTY_CHAN_TOKEN);
-
 	}
 }
