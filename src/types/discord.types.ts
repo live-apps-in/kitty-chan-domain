@@ -16,7 +16,7 @@ export type DiscordEmbeds={
     video?: string
     provider?: string
     author?: string
-    fields?: string
+    fields?: string[]
 }
 
 export type DiscordEmbedFields = {
