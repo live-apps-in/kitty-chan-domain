@@ -16,7 +16,7 @@ import { OnInit } from '../jobs/onInit';
 import { RolesService } from './service/roles/roles.service';
 
 /**
- * Discord JS lib CLient Config
+ * Discord JS lib Client Config
  */
 export const client = new Client({
 	intents: [

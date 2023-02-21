@@ -4,7 +4,7 @@ import { controller, httpPatch } from 'inversify-express-utils';
 import { Req } from '../../../../core/custom_types';
 import { TYPES } from '../../../../core/inversify.types';
 import { InternalAuthGuard } from '../../../auth/guards/InternalAuthGuard';
-import { RolesAPIService } from '../../../service/live_cord/roles/roles.service';
+import { RolesAPIService } from '../../service/roles/roles.service';
 
 @controller('/live_cord')
 export class RolesController{

@@ -12,9 +12,9 @@ import '../api/controller/config.controller';
 /**
  * LiveCord Controller
  */
-import '../api/controller/live_cord/user.controller';
-import '../api/controller/live_cord/guild.controller';
-import '../api/controller/live_cord/roles/roles.controller';
+import '../api/live_cord/controller/user.controller';
+import '../api/live_cord/controller/guild.controller';
+import '../api/live_cord/controller/roles/roles.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';
 import { TYPES } from './inversify.types';
@@ -42,10 +42,10 @@ import { GamesService } from '../app/service/games/games.service';
 import { RPSGameService } from '../app/service/games/RPSGame.service';
 import { MathService } from '../app/service/math.service';
 import { imageService } from '../app/service/image.service';
-import { UserService } from '../api/service/live_cord/user.service';
-import { GuildAPIService } from '../api/service/live_cord/guild.service';
-import { RolesAPIService } from '../api/service/live_cord/roles/roles.service';
+import { GuildAPIService } from '../api/live_cord/service/guild.service';
+import { RolesAPIService } from '../api/live_cord/service/roles/roles.service';
 import { RolesService } from '../app/service/roles/roles.service';
+import { UserService } from '../api/live_cord/service/user.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'

@@ -1,6 +1,6 @@
 import { EmbedBuilder, GuildEmoji, MessageReaction } from 'discord.js';
 import { inject, injectable } from 'inversify';
-import { ReactionRolesActionDto } from '../../../api/_dto/roles.dto';
+import { ReactionRolesActionDto } from '../../../api/live_cord/_dto/roles.dto';
 import { TYPES } from '../../../core/inversify.types';
 import { DiscordEmbeds } from '../../../types/discord.types';
 import ReactionRoles from '../../../model/reaction_roles.model';

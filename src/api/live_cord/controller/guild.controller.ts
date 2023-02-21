@@ -3,8 +3,8 @@ import { controller, httpPatch, httpPost } from 'inversify-express-utils';
 import { Req } from '../../../core/custom_types';
 import { TYPES } from '../../../core/inversify.types';
 import { InternalAuthGuard } from '../../auth/guards/InternalAuthGuard';
-import { GuildAPIService } from '../../service/live_cord/guild.service';
-import { RolesAPIService } from '../../service/live_cord/roles/roles.service';
+import { GuildAPIService } from '../service/guild.service';
+import { RolesAPIService } from '../service/roles/roles.service';
 
 
 @controller('/live_cord/guild')

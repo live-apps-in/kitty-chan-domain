@@ -2,8 +2,8 @@ import { inject, injectable } from 'inversify';
 import { RolesService } from '../../../../app/service/roles/roles.service';
 import { HttpException } from '../../../../core/exception';
 import { TYPES } from '../../../../core/inversify.types';
-import { ReactionRoleActions } from '../../../enum/roles.enum';
-import { ReactionRolesActionDto } from '../../../_dto/roles.dto';
+import { ReactionRoleActions } from '../../enum/roles.enum';
+import { ReactionRolesActionDto } from '../../_dto/roles.dto';
 
 
 @injectable()
