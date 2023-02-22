@@ -6,8 +6,6 @@ import kitty_chan from '../../model/kitty_chan';
 @injectable()
 export class AnalyticsService{
 	private gamers_hub_guild_id = process.env.GAMERS_HUB_GUILD_ID;
-	constructor() { }
-    
 
 	async messageCount() {
 		const count = await kitty_chan.findOne({});

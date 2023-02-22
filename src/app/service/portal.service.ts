@@ -1,6 +1,5 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import { randomNumber } from '../../utils/calc';
 import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';
 import Server from '../../model/server';

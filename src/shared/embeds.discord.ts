@@ -1,6 +1,2 @@
-export class DiscordEmbedBuilder{
-	constructor() { }
-    
-
-    
+export class DiscordEmbedBuilder{ 
 }

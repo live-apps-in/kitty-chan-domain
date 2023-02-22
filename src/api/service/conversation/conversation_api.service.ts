@@ -1,5 +1,4 @@
 import { inject, injectable } from 'inversify';
-import { Types } from 'mongoose';
 import { HttpException } from '../../../core/exception';
 import { TYPES } from '../../../core/inversify.types';
 import { ConversationRepository } from '../../repository/conversation.repo';

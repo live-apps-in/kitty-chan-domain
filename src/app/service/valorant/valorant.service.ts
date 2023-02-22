@@ -5,7 +5,6 @@ import { IGuild } from '../../interface/shared.interface';
 
 @injectable()
 export class ValorantService{
-	constructor() { }
     
 	async matchmaking(guild: IGuild): Promise<any> {
 		const userRoles = guild.payload.member.roles.cache;

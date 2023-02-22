@@ -1,7 +1,6 @@
-import axios, { AxiosError } from 'axios';
-import { ChatInputCommandInteraction, Message } from 'discord.js';
+import axios from 'axios';
+import { Message } from 'discord.js';
 import { injectable } from 'inversify';
-import { client } from '../app';
 import { IGuild, IMessageReaction } from '../interface/shared.interface';
 
 interface axiosConfig{

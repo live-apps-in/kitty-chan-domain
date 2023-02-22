@@ -24,7 +24,6 @@ import { SharedService } from '../app/shared/shared.service';
 import { ViolationRepository } from '../app/repository/violation.repo';
 import { LoggerService } from '../app/service/logger.service';
 import { TextLogRepository } from '../app/repository/textLogRepo';
-import { WhiteListService } from '../app/service/shared/whitelist.service';
 import { CommandService } from '../app/service/commands.service';
 import { ActionService } from '../app/service/shared/action.service';
 import { AnalyticsService } from '../api/service/analytics.service';
@@ -98,7 +97,6 @@ container.bind<SharedService>(TYPES.SharedService).to(SharedService);
 container.bind<ActionService>(TYPES.ActionService).to(ActionService);
 container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
 container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService);
-container.bind<WhiteListService>(TYPES.WhiteListService).to(WhiteListService);
 container.bind<FeatureFlagService>(TYPES.FeatureFlagService).to(FeatureFlagService);
 
 

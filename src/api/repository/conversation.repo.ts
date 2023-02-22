@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { Types } from 'mongoose';
 import ConversationPhrase from '../../model/conversation_phrase.model';
 import ConversationResponse from '../../model/conversation_res.model';

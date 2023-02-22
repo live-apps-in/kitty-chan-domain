@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import { client } from '../app';
 import { image_content } from '../content/image';
 import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';

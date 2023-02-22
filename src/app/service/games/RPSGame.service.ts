@@ -1,7 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../core/inversify.types';
 import { RPS_GAME_Content } from '../../content/games/rpsGame.content';
-import { ACTIONS } from '../../enum/action';
 import { REPLY } from '../../enum/reply';
 import { IGuild } from '../../interface/shared.interface';
 import { ActionService } from '../shared/action.service';

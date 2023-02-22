@@ -8,22 +8,19 @@ import { IGuild } from '../interface/shared.interface';
 import { REPLY } from '../enum/reply';
 import { LoggerService } from './logger.service';
 import { VIOLATIONS } from '../enum/violations';
-import { middleware, WhiteListService } from './shared/whitelist.service';
 require('dotenv/config');
 
 @injectable()
 export class LanguageFilter {
 	constructor(
 		@inject(TYPES.ResponseService) private readonly responseService: ResponseService,
-		@inject(TYPES.LoggerService) private readonly LoggerService: LoggerService,
-		@inject(TYPES.WhiteListService) private readonly whiteListService: WhiteListService
+		@inject(TYPES.LoggerService) private readonly LoggerService: LoggerService
 	) { }
     
 	///Non-English Detection
-	@middleware()
 	async non_english_detection(guild: IGuild): Promise<boolean>{
-		this.whiteListService.validate();
-		let {messageContent} = guild;
+		let { messageContent } = guild;
+		
 		messageContent = messageContent.toLowerCase().trim();
 		const messageChunk = messageContent.split(' ');
 		let isNonEnglish = false;

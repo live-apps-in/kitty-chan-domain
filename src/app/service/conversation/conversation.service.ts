@@ -1,9 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { ConversationRepository } from '../../../api/repository/conversation.repo';
-import { ConversationAPIService } from '../../../api/service/conversation/conversation_api.service';
 import { TYPES } from '../../../core/inversify.types';
 import { randomNumber } from '../../../utils/calc';
-import { conversation_phrase, conversation_phrase_response } from '../../data/conversation/conversation';
 import { REPLY } from '../../enum/reply';
 import { IGuild } from '../../interface/shared.interface';
 import { ResponseService } from '../shared/response.service';

@@ -46,6 +46,5 @@ export const TYPES = {
 	ActionService: Symbol.for('ActionService'),
 	LoggerService: Symbol.for('LoggerService'),
 	UtilityService: Symbol.for('UtilityService'),
-	WhiteListService: Symbol.for('WhiteListService'),
 	FeatureFlagService: Symbol.for('FeatureFlagService'),
 };

@@ -1,4 +1,4 @@
-import { EmbedBuilder, GuildEmoji, MessageReaction } from 'discord.js';
+import { GuildEmoji, MessageReaction } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { ReactionRolesActionDto } from '../../../api/live_cord/_dto/roles.dto';
 import { TYPES } from '../../../core/inversify.types';
@@ -10,9 +10,9 @@ import { REPLY } from '../../enum/reply';
 import ReactionRole from '../../../model/reaction_roles.model';
 import { ActionService } from '../shared/action.service';
 import { ACTIONS } from '../../enum/action';
-import { IGuild, IMessageReaction } from '../../interface/shared.interface';
+import { IMessageReaction } from '../../interface/shared.interface';
 import { compareRolesMapping } from '../../../utils/roles_mapping';
-import { ReactMessageLimiter } from '../../../jobs/rate-limiter';
+import { patchRoleRateLimiter } from '../../../jobs/rate-limiter';
 
 
 @injectable()
@@ -124,9 +124,11 @@ export class RolesService{
 		}
 
 		if (!role) return false;
+		
 		///Add role to User
-		console.log('RUN');
-		this.actionService.call({
+		//Rate Limit API call to Discord
+		await patchRoleRateLimiter();
+		return this.actionService.call({
 			type: ACTIONS.setRole,
 			guild: {
 				guildId: reaction_role.guildId,
@@ -158,7 +160,10 @@ export class RolesService{
 		}
 
 		if (!role) return false;
+
 		///Add role to User
+		//Rate Limit API call to Discord
+		await patchRoleRateLimiter();
 		this.actionService.call({
 			type: ACTIONS.deleteRole,
 			guild: {

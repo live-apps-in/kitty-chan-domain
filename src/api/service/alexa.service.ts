@@ -1,5 +1,4 @@
 import { inject, injectable } from 'inversify';
-import { VALORANT_ROLE_ID } from '../../app/data/id';
 import { REPLY } from '../../app/enum/reply';
 import { ResponseService } from '../../app/service/shared/response.service';
 import { TYPES } from '../../core/inversify.types';
