@@ -103,10 +103,38 @@ export class RolesService{
 			});
 			
 		}
+
+		return {
+			message: 'Reaction role updated',
+			reaction_role_message_ref
+		};
+	}
+
+	async deleteReactionRole(dto: ReactionRolesActionDto) {
+		const { guildId, channelId, reaction_role_message_ref } = dto;
+
+		const reaction_role = await ReactionRole.findOne({ messageId: reaction_role_message_ref });
+		if (!reaction_role) throw new HttpException('Cannot find Reaction Role', 400);
+		
+
+		///Update Message
+		await this.responseService.deleteMessage({
+			guildId,
+			channelId,
+			messageId: reaction_role_message_ref
+		});
+
+		await ReactionRoles.deleteOne({ messageId: reaction_role_message_ref });
+
+		return {
+			message: 'Reaction Role Deleted',
+			reaction_role_message_ref
+		};
 	}
 
 	/**
 	 * Role Reactions
+	 * Handle Reactions
 	 */
 	async setReactionRole(reaction: MessageReaction, user) {
 		if (user.isBot) return false;

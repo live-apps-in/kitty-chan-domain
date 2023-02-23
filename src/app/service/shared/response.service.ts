@@ -26,6 +26,20 @@ export class ResponseService{
 		});
 	}
 
+	/**
+	 * Messages
+	 */
+	async deleteMessage(guild: IGuild) {
+		return this.respond({
+			type: REPLY.deleteMessage,
+			guild,
+			body: {}
+		});
+	}
+
+	/**
+	 * Message Embeds
+	 */
 	async embedMessage(embeds: DiscordEmbeds[], guild: IGuild) {
 		return await this.respond({
 			type: REPLY.sendEmbed,
@@ -75,6 +89,14 @@ class ResponseFactory{
 			config.route = `/channels/${channelId}/messages`;
 			config.method = 'post';
 			break;
+		case REPLY.replyMessage:
+			config.route = `/channels/${channelId}/messages`;
+			config.method = 'post';
+			break;
+		case REPLY.deleteMessage:
+			config.route = `/channels/${channelId}/messages/${messageId}`;
+			config.method = 'delete';
+			break;
 		case REPLY.sendEmbed:
 			config.route = `/channels/${channelId}/messages`;
 			config.method = 'post';
@@ -88,10 +110,6 @@ class ResponseFactory{
 			config.method = 'put';
 			break;
 			
-		case REPLY.replyMessage:
-			config.route = `/channels/${channelId}/messages`;
-			config.method = 'post';
-			break;
          
 		default:
 			break;
