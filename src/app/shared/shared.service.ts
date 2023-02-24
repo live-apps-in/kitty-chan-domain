@@ -80,6 +80,9 @@ export class SharedService{
 		return guild;
 	}
 
+	/**
+	 * Message Reply or Role Mentions
+	 */
 	async filterMentions(guild: IGuild) {
 		const mentions = guild.payload.mentions;
 		return {
@@ -89,5 +92,30 @@ export class SharedService{
 			role: mentions.roles
 		};
 		
+	}
+
+	async filterWebLinks(guild: IGuild) {
+		const message = guild.payload;
+
+		const trustedDomains = ['jagalive.in', 'tenor.com'];
+		const res = {
+			isLink: false,
+			isTrustable: false,
+			domain: ''
+		};
+
+      	const links = message.content.match(/(https?:\/\/|www\.)\S+/gi) || [];
+		for (const link of links) {
+			res.isLink = true;
+        	const url = new URL(link);
+        	const domain = url.hostname.replace(/^www\./i, '');
+
+			if (trustedDomains.includes(domain)) {
+				res.isTrustable = true;
+				res.domain = domain;
+        	}
+		}
+		
+		return res;
 	}
 }

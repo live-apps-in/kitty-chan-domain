@@ -10,6 +10,7 @@ import { ActionService } from './shared/action.service';
 import { ACTIONS } from '../enum/action';
 import { portal_active_description, portal_inactive_description } from '../content/descriptions';
 import { SharedService } from '../shared/shared.service';
+import { globalRoleRateLimiter } from '../../jobs/rate-limiter';
 
 
 @injectable()
@@ -60,11 +61,30 @@ export class PortalService{
 			return;
 		}
 
+		///Check if message contains attachments
+		if (guild.payload.attachments.size !== 0) {
+			await this.reply('We don\'t allow attachments currently ⚠. We\'ll add support for media soon ;)', guild);
+			return;
+		}
+
+		///Check if message contains website links
+		const { isLink, isTrustable, domain } = await this.sharedService.filterWebLinks(guild);
+		if (isLink && !isTrustable) {
+			await this.reply('We don\'t allow this URL ⚠. Avoid sending website links in this Portal.', guild);
+			return;
+		}
+
 		///Notify Other Portal Members
 		const getSessionGuild = await this.getSessionMembers(guild);
 		if (!getSessionGuild || getSessionGuild.length === 0) return;
 
-		getSessionGuild.map(e => e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent}`);
+		getSessionGuild.map(e => {
+			if (domain === 'tenor.com') {
+				e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent} \n`;
+			} else {
+				e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent}`;
+			}
+		});
 
 		await this.message(getSessionGuild);
 		return true;
@@ -216,6 +236,7 @@ export class PortalService{
 
 	private async message(guilds: any[]) {
 		guilds.map(async e => {
+			await globalRoleRateLimiter();
 			await this.responseService.respond({
 			    type: REPLY.sendMessage,
 			    guild: {
