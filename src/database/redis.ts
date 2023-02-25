@@ -1,6 +1,6 @@
 import { Redis } from 'ioredis';
 
-const host = process.env.NODE_ENV === 'dev'? '154.61.74.196': '127.0.0.1';
+const host = process.env.NODE_ENV === 'dev'? '154.61.74.196': 'localhost';
 
 const client = new Redis({
 	host,
