@@ -14,6 +14,7 @@ import './config/command_init';
 import 'dotenv/config';
 import { OnInit } from '../jobs/onInit';
 import { RolesService } from './service/roles/roles.service';
+import { RedisService } from '../shared/redis.service';
 
 /**
  * Discord JS lib Client Config
@@ -41,6 +42,7 @@ export class App{
 		@inject(TYPES.PortalService) private readonly portalService: PortalService,
 		@inject(TYPES.GameService) private readonly gameService: GamesService,
 		@inject(TYPES.RolesService) private readonly rolesService: RolesService,
+		@inject(TYPES.RedisService) private readonly redisService: RedisService,
 	){}
 
 	async start() {
@@ -156,6 +158,16 @@ export class App{
 				name: guild.name,
 				guildId: guild.id
 			});
+
+			await this.redisService.set(
+				`guild:${guild.id}:flags`,
+				JSON.stringify({
+					strongLanguage: false,
+					hindi: false,
+					valorant_find_players: false,
+					valorant_set_rank: false
+				})
+			)
 
 			///Jaga's Discord ID
 			const userId = '516438995824017420';
