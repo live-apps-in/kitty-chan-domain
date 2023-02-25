@@ -167,7 +167,7 @@ export class App{
 					valorant_find_players: false,
 					valorant_set_rank: false
 				})
-			)
+			);
 
 			///Jaga's Discord ID
 			const userId = '516438995824017420';
