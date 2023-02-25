@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { TYPES } from '../../../core/inversify.types';
+import { RedisService } from '../../../shared/redis.service';
 import { IGuild } from '../../interface/shared.interface';
 import { ServerRepo } from '../../repository/server.repo';
 
@@ -8,7 +9,8 @@ import { ServerRepo } from '../../repository/server.repo';
 @injectable()
 export class FeatureFlagService{
 	constructor(
-        @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo
+        @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
+        @inject(TYPES.RedisService) private readonly redisService: RedisService,
 	) { }
 
     
@@ -17,7 +19,8 @@ export class FeatureFlagService{
 	}
     
 	async getFeatureFlag(guild: IGuild) {
-		return await this.serverRepo.getByGuildId(guild.guildId);
+		const guildFlag = await this.redisService.get(`guild:${guild.guildId}:flags`);
+		return guildFlag ? JSON.parse(guildFlag) : null;
 	}
 
 	async viewAllFeatureFlag() {

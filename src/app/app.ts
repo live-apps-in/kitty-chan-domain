@@ -84,12 +84,14 @@ export class App{
 			
 			///Validate if Bot message
 			if (guildInfo.isBot) return;
-			
+
 			///Fetch feature flags
+			console.time('test');
 			const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
+			console.timeEnd('test');
 			if (!featureFlag) return;
 
-			guildInfo.featureFlag = { ...featureFlag.features };
+			guildInfo.featureFlag = { ...featureFlag };
 
 			///Check Portal Intent
 			const isPortal = await this.portalService.validate_channel(guildInfo);

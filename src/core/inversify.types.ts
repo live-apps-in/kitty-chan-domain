@@ -42,6 +42,7 @@ export const TYPES = {
 	
 	///Shared Service
 	SharedService: Symbol.for('SharedService'),
+	RedisService: Symbol.for('RedisService'),
 	ResponseService: Symbol.for('ResponseService'),
 	ActionService: Symbol.for('ActionService'),
 	LoggerService: Symbol.for('LoggerService'),

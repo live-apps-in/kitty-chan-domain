@@ -45,6 +45,7 @@ import { GuildAPIService } from '../api/live_cord/service/guild.service';
 import { RolesAPIService } from '../api/live_cord/service/roles/roles.service';
 import { RolesService } from '../app/service/roles/roles.service';
 import { UserService } from '../api/live_cord/service/user.service';
+import { RedisService } from '../shared/redis.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -94,6 +95,7 @@ container.bind<ServerRepo>(TYPES.ServerRepo).to(ServerRepo);
 
 ///Shared Service
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);
+container.bind<RedisService>(TYPES.RedisService).to(RedisService);
 container.bind<ActionService>(TYPES.ActionService).to(ActionService);
 container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
 container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService);
