@@ -87,6 +87,7 @@ export class App{
 			///Validate if Bot message
 			if (guildInfo.isBot) return;
 
+			console.time('test')
 			///Fetch feature flags
 			const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
 			if (!featureFlag) return;
@@ -125,7 +126,7 @@ export class App{
 
 			///Log Good Text Count
 			await this.loggerService.text_count_logger(guildInfo);
-
+			console.timeEnd('test')
 		});
 
 
