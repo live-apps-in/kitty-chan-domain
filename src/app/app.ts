@@ -87,7 +87,6 @@ export class App{
 			///Validate if Bot message
 			if (guildInfo.isBot) return;
 
-			console.time('test');
 			///Fetch feature flags
 			const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
 			if (!featureFlag) return;
@@ -119,14 +118,13 @@ export class App{
 			if (isCommand) return;
 
 			///Wake Words
-			await this.wakeService.validate(guildInfo);
+			this.wakeService.validate(guildInfo);
 
 			///Games
-			await this.gameService.call(guildInfo);
+			this.gameService.call(guildInfo);
 
 			///Log Good Text Count
-			await this.loggerService.text_count_logger(guildInfo);
-			console.timeEnd('test');
+			this.loggerService.text_count_logger(guildInfo);
 		});
 
 
