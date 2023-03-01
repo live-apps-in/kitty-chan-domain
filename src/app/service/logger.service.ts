@@ -35,7 +35,7 @@ export class LoggerService{
 	}
 
 	async text_count_logger(guild: IGuild) {
-		await this.queueService.sendToQueue({name: "jaga"}, 'logger')
+		await this.queueService.sendToQueue({name: 'jaga'}, 'logger');
 		const getTextLog = await this.textLogRepo.count_text_log(guild.userId, guild.guildId);
 		if (getTextLog === 0) {
 			await this.textLogRepo.create({
