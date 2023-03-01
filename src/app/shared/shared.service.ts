@@ -97,7 +97,7 @@ export class SharedService{
 	async filterWebLinks(guild: IGuild) {
 		const message = guild.payload;
 
-		const trustedDomains = ['jagalive.in', 'tenor.com'];
+		const trustedDomains = ['jaga.live', 'tenor.com'];
 		const res = {
 			isLink: false,
 			isTrustable: false,

@@ -1,5 +1,5 @@
 config:
-  target: "https://kittychan.jagalive.in"
+  target: "https://kittychan.jaga.live"
   phases:
     - duration: 60
       arrivalRate: 5

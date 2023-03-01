@@ -7,11 +7,13 @@ import { ViolationRepository } from '../repository/violation.repo';
 import kitty_chan from '../../model/kitty_chan';
 import server from '../../model/server';
 import io from '../../main';
+import { QueueService } from '../../shared/queue.service';
 @injectable()
 export class LoggerService{
 	constructor(
         @inject(TYPES.ViolationRepository) private readonly violationRepo: ViolationRepository,
         @inject(TYPES.TextLogRepository) private readonly textLogRepo:TextLogRepository,
+        @inject(TYPES.QueueService) private readonly queueService: QueueService,
 	) { }
 
 	async log_message_count(guild: IGuild) {
@@ -33,6 +35,7 @@ export class LoggerService{
 	}
 
 	async text_count_logger(guild: IGuild) {
+		await this.queueService.sendToQueue({name: "jaga"}, 'logger')
 		const getTextLog = await this.textLogRepo.count_text_log(guild.userId, guild.guildId);
 		if (getTextLog === 0) {
 			await this.textLogRepo.create({
