@@ -1,13 +1,12 @@
 import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
-import { bad_words } from '../data/strong_language';
-import { hinglish_words } from '../data/hinglish';
 import { TYPES } from '../../core/inversify.types';
 import { ResponseService } from './shared/response.service';
 import { IGuild } from '../interface/shared.interface';
 import { REPLY } from '../enum/reply';
 import { LoggerService } from './logger.service';
 import { VIOLATIONS } from '../enum/violations';
+import { bad_words, hinglish_words } from '../../jobs/onInit';
 require('dotenv/config');
 
 @injectable()
