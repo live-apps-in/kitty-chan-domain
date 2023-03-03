@@ -1,5 +1,5 @@
 # kitty chan 😺
-A discord bot designed for Gamer's Hub Discord server. [ TypeScript Version ]
+kitty chan is a multi-purpose Discord Bot.
 
 Ongoing Updates:
  * Major Code Refactoring
