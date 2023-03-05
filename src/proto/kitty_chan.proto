@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/any.proto";
-
 
 package kitty_chan;
 
@@ -11,13 +9,12 @@ service ReactionRoleService {
 
 message ReactionRoleActionReqDto {
   string name = 1;
-  string channelId = 2;
-  string action = 3;
-  repeated google.protobuf.Any rolesMapping = 4;
-  string reaction_role_message_ref = 5;
-  string discord_embed_config = 6;
+  string action = 2;
+  string channelId = 3;
+  string reaction_role_message_ref = 4;
+  string discordEmbedConfig = 5;
 }
 
 message ReactionRoleActionResDto {
-  string test = 1;
+  string messageRef = 1;
 }

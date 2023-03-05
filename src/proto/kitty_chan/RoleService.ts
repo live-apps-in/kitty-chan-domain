@@ -18,7 +18,7 @@ export interface RoleServiceClient extends grpc.Client {
 }
 
 export interface RoleServiceHandlers extends grpc.UntypedServiceImplementation {
-  reactionRolesAction: grpc.handleUnaryCall<_kitty_chan_ReactionRoleActionReqDto__Output, _google_protobuf_Any>;
+  reactionRolesAction: grpc.handleUnaryCall<_kitty_chan_ReactionRoleActionReqDto, _google_protobuf_Any>;
   
 }
 

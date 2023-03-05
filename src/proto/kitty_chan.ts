@@ -8,11 +8,6 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 };
 
 export interface ProtoGrpcType {
-  google: {
-    protobuf: {
-      Any: MessageTypeDefinition
-    }
-  }
   kitty_chan: {
     ReactionRoleActionReqDto: MessageTypeDefinition
     ReactionRoleActionResDto: MessageTypeDefinition
