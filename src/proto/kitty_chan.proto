@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package kitty_chan;
+
+service HelloWorld {
+  rpc hello (HelloRequest) returns (HelloResponse);
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}

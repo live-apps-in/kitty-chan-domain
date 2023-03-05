@@ -6,7 +6,6 @@ import { TYPES } from '../../../core/inversify.types';
 import { InternalAuthGuard } from '../../auth/guards/InternalAuthGuard';
 import { UserService } from '../service/user.service';
 
-
 @controller('/live_cord')
 export class UserController{
 	constructor(
