@@ -1,15 +1,23 @@
 syntax = "proto3";
 
+import "google/protobuf/any.proto";
+
+
 package kitty_chan;
 
-service HelloWorld {
-  rpc hello (HelloRequest) returns (HelloResponse);
+service ReactionRoleService {
+  rpc reactionRolesAction (ReactionRoleActionReqDto) returns (ReactionRoleActionResDto);
 }
 
-message HelloRequest {
+message ReactionRoleActionReqDto {
   string name = 1;
+  string channelId = 2;
+  string action = 3;
+  repeated google.protobuf.Any rolesMapping = 4;
+  string reaction_role_message_ref = 5;
+  string discord_embed_config = 6;
 }
 
-message HelloResponse {
-  string message = 1;
+message ReactionRoleActionResDto {
+  string test = 1;
 }

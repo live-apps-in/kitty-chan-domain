@@ -1,17 +1,22 @@
 import type * as grpc from '@grpc/grpc-js';
 import type { MessageTypeDefinition } from '@grpc/proto-loader';
 
-import type { HelloWorldClient as _kitty_chan_HelloWorldClient, HelloWorldDefinition as _kitty_chan_HelloWorldDefinition } from './kitty_chan/HelloWorld';
+import type { ReactionRoleServiceClient as _kitty_chan_ReactionRoleServiceClient, ReactionRoleServiceDefinition as _kitty_chan_ReactionRoleServiceDefinition } from './kitty_chan/ReactionRoleService';
 
 type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> = {
   new(...args: ConstructorParameters<Constructor>): Subtype;
 };
 
 export interface ProtoGrpcType {
+  google: {
+    protobuf: {
+      Any: MessageTypeDefinition
+    }
+  }
   kitty_chan: {
-    HelloRequest: MessageTypeDefinition
-    HelloResponse: MessageTypeDefinition
-    HelloWorld: SubtypeConstructor<typeof grpc.Client, _kitty_chan_HelloWorldClient> & { service: _kitty_chan_HelloWorldDefinition }
+    ReactionRoleActionReqDto: MessageTypeDefinition
+    ReactionRoleActionResDto: MessageTypeDefinition
+    ReactionRoleService: SubtypeConstructor<typeof grpc.Client, _kitty_chan_ReactionRoleServiceClient> & { service: _kitty_chan_ReactionRoleServiceDefinition }
   }
 }
 

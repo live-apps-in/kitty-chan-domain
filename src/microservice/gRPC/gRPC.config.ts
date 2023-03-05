@@ -1,6 +1,9 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import { RolesGrpcController } from '../../api/live_cord/controller/roles/roles.gRPC.controller';
+import { RolesAPIService } from '../../api/live_cord/service/roles/roles.service';
+import container from '../../core/inversify.di';
+import { TYPES } from '../../core/inversify.types';
 import { ProtoGrpcType } from '../../proto/kitty_chan';
 
 /**
@@ -13,13 +16,14 @@ const proto = (grpc.loadPackageDefinition(packageDefinition) as unknown) as Prot
 /**
  * gRPC Controller
  */
-const rolesGrpcController = new RolesGrpcController();
+const rolesApiService = container.get<RolesAPIService>(TYPES.RolesAPIService);
+const rolesGrpcController = new RolesGrpcController(rolesApiService);
 
 /**
  * gRPC Server Config
  */
 const gRpcServer = new grpc.Server();
-gRpcServer.addService(proto.kitty_chan.HelloWorld.service, rolesGrpcController);
+gRpcServer.addService(proto.kitty_chan.ReactionRoleService.service, rolesGrpcController);
 
 gRpcServer.bindAsync(process.env.GRPC_URL, grpc.ServerCredentials.createInsecure(), (err, port) => {
 	if (err) {
