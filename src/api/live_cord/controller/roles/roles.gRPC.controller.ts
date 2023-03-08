@@ -18,8 +18,7 @@ export class RolesGrpcController implements ReactionRoleServiceHandlers{
   
   async reactionRolesAction(call: ServerUnaryCall<ReactionRoleActionReqDto, ReactionRoleActionResDto>, callback: sendUnaryData<any>) {
   	console.log(call.request);
-  	callback(null, { messageRef: 'test'});
-		
+  	callback(null, { reactionRoleMessageRef: 'test' });
 		
   	return;
 

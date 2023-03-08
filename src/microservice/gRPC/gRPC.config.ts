@@ -21,9 +21,18 @@ const rolesGrpcController = new RolesGrpcController(rolesApiService);
 
 /**
  * gRPC Server Config
+function middleware(call: grpc.ServerUnaryCall<any, any>, callback: grpc.sendUnaryData<any>, next: () => void) {
+  const metadata = call.metadata.getMap();
+  // Access metadata headers here
+  console.log(metadata);
+
+  // Proceed with the request
+  next();
+}
  */
 const gRpcServer = new grpc.Server();
 gRpcServer.addService(proto.kitty_chan.ReactionRoleService.service, rolesGrpcController);
+
 
 gRpcServer.bindAsync(process.env.GRPC_URL, grpc.ServerCredentials.createInsecure(), (err, port) => {
 	if (err) {
@@ -33,3 +42,5 @@ gRpcServer.bindAsync(process.env.GRPC_URL, grpc.ServerCredentials.createInsecure
 	console.log(`gRPC Server listening on port ${port}`);
 	gRpcServer.start();
 });
+
+

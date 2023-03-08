@@ -1,6 +1,4 @@
 syntax = "proto3";
-
-
 package kitty_chan;
 
 service ReactionRoleService {
@@ -11,10 +9,28 @@ message ReactionRoleActionReqDto {
   string name = 1;
   string action = 2;
   string channelId = 3;
-  string reaction_role_message_ref = 4;
-  string discordEmbedConfig = 5;
+  string reactionRoleMessageRef = 4;
+  DiscordEmbedConfig discordEmbedConfig = 5;
 }
 
 message ReactionRoleActionResDto {
-  string messageRef = 1;
+  string reactionRoleMessageRef = 1;
+}
+
+message DiscordEmbedConfig{
+  string title = 1;
+  string description = 2;
+  int32 color = 3;
+  DiscordEmbedFooter footer = 4;
+  repeated DiscordEmbedFields fields = 5;
+}
+
+message DiscordEmbedFooter{
+  string text = 1;
+}
+
+message DiscordEmbedFields{
+  string name = 1;
+  string value = 2;
+  bool inline = 3;
 }

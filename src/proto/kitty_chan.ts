@@ -9,6 +9,9 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   kitty_chan: {
+    DiscordEmbedConfig: MessageTypeDefinition
+    DiscordEmbedFields: MessageTypeDefinition
+    DiscordEmbedFooter: MessageTypeDefinition
     ReactionRoleActionReqDto: MessageTypeDefinition
     ReactionRoleActionResDto: MessageTypeDefinition
     ReactionRoleService: SubtypeConstructor<typeof grpc.Client, _kitty_chan_ReactionRoleServiceClient> & { service: _kitty_chan_ReactionRoleServiceDefinition }

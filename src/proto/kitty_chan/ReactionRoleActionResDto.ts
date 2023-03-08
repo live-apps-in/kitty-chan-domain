@@ -2,9 +2,9 @@
 
 
 export interface ReactionRoleActionResDto {
-  'messageRef'?: (string);
+  'reactionRoleMessageRef'?: (string);
 }
 
 export interface ReactionRoleActionResDto__Output {
-  'messageRef'?: (string);
+  'reactionRoleMessageRef'?: (string);
 }
