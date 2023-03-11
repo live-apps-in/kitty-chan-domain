@@ -81,11 +81,11 @@ export class App{
 			///Extract Guild Info
 			const guildInfo = await this.sharedService.extractGuildInfo(message);
 			
-			///Log
-			this.loggerService.log_message_count(guildInfo);
-			
 			///Validate if Bot message
 			if (guildInfo.isBot) return;
+			
+			///Log
+			this.loggerService.log_message_count(guildInfo);
 
 			///Fetch feature flags
 			const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
