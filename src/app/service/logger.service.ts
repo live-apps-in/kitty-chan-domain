@@ -5,9 +5,10 @@ import text_log from '../../model/text_log';
 import { TextLogRepository } from '../repository/textLogRepo';
 import { ViolationRepository } from '../repository/violation.repo';
 import kitty_chan from '../../model/kitty_chan';
-import server from '../../model/server';
+import Server from '../../model/server';
 import io from '../../main';
 import { QueueService } from '../../shared/queue.service';
+import MessageLog from '../../model/message_logs.model';
 @injectable()
 export class LoggerService{
 	constructor(
@@ -18,7 +19,7 @@ export class LoggerService{
 
 	async log_message_count(guild: IGuild) {
 		///Global Count
-		await kitty_chan.updateOne({}, {
+		kitty_chan.updateOne({}, {
 			$inc: {messageCount: 1}
 		});
 
@@ -27,10 +28,18 @@ export class LoggerService{
 		
 		///Individual Guild
 		if (!guild.isBot) {
-			await server.updateOne({ guildId: guild.guildId }, {
+			Server.updateOne({ guildId: guild.guildId }, {
 				$inc: { messageCount: 1 }
 			});
 		}
+
+		///Message Log
+		 MessageLog.insertMany({
+			userId: guild.userId,
+			guildId: guild.guildId,
+			channelId: guild.channelId,
+			createdAt: new Date()
+		});
 		return;
 	}
 
