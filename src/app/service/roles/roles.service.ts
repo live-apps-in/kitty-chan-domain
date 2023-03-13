@@ -29,8 +29,7 @@ export class RolesService{
 		const embed: DiscordEmbeds[] = [{
 			...dto.discordEmbedConfig
 		}];
-        
-		 
+		
 		const res:any = await this.responseService.embedMessage(embed, {
 			guildId: dto.guildId,
 			channelId: dto.channelId
@@ -52,27 +51,27 @@ export class RolesService{
 			const emoji= rolesMapping[index].emoji;
 			await this.responseService.respond({
 				type: REPLY.addReaction,
-				guild: {guildId, channelId, messageId: res.id},
+				guild: { guildId, channelId, messageId: res.id },
 				body: {
 					emoji: emoji.type ===  'standard' ? encodeURIComponent(emoji.standardEmoji) :  encodeURIComponent(`${emoji.name}:${emoji.id}`)
 				}
 			});
 		}
 
-		const reaction_role_message_ref = res.id;
+		const reactionRoleMessageRef = res.id;
 		return {
-			reaction_role_message_ref
+			reactionRoleMessageRef
 		};
 	}
 
 	///Update Reaction Role
 	async updateReactionRole(dto: ReactionRolesActionDto) {
-		const { guildId, channelId, rolesMapping, reaction_role_message_ref } = dto;
+		const { guildId, channelId, rolesMapping, reactionRoleMessageRef } = dto;
 		const embed: DiscordEmbeds[] = [{
 			...dto.discordEmbedConfig
 		}];
 
-		const reaction_role = await ReactionRole.findOne({ messageId: reaction_role_message_ref });
+		const reaction_role = await ReactionRole.findOne({ messageId: reactionRoleMessageRef });
 		if (!reaction_role) throw new HttpException('Cannot find Reaction Role', 400);
 		
 
@@ -80,7 +79,7 @@ export class RolesService{
 		await this.responseService.editEmbedMessage(embed, {
 			guildId,
 			channelId,
-			messageId: reaction_role_message_ref
+			messageId: reactionRoleMessageRef
 		});
 
 		///Update Roles Mapping Changes
@@ -96,7 +95,7 @@ export class RolesService{
 			const emoji= emojiToBeUpdated[index].emoji;
 			await this.responseService.respond({
 				type: REPLY.addReaction,
-				guild: { guildId, channelId, messageId: reaction_role_message_ref },
+				guild: { guildId, channelId, messageId: reactionRoleMessageRef },
 				body: {
 					emoji: emoji.type ===  'standard' ? encodeURIComponent(emoji.standardEmoji) :  encodeURIComponent(`${emoji.name}:${emoji.id}`)
 				}
@@ -105,15 +104,14 @@ export class RolesService{
 		}
 
 		return {
-			message: 'Reaction role updated',
-			reaction_role_message_ref
+			reactionRoleMessageRef
 		};
 	}
 
 	async deleteReactionRole(dto: ReactionRolesActionDto) {
-		const { guildId, channelId, reaction_role_message_ref } = dto;
+		const { guildId, channelId, reactionRoleMessageRef } = dto;
 
-		const reaction_role = await ReactionRole.findOne({ messageId: reaction_role_message_ref });
+		const reaction_role = await ReactionRole.findOne({ messageId: reactionRoleMessageRef });
 		if (!reaction_role) throw new HttpException('Cannot find Reaction Role', 400);
 		
 
@@ -121,14 +119,13 @@ export class RolesService{
 		await this.responseService.deleteMessage({
 			guildId,
 			channelId,
-			messageId: reaction_role_message_ref
+			messageId: reactionRoleMessageRef
 		});
 
-		await ReactionRoles.deleteOne({ messageId: reaction_role_message_ref });
+		await ReactionRoles.deleteOne({ messageId: reactionRoleMessageRef });
 
 		return {
-			message: 'Reaction Role Deleted',
-			reaction_role_message_ref
+			reactionRoleMessageRef
 		};
 	}
 

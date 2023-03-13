@@ -17,20 +17,18 @@ export class RolesGrpcController implements ReactionRoleServiceHandlers{
   ) { }
   
   async reactionRolesAction(call: ServerUnaryCall<ReactionRoleActionReqDto, ReactionRoleActionResDto>, callback: sendUnaryData<any>) {
-  	console.log(call.request);
-  	callback(null, { reactionRoleMessageRef: 'test' });
-		
-  	return;
-
-  	// 	const res = await this.rolesAPIService.reactionRoleFactory({
-  	// 	name,
-  	// 	guildId: '',
-  	// 	channelId,
-  	// 	action,
-  	// 	rolesMapping,
-  	// 	reaction_role_message_ref,
-  	// 	discordEmbedConfig
-  	// });
+  	const {name, channelId, guildId, action, rolesMapping, reactionRoleMessageRef, discordEmbedConfig} = call.request
+	  
+	  const res = await this.rolesAPIService.reactionRoleFactory({
+		name,
+  		guildId,
+  		channelId,
+  		action,
+  		rolesMapping,
+  		reactionRoleMessageRef,
+  		discordEmbedConfig
+	});
     
+	return callback(null, { ...res });
   }
 }

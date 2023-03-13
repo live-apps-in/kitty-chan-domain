@@ -7,6 +7,6 @@ export class ReactionRolesActionDto{
 	channelId: string;
 	action: string;
 	rolesMapping: any[];
-	reaction_role_message_ref: string;
+	reactionRoleMessageRef: string;
 	discordEmbedConfig?: any;
 }

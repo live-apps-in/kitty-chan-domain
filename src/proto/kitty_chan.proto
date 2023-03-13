@@ -8,15 +8,34 @@ service ReactionRoleService {
 message ReactionRoleActionReqDto {
   string name = 1;
   string action = 2;
-  string channelId = 3;
-  string reactionRoleMessageRef = 4;
-  DiscordEmbedConfig discordEmbedConfig = 5;
+  string guildId = 3;
+  string channelId = 4;
+  repeated RolesMapping rolesMapping = 5;
+  DiscordEmbedConfig discordEmbedConfig = 6;
+  string reactionRoleMessageRef = 7;
 }
 
 message ReactionRoleActionResDto {
   string reactionRoleMessageRef = 1;
 }
 
+/**Reaction Role Mapping **/
+message RolesMapping{
+  string name = 1;
+  string roleId = 2;
+  RolesMappingEmoji emoji = 3;
+
+}
+
+message RolesMappingEmoji{
+  string type = 1;
+  string id = 2;
+  string name = 3;
+  string standardEmoji = 4;
+}
+/*****/
+
+/**Discord Embed **/
 message DiscordEmbedConfig{
   string title = 1;
   string description = 2;
@@ -34,3 +53,4 @@ message DiscordEmbedFields{
   string value = 2;
   bool inline = 3;
 }
+/****/

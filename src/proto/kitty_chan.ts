@@ -15,6 +15,8 @@ export interface ProtoGrpcType {
     ReactionRoleActionReqDto: MessageTypeDefinition
     ReactionRoleActionResDto: MessageTypeDefinition
     ReactionRoleService: SubtypeConstructor<typeof grpc.Client, _kitty_chan_ReactionRoleServiceClient> & { service: _kitty_chan_ReactionRoleServiceDefinition }
+    RolesMapping: MessageTypeDefinition
+    RolesMappingEmoji: MessageTypeDefinition
   }
 }
 

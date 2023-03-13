@@ -19,7 +19,7 @@ export class RolesController{
 	async reactionRoleAction(req: Req) {
 		const { action } = req.params;
 		const { guildId } = req.userData;
-		const { name, channelId, rolesMapping, reaction_role_message_ref, discordEmbedConfig } = req.body;
+		const { name, channelId, rolesMapping, reactionRoleMessageRef, discordEmbedConfig } = req.body;
         
 		return this.rolesAPIService.reactionRoleFactory({
 			name,
@@ -27,7 +27,7 @@ export class RolesController{
 			channelId,
 			action,
 			rolesMapping,
-			reaction_role_message_ref,
+			reactionRoleMessageRef,
 			discordEmbedConfig
 		});
 	}
