@@ -19,7 +19,7 @@ export class LoggerService{
 
 	async log_message_count(guild: IGuild) {
 		///Global Count
-		kitty_chan.updateOne({}, {
+		await kitty_chan.updateOne({}, {
 			$inc: {messageCount: 1}
 		});
 
@@ -28,7 +28,7 @@ export class LoggerService{
 		
 		///Individual Guild
 		if (!guild.isBot) {
-			Server.updateOne({ guildId: guild.guildId }, {
+			await Server.updateOne({ guildId: guild.guildId }, {
 				$inc: { messageCount: 1 }
 			});
 		}
