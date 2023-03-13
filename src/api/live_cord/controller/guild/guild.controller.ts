@@ -1,9 +1,9 @@
 import { inject } from 'inversify';
 import { controller, httpPatch, httpPost } from 'inversify-express-utils';
-import { Req } from '../../../core/custom_types';
-import { TYPES } from '../../../core/inversify.types';
-import { InternalAuthGuard } from '../../auth/guards/InternalAuthGuard';
-import { GuildAPIService } from '../service/guild.service';
+import { Req } from '../../../../core/custom_types';
+import { TYPES } from '../../../../core/inversify.types';
+import { InternalAuthGuard } from '../../../auth/guards/InternalAuthGuard';
+import { GuildAPIService } from '../../service/guild.service';
 
 
 @controller('/live_cord/guild')

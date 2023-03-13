@@ -5,11 +5,11 @@ import type { RolesMappingEmoji as _kitty_chan_RolesMappingEmoji, RolesMappingEm
 export interface RolesMapping {
   'name'?: (string);
   'roleId'?: (string);
-  'emoji'?: (_kitty_chan_RolesMappingEmoji)[];
+  'emoji'?: (_kitty_chan_RolesMappingEmoji | null);
 }
 
 export interface RolesMapping__Output {
   'name'?: (string);
   'roleId'?: (string);
-  'emoji'?: (_kitty_chan_RolesMappingEmoji__Output)[];
+  'emoji'?: (_kitty_chan_RolesMappingEmoji__Output);
 }

@@ -13,7 +13,7 @@ import '../api/controller/config.controller';
  * LiveCord Controller
  */
 import '../api/live_cord/controller/user.controller';
-import '../api/live_cord/controller/guild.controller';
+import '../api/live_cord/controller/guild/guild.controller';
 import '../api/live_cord/controller/roles/roles.controller';
 
 import { LanguageFilter } from '../app/service/languageFilter.service';

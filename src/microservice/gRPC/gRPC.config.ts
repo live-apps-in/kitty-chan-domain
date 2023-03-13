@@ -1,5 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
+import { GuildGrpcController } from '../../api/live_cord/controller/guild/guild.gRPC.controller';
 import { RolesGrpcController } from '../../api/live_cord/controller/roles/roles.gRPC.controller';
 import { RolesAPIService } from '../../api/live_cord/service/roles/roles.service';
 import container from '../../core/inversify.di';
@@ -17,7 +18,9 @@ const proto = (grpc.loadPackageDefinition(packageDefinition) as unknown) as Prot
  * gRPC Controller
  */
 const rolesApiService = container.get<RolesAPIService>(TYPES.RolesAPIService);
+
 const rolesGrpcController = new RolesGrpcController(rolesApiService);
+const guildGrpcController = new GuildGrpcController();
 
 /**
  * gRPC Server Config
@@ -32,6 +35,7 @@ function middleware(call: grpc.ServerUnaryCall<any, any>, callback: grpc.sendUna
  */
 const gRpcServer = new grpc.Server();
 gRpcServer.addService(proto.kitty_chan.ReactionRoleService.service, rolesGrpcController);
+gRpcServer.addService(proto.kitty_chan.GuildService.service, guildGrpcController);
 
 
 gRpcServer.bindAsync(process.env.GRPC_URL, grpc.ServerCredentials.createInsecure(), (err, port) => {
