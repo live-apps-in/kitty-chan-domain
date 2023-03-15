@@ -44,7 +44,7 @@ export class App{
 		@inject(TYPES.PortalService) private readonly portalService: PortalService,
 		@inject(TYPES.GameService) private readonly gameService: GamesService,
 		@inject(TYPES.RolesService) private readonly rolesService: RolesService,
-		@inject(TYPES.RolesService) private readonly guildService: GuildService,
+		@inject(TYPES.GuildService) private readonly guildService: GuildService,
 		@inject(TYPES.RedisService) private readonly redisService: RedisService,
 	){}
 
@@ -203,8 +203,13 @@ export class App{
 		client.on('guildMemberAdd', (member: GuildMember) => {
 			const guild: IGuildMember = this.sharedService.extractGuildFromMember(member);
 		
-			this.guildService.syncNewMemberWithLiveCord(guild);
-			
+			this.guildService.syncCreateMemberWithLiveCord(guild);
+		});
+
+		client.on('guildMemberRemove', (member: GuildMember) => {
+			const guild: IGuildMember = this.sharedService.extractGuildFromMember(member);
+		
+			this.guildService.syncRemoveMemberWithLiveCord(guild);
 		});
 
 		///Login kitty chan

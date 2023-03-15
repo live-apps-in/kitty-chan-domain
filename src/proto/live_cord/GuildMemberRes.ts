@@ -1,10 +1,10 @@
 // Original file: src/proto/live_cord.proto
 
 
-export interface NewGuildMemberRes {
+export interface GuildMemberRes {
   'message'?: (string);
 }
 
-export interface NewGuildMemberRes__Output {
+export interface GuildMemberRes__Output {
   'message'?: (string);
 }

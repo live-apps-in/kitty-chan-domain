@@ -9,9 +9,9 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   live_cord: {
+    GuildMemberReq: MessageTypeDefinition
+    GuildMemberRes: MessageTypeDefinition
     GuildService: SubtypeConstructor<typeof grpc.Client, _live_cord_GuildServiceClient> & { service: _live_cord_GuildServiceDefinition }
-    NewGuildMemberReq: MessageTypeDefinition
-    NewGuildMemberRes: MessageTypeDefinition
   }
 }
 
