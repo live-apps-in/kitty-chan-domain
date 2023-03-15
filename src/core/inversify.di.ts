@@ -47,6 +47,7 @@ import { RolesService } from '../app/service/roles/roles.service';
 import { UserService } from '../api/live_cord/service/user.service';
 import { RedisService } from '../shared/redis.service';
 import { QueueService } from '../shared/queue.service';
+import { GuildService } from '../app/service/guild.service';
 
 const container = new Container({
 	defaultScope: 'Singleton'
@@ -62,6 +63,7 @@ container.bind<CommandService>(TYPES.CommandService).to(CommandService);
 container.bind<WakeService>(TYPES.WakeService).to(WakeService);
 container.bind<PortalService>(TYPES.PortalService).to(PortalService);
 container.bind<RolesService>(TYPES.RolesService).to(RolesService);
+container.bind<GuildService>(TYPES.GuildService).to(GuildService);
 
 ///VALORANT Service
 container.bind<ValorantService>(TYPES.ValorantService).to(ValorantService);

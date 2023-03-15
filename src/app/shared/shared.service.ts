@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { Message } from 'discord.js';
+import { GuildMember, Message } from 'discord.js';
 import { injectable } from 'inversify';
-import { IGuild, IMessageReaction } from '../interface/shared.interface';
+import { IGuild, IGuildMember, IMessageReaction } from '../interface/shared.interface';
 
 interface axiosConfig{
     method: string,
@@ -47,7 +47,7 @@ export class SharedService{
 	}
 
 	////Extract users and channel info
-	async extractGuildInfo(content: Message) {
+	extractGuildInfo(content: Message) {
 		const guild = new IGuild(
 			content.guildId,
 			content.guild.name,
@@ -64,9 +64,18 @@ export class SharedService{
 
 		return guild;
 	}
+	////Extract users and channel info
+	extractGuildFromMember(member: GuildMember) {
+		const guild = new IGuildMember(
+			member.guild.id,
+			member.user.id
+		);
+
+		return guild;
+	}
 
 	////Extract Info from raw events
-	async extractGuildFromRaw(event) {
+	extractGuildFromRaw(event) {
 		const isBot = process.env.KITTY_CHAN_ID === event.d.user_id;
 		const guild = {
 			guildId: event.d.guild_id,

@@ -1,10 +1,11 @@
 import * as grpc from '@grpc/grpc-js';
 import { loadSync } from '@grpc/proto-loader';
-import { ProtoGrpcType } from '../../proto/kitty_chan';
+import { ProtoGrpcType } from '../../proto/live_cord';
+import 'dotenv/config';
 
-const PROTO_PATH = './src/proto/kitty_chan.proto'; // replace with your own proto file path
+const PROTO_PATH = '../../proto/live_cord.proto'; // replace with your own proto file path
 const packageDefinition = loadSync(PROTO_PATH);
 const proto = (grpc.loadPackageDefinition(packageDefinition) as unknown) as ProtoGrpcType;
 
 
-export const kittyClient = new proto.kitty_chan.ReactionRoleService('localhost:5030', grpc.credentials.createInsecure());
+export const liveCordgRPC = new proto.live_cord.GuildService(process.env.LIVE_CORD_GRPC_URL, grpc.credentials.createInsecure());

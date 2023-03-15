@@ -1,0 +1,18 @@
+syntax = "proto3";
+package live_cord;
+
+/** LiveCord Services */
+service GuildService{
+  rpc syncNewGuildMembers (NewGuildMemberReq) returns (NewGuildMemberRes);
+}
+
+
+/** Guild Service **/
+message NewGuildMemberReq{
+  string guildId = 1;
+  string userId = 2;
+}
+
+message NewGuildMemberRes{
+  string message = 1;
+}

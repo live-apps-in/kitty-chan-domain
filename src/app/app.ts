@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../core/inversify.types';
 import { LanguageFilter } from './service/languageFilter.service';
-import { ActivityType, Client, GatewayIntentBits, MessageReaction } from 'discord.js';
+import { ActivityType, Client, GatewayIntentBits, GuildMember, MessageReaction } from 'discord.js';
 import { SharedService } from './shared/shared.service';
 import { LoggerService } from './service/logger.service';
 import { CommandService } from './service/commands.service';
@@ -15,6 +15,8 @@ import 'dotenv/config';
 import { OnInit } from '../jobs/onInit';
 import { RolesService } from './service/roles/roles.service';
 import { RedisService } from '../shared/redis.service';
+import { IGuildMember } from './interface/shared.interface';
+import { GuildService } from './service/guild.service';
 
 /**
  * Discord JS lib Client Config
@@ -22,9 +24,9 @@ import { RedisService } from '../shared/redis.service';
 export const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
-		GatewayIntentBits.GuildMessageReactions,
 		GatewayIntentBits.GuildMessageReactions,
 	],
 	shards: 'auto',
@@ -42,6 +44,7 @@ export class App{
 		@inject(TYPES.PortalService) private readonly portalService: PortalService,
 		@inject(TYPES.GameService) private readonly gameService: GamesService,
 		@inject(TYPES.RolesService) private readonly rolesService: RolesService,
+		@inject(TYPES.RolesService) private readonly guildService: GuildService,
 		@inject(TYPES.RedisService) private readonly redisService: RedisService,
 	){}
 
@@ -79,7 +82,7 @@ export class App{
 		 */
 		client.on('messageCreate', async (message) => {
 			///Extract Guild Info
-			const guildInfo = await this.sharedService.extractGuildInfo(message);
+			const guildInfo = this.sharedService.extractGuildInfo(message);
 			
 			///Validate if Bot message
 			if (guildInfo.isBot) return;
@@ -142,7 +145,7 @@ export class App{
 		 */
 		client.on('raw', async (event) => {
 			if (event.t === 'MESSAGE_REACTION_REMOVE') {
-				const guild = await this.sharedService.extractGuildFromRaw(event);
+				const guild = this.sharedService.extractGuildFromRaw(event);
 				this.rolesService.removeReactionRole(guild);
 			}
 		});
@@ -192,6 +195,16 @@ export class App{
     			user.send(`I've been removed from to ${guild.name} - ${guild.id}`);
   			})
   			.catch(console.error);
+		});
+
+		/**
+		 * User Joining Guild
+		 */
+		client.on('guildMemberAdd', (member: GuildMember) => {
+			const guild: IGuildMember = this.sharedService.extractGuildFromMember(member);
+		
+			this.guildService.syncNewMemberWithLiveCord(guild);
+			
 		});
 
 		///Login kitty chan
