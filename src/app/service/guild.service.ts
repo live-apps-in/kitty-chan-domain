@@ -7,19 +7,19 @@ export class GuildService{
 	constructor() { }
     
 	async syncCreateMemberWithLiveCord(guild: IGuildMember) {
-		const { guildId, userId } = guild
-		console.log(guild)
+		const { guildId, userId } = guild;
+		console.log(guild);
 		liveCordgRPC.syncCreateGuildMember({
 			guildId,
 			userId,
-		}, (err, res)=>{})
+		}, (err, res)=>{});
 	}
 
 	async syncRemoveMemberWithLiveCord(guild: IGuildMember) {
-		const { guildId, userId } = guild
+		const { guildId, userId } = guild;
 		liveCordgRPC.syncRemoveGuildMember({
 			guildId,
 			userId
-		}, (err, res)=>{})
+		}, (err, res)=>{});
 	}
 }

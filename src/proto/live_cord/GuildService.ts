@@ -1,7 +1,7 @@
 // Original file: src/proto/live_cord.proto
 
-import type * as grpc from '@grpc/grpc-js'
-import type { MethodDefinition } from '@grpc/proto-loader'
+import type * as grpc from '@grpc/grpc-js';
+import type { MethodDefinition } from '@grpc/proto-loader';
 import type { GuildMemberReq as _live_cord_GuildMemberReq, GuildMemberReq__Output as _live_cord_GuildMemberReq__Output } from '../live_cord/GuildMemberReq';
 import type { GuildMemberRes as _live_cord_GuildMemberRes, GuildMemberRes__Output as _live_cord_GuildMemberRes__Output } from '../live_cord/GuildMemberRes';
 
