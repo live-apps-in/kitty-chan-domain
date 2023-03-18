@@ -9,6 +9,7 @@
     "build": "tsc",
     "build:kitty_chan_proto": "npx proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./src/proto/ ./src/proto/kitty_chan.proto -y",
     "build:live_cord_proto": "npx proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./src/proto/ ./src/proto/live_cord.proto -y",
+    "build:proto": "cpx \"./src/proto/*.proto\" ./dist/proto",
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest",
