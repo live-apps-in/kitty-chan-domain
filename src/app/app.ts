@@ -19,7 +19,7 @@ import { IGuildMember } from './interface/shared.interface';
 import { GuildService } from './service/guild.service';
 
 /**
- * Discord JS lib Client Config
+ * Discord JS Client Config
  */
 export const client = new Client({
 	intents: [
@@ -48,9 +48,15 @@ export class App{
 		@inject(TYPES.RedisService) private readonly redisService: RedisService,
 	){}
 
+	/** 
+	 * Planning to migrate from monolith to Events & Domain microservice
+	 * Discord JS is not optimized at shards level
+	 * Discord API custom rate-limiter is still experimental
+	 * Currently focusing on LiveCord and kitty chan gRPC endpoints
+	*/
 	async start() {
 		/**
-		 * Client on Ready
+		 * On client bootstrap
 		 */
 		client.on('ready', async() => {
 			client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
@@ -59,10 +65,10 @@ export class App{
 			let memberCount = 0;
 			let botCount = 0;
 			
-			///Loaders
+			///Loaders - OnInit
 			await new OnInit().bootstrap();
 			
-			///Log Server Stats
+			///Log Server Stats - ?Remove here and use API to reduce app bootstrap time
 			client.guilds.cache.forEach(guild => {
 				memberCount += guild.memberCount;
     			botCount += guild.members.cache.filter(member => member.user.bot).size;
@@ -71,6 +77,7 @@ export class App{
 			console.log(`Connected to ${serverCount} servers and serving ${memberCount + botCount} members`);
 			console.log('kitty chan connected 😸');
 			
+			///Currently static
 			setInterval(() => {
 				client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
 			},60000);	
@@ -79,6 +86,8 @@ export class App{
         
 		/**
 		 * Message Create Event
+		 * 
+		 * As part of the distribution plans, remove most of the services to increase performance
 		 */
 		client.on('messageCreate', async (message) => {
 			///Extract Guild Info

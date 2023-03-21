@@ -152,7 +152,7 @@ export class RolesService{
 		
 		///Add role to User
 		//Rate Limit API call to Discord
-		await patchRoleRateLimiter();
+		await patchRoleRateLimiter(); //BETA
 		return this.actionService.call({
 			type: ACTIONS.setRole,
 			guild: {
@@ -188,7 +188,7 @@ export class RolesService{
 
 		///Add role to User
 		//Rate Limit API call to Discord
-		await patchRoleRateLimiter();
+		await patchRoleRateLimiter(); //BETA
 		this.actionService.call({
 			type: ACTIONS.deleteRole,
 			guild: {
