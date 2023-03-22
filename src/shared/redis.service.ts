@@ -10,6 +10,10 @@ export class RedisService{
 	}
 
 	async get(key: string) {
-		return await client.get(key);
+		return client.get(key);
+	}
+
+	async delete(key: string) {
+		client.del(key);
 	}
 }

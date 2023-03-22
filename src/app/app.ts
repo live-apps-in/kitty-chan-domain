@@ -195,10 +195,14 @@ export class App{
 		 * Guild Delete Event
 		 */
 		client.on('guildDelete', async (guild) => {
-	
+			///Remove feature flag in Redis
+			await this.redisService.delete(`guild:${guild.id}:flags`);
+
+			///Remove Reaction Role Mongo cache
+			await this.rolesService.deleteReactionRolesByGuild(guild.id);
+			
 			///Jaga's Discord ID
 			const userId = '516438995824017420';
-
 			client.users.fetch(userId)
   			.then(user => {
     			user.send(`I've been removed from to ${guild.name} - ${guild.id}`);

@@ -129,6 +129,10 @@ export class RolesService{
 		};
 	}
 
+	async deleteReactionRolesByGuild(guildId: string) {
+		await ReactionRoles.deleteMany({guildId });
+	}
+
 	/**
 	 * Role Reactions
 	 * Handle Reactions
