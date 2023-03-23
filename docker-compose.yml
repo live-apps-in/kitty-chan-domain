@@ -1,20 +1,8 @@
 version: "3.9"
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    volumes:
-      - mongodb_data:/data/db
-    restart: always
   kittychan:
     build: .
     container_name: kittychan
     ports:
-      - "3000:3000"
-    depends_on:
-      - mongodb
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/kittychan
+      - "5000:5000"
     restart: always
-volumes:
-  mongodb_data:

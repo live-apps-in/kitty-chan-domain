@@ -5,17 +5,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t kitty-chan .'
+                sh 'docker compose up'
             }
         }
-        stage('Stop old container') {
+        stage('Restart Container') {
             steps {
-                sh 'docker rm kitty-chan --force'
-            }
-        }
-        stage('Start New Container') {
-            steps {
-                sh 'docker run -p 5000:5000 -d --restart always --name kitty-chan kitty-chan'
+                sh 'docker-compose up -d'
             }
         }
     }
