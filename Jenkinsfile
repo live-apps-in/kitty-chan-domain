@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker-compose up'
+                sh 'docker-compose build'
             }
         }
         stage('Restart Container') {
