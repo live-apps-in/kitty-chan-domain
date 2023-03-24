@@ -3,7 +3,7 @@ import { Redis } from 'ioredis';
 // const host = process.env.NODE_ENV === 'dev'? '154.61.74.196': 'localhost';
 
 const client = new Redis({
-	host: '154.61.74.196',
+	host: process.env.REDIS_HOST,
 	port: 6379,
 	password: process.env.REDIS_PASS,
 	db: 1,
