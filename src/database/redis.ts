@@ -6,7 +6,7 @@ const client = new Redis({
 	host: process.env.REDIS_HOST,
 	port: 6379,
 	password: process.env.REDIS_PASS,
-	db: 1,
+	db: 0,
 });
 
 client.on('connect', () => {
