@@ -1,6 +1,8 @@
 import { client } from '../app/app';
 import DataLibs from '../model/data_libs.model';
 import ReactionRoles from '../model/reaction_roles.model';
+import server from '../model/server';
+import redisClient from '../database/redis';
 /**
  * Data Libs
  */
@@ -35,5 +37,25 @@ export class OnInit{
 			if (e.name === 'hindi') hinglish_words = e.data;
 		});
 		
+	}
+
+
+	/**
+	 * Redis Feature flags default values
+	 */
+	private async migrate() {
+		const guild = await server.find({});
+
+		for (let index = 0; index < guild.length; index++) {
+			const guildId = guild[index].guildId;
+			
+			redisClient.set(`guild:${guildId}:flags`, JSON.stringify({
+				strongLanguage: true,
+				hindi: true,
+				valorant_find_players: false,
+				valorant_set_rank: false
+			}));
+
+		}
 	}
 }

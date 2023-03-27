@@ -90,53 +90,53 @@ export class App{
 		 * As part of the distribution plans, remove most of the services to increase performance
 		 */
 		client.on('messageCreate', async (message) => {
-			///Extract Guild Info
-			const guildInfo = this.sharedService.extractGuildInfo(message);
+			// ///Extract Guild Info
+			// const guildInfo = this.sharedService.extractGuildInfo(message);
 			
-			///Validate if Bot message
-			if (guildInfo.isBot) return;
+			// ///Validate if Bot message
+			// if (guildInfo.isBot) return;
 			
-			///Log
-			this.loggerService.log_message_count(guildInfo);
+			// ///Log
+			// this.loggerService.log_message_count(guildInfo);
 
-			///Fetch feature flags
-			const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
-			if (!featureFlag) return;
+			// ///Fetch feature flags
+			// const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
+			// if (!featureFlag) return;
 
-			guildInfo.featureFlag = { ...featureFlag };
+			// guildInfo.featureFlag = { ...featureFlag };
 
-			///Check Portal Intent
-			const isPortal = await this.portalService.validate_channel(guildInfo);
-			if (isPortal) return;
+			// ///Check Portal Intent
+			// const isPortal = await this.portalService.validate_channel(guildInfo);
+			// if (isPortal) return;
 
-			///Check Game Intent
-			const isGame = await this.gameService.validateGame(guildInfo);
-			if (isGame) return;
+			// ///Check Game Intent
+			// const isGame = await this.gameService.validateGame(guildInfo);
+			// if (isGame) return;
 
-			///Non-English Detection (Only Detects Hindi)
-			if (guildInfo?.featureFlag?.hindi) {
-				const isNonEnglish = await this.langFilter.non_english_detection(guildInfo);
-				if (isNonEnglish) return;
-			}
+			// ///Non-English Detection (Only Detects Hindi)
+			// if (guildInfo?.featureFlag?.hindi) {
+			// 	const isNonEnglish = await this.langFilter.non_english_detection(guildInfo);
+			// 	if (isNonEnglish) return;
+			// }
 
-			if (guildInfo?.featureFlag?.strongLanguage) { 
-				///Strong Language Detection
-				const isStrongLang = await this.langFilter.strong_language_detection(guildInfo);
-				if (isStrongLang) return;
-			}
+			// if (guildInfo?.featureFlag?.strongLanguage) { 
+			// 	///Strong Language Detection
+			// 	const isStrongLang = await this.langFilter.strong_language_detection(guildInfo);
+			// 	if (isStrongLang) return;
+			// }
 
-			///Commands
-			const isCommand = await this.commandService.validateCommand(guildInfo);
-			if (isCommand) return;
+			// ///Commands
+			// const isCommand = await this.commandService.validateCommand(guildInfo);
+			// if (isCommand) return;
 
-			///Wake Words
-			this.wakeService.validate(guildInfo);
+			// ///Wake Words
+			// this.wakeService.validate(guildInfo);
 
-			///Games
-			this.gameService.call(guildInfo);
+			// ///Games
+			// this.gameService.call(guildInfo);
 
-			///Log Good Text Count
-			this.loggerService.text_count_logger(guildInfo);
+			// ///Log Good Text Count
+			// this.loggerService.text_count_logger(guildInfo);
 		});
 
 

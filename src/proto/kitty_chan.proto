@@ -1,6 +1,14 @@
 syntax = "proto3";
 package kitty_chan;
 
+/**
+* Handle Events from kitty chan Events
+**/
+service EventsService{
+  rpc messageCreate (IGuild) returns (NoResponse);
+}
+
+
 service GuildService{
   rpc getAllUserGuilds (GetAllUserGuildReq) returns (GetAllUserGuildRes);
 }
@@ -9,6 +17,37 @@ service ReactionRoleService {
   rpc reactionRolesAction (ReactionRoleActionReqDto) returns (ReactionRoleActionResDto);
 }
 
+/**Common**/
+message NoResponse{}
+
+message IGuild{
+  string guildId = 1;
+  string guildName = 2;
+  string channelId = 3;
+  string messageId = 4;
+  string userId = 5;
+  string username = 6;
+  string avatar = 7;
+  string messageContent = 8;
+  bool isBot = 9;
+  string payload = 10;
+}
+
+message IGuildMember{
+  string guildId = 1;
+  string userid = 2;
+}
+
+message IMessageReaction{
+  string guildId = 1;
+  string channelId = 2;
+  string messageId = 3;
+  string userId = 4;
+  string messageContent = 5;
+  string isBot = 6;
+  string emoji = 7;
+  string payload = 8;
+}
 
 /** Guild Service **/
 message GetAllUserGuildReq{

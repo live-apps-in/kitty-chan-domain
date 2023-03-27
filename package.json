@@ -1,7 +1,7 @@
 {
-  "name": "kitty-chan-discord-ts",
+  "name": "kittychan-domain",
   "version": "1.0.0",
-  "description": "A discord bot specifically designed for Gamer's Hub discord server. [TypeScript Version]",
+  "description": "Domain microservice for kitty chan",
   "main": "index.js",
   "scripts": {
     "start": "tsc && node ./dist/main.js",
