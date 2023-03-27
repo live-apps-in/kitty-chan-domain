@@ -19,8 +19,12 @@ export class FeatureFlagService{
 	}
     
 	async getFeatureFlag(guild: IGuild) {
-		const guildFlag = await this.redisService.get(`guild:${guild.guildId}:flags`);
-		return guildFlag ? JSON.parse(guildFlag) : null;
+		try {
+			const guildFlag = await this.redisService.get(`guild:${guild.guildId}:flags`);
+			return guildFlag ? JSON.parse(guildFlag) : null;
+		} catch (error) {
+			return null;
+		}
 	}
 
 	async viewAllFeatureFlag() {

@@ -8,6 +8,8 @@ services:
       - "5030:5030"
     depends_on:
       - redis
+    networks:
+      - kittychan_network
     restart: always
   
   redis:
@@ -23,3 +25,5 @@ services:
 volumes:
   redis_data:
   
+networks:
+  kittychan_network:
