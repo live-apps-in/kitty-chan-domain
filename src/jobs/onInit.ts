@@ -12,6 +12,7 @@ export class OnInit{
 	async bootstrap() {
 		await this.loadReactionRoles();
 		await this.loadDataLibs();
+		await this.migrate();
 	}
 	
 	/**
@@ -50,8 +51,8 @@ export class OnInit{
 			const guildId = guild[index].guildId;
 			
 			redisClient.set(`guild:${guildId}:flags`, JSON.stringify({
-				strongLanguage: true,
-				hindi: true,
+				strongLanguage: false,
+				hindi: false,
 				valorant_find_players: false,
 				valorant_set_rank: false
 			}));
