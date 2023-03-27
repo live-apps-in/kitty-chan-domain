@@ -12,7 +12,6 @@ export class OnInit{
 	async bootstrap() {
 		await this.loadReactionRoles();
 		await this.loadDataLibs();
-		await this.migrate();
 	}
 	
 	/**
@@ -38,25 +37,5 @@ export class OnInit{
 			if (e.name === 'hindi') hinglish_words = e.data;
 		});
 		
-	}
-
-
-	/**
-	 * Redis Feature flags default values
-	 */
-	private async migrate() {
-		const guild = await server.find({});
-
-		for (let index = 0; index < guild.length; index++) {
-			const guildId = guild[index].guildId;
-			
-			redisClient.set(`guild:${guildId}:flags`, JSON.stringify({
-				strongLanguage: false,
-				hindi: false,
-				valorant_find_players: false,
-				valorant_set_rank: false
-			}));
-
-		}
 	}
 }
