@@ -1,5 +1,6 @@
 // Original file: src/proto/kitty_chan.proto
 
+import type { IEmoji as _kitty_chan_IEmoji, IEmoji__Output as _kitty_chan_IEmoji__Output } from '../kitty_chan/IEmoji';
 
 export interface IMessageReaction {
   'guildId'?: (string);
@@ -7,9 +8,8 @@ export interface IMessageReaction {
   'messageId'?: (string);
   'userId'?: (string);
   'messageContent'?: (string);
-  'isBot'?: (string);
-  'emoji'?: (string);
-  'payload'?: (string);
+  'isBot'?: (boolean);
+  'emoji'?: (_kitty_chan_IEmoji | null);
 }
 
 export interface IMessageReaction__Output {
@@ -18,7 +18,6 @@ export interface IMessageReaction__Output {
   'messageId'?: (string);
   'userId'?: (string);
   'messageContent'?: (string);
-  'isBot'?: (string);
-  'emoji'?: (string);
-  'payload'?: (string);
+  'isBot'?: (boolean);
+  'emoji'?: (_kitty_chan_IEmoji__Output);
 }

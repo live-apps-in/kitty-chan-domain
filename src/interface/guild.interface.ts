@@ -1,15 +1,16 @@
-import { Message } from 'discord.js';
+export interface IMessageReaction{
+        guildId?: string,
+        channelId?: string,
+        messageId?: string,
+        userId?: string,
+        messageContent?: string,
+        isBot?: boolean,
+        emoji?: IEmoji,
+}
 
-// export interface IGuild {
-//   guildId?: string;
-//   guildName: string;
-//   channelId: string;
-//   messageId: string;
-//   userId: string;
-//   username: string;
-//   avatar: string;
-//   messageContent: string;
-//   isBot: boolean;
-//   payload: Message;
-//   featureFlag: any;
-// }
+export interface IEmoji{
+        name: string,
+        id: string,
+        animated: boolean,
+        createdAt?: Date
+}

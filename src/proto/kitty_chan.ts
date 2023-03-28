@@ -18,6 +18,7 @@ export interface ProtoGrpcType {
     GetAllUserGuildReq: MessageTypeDefinition
     GetAllUserGuildRes: MessageTypeDefinition
     GuildService: SubtypeConstructor<typeof grpc.Client, _kitty_chan_GuildServiceClient> & { service: _kitty_chan_GuildServiceDefinition }
+    IEmoji: MessageTypeDefinition
     IGuild: MessageTypeDefinition
     IGuildMember: MessageTypeDefinition
     IMessageReaction: MessageTypeDefinition

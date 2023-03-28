@@ -1,4 +1,3 @@
-import { GuildEmoji, MessageReaction } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { ReactionRolesActionDto } from '../../../api/live_cord/_dto/roles.dto';
 import { TYPES } from '../../../core/inversify.types';
@@ -137,19 +136,23 @@ export class RolesService{
 	 * Role Reactions
 	 * Handle Reactions
 	 */
-	async setReactionRole(reaction: MessageReaction, user) {
-		if (user.isBot) return false;
-		const reaction_role = await ReactionRole.findOne({ messageId: reaction.message.id });
+	async setReactionRole(payload: IMessageReaction) {
+		const { isBot, messageId, emoji, userId } = payload;
+
+		if (isBot) return false;
+
+		const reaction_role = await ReactionRole.findOne({ messageId });
 		if (!reaction_role) return false;
 
-		const emojiType = reaction.emoji instanceof GuildEmoji ? 'guild' : 'standard';
-		let role;
+		const emojiType = emoji.id ? 'guild' : 'standard';
+		let role: any;
+		
 		if (emojiType === 'guild') {
-			role = reaction_role.rolesMapping.find((e: any) => e.emoji.id === reaction.emoji.id);
+			role = reaction_role.rolesMapping.find((e: any) => e.emoji.id === emoji.id);
 		}
 
 		if (emojiType === 'standard') {
-			role = reaction_role.rolesMapping.find((e: any) => e.emoji.standardEmoji === reaction.emoji.name);
+			role = reaction_role.rolesMapping.find((e: any) => e.emoji.standardEmoji === emoji.name);
 		}
 
 		if (!role) return false;
@@ -162,7 +165,7 @@ export class RolesService{
 			guild: {
 				guildId: reaction_role.guildId,
 				channelId: reaction_role.channelId,
-				userId: user.id
+				userId
 			},
 			body: {
 				roleId: role.roleId

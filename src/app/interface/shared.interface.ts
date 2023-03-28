@@ -22,15 +22,21 @@ export class IGuildMember{
 	){}
 }
 
-export class IMessageReaction{
-	constructor(
-        public guildId?: string,
-        public channelId?: string,
-        public messageId?: string,
-        public userId?: string,
-        public messageContent?: string,
-        public isBot?: boolean,
-        public emoji?: any,
-        public payload?: Message,
-	){}
+/**Discord Message Reaction */
+export interface IMessageReaction{
+        guildId?: string,
+        channelId?: string,
+        messageId?: string,
+        userId?: string,
+        messageContent?: string,
+        isBot?: boolean,
+        emoji?: IEmoji,
+}
+
+/**Discord Emoji */
+export interface IEmoji{
+        name: string,
+        id: string,
+        animated: boolean,
+        createdAt?: Date
 }

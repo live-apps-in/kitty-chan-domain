@@ -6,6 +6,7 @@ package kitty_chan;
 **/
 service EventsService{
   rpc messageCreate (IGuild) returns (NoResponse);
+  rpc messageReactionAdd (IMessageReaction) returns (NoResponse);
 }
 
 
@@ -30,7 +31,6 @@ message IGuild{
   string avatar = 7;
   string messageContent = 8;
   bool isBot = 9;
-  string payload = 10;
 }
 
 message IGuildMember{
@@ -44,9 +44,15 @@ message IMessageReaction{
   string messageId = 3;
   string userId = 4;
   string messageContent = 5;
-  string isBot = 6;
-  string emoji = 7;
-  string payload = 8;
+  bool isBot = 6;
+  IEmoji emoji = 7;
+}
+
+message IEmoji{
+  bool animated = 1;
+  string id = 2;
+  string name = 3;
+  string createdAt = 4;
 }
 
 /** Guild Service **/

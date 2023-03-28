@@ -2,6 +2,7 @@ version: "3.9"
 services:
   kittychan:
     build: .
+    image: kittychan_domain
     container_name: kittychan_domain
     ports:
       - "5000:5000"

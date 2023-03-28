@@ -76,11 +76,7 @@ export class App{
 			
 			console.log(`Connected to ${serverCount} servers and serving ${memberCount + botCount} members`);
 			console.log('kitty chan connected 😸');
-			
-			///Currently static
-			setInterval(() => {
-				client.user.setActivity('people\'s wishes!', { type: ActivityType.Listening});
-			},60000);	
+				
 		});
 
         
@@ -143,9 +139,9 @@ export class App{
 		/**
 		 * Message Reaction Add Event
 		 */
-		client.on('messageReactionAdd', async (reaction: MessageReaction, user) => {
-			this.rolesService.setReactionRole(reaction, user);
-		});
+		// client.on('messageReactionAdd', async (reaction: MessageReaction, user) => {
+		// 	this.rolesService.setReactionRole(reaction, user);
+		// });
 
 
 		/**

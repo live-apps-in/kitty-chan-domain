@@ -2,7 +2,7 @@ import { sendUnaryData, ServerUnaryCall } from '@grpc/grpc-js';
 import { Message } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { client } from '../app/app';
-import { IGuild } from '../app/interface/shared.interface';
+import { IGuild, IMessageReaction } from '../app/interface/shared.interface';
 import { CommandService } from '../app/service/commands.service';
 import { GamesService } from '../app/service/games/games.service';
 import { GuildService } from '../app/service/guild.service';
@@ -35,7 +35,11 @@ export class EventsHandler implements EventsServiceHandlers{
 		@inject(TYPES.RedisService) private readonly redisService: RedisService,
     ) { }
     
+    /**Message Create Events */
     async messageCreate(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
+    	///Acknowledge gRPC call
+    	callback(null);
+
     	const guildInfo = call.request as IGuild;
 		
     	/**IMPORTANT 
@@ -47,24 +51,24 @@ export class EventsHandler implements EventsServiceHandlers{
     	/**IMPORTANT */
 		
     	//Validate if Bot message
-    	if (guildInfo.isBot) return callback(null);
+    	if (guildInfo.isBot) return;
 			
     	///Log
     	this.loggerService.log_message_count(guildInfo);
 
     	///Fetch feature flags
     	const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
-    	if (!featureFlag) return callback(null);
+    	if (!featureFlag) return;
 
     	guildInfo.featureFlag = { ...featureFlag };
 
     	///Check Portal Intent
     	const isPortal = await this.portalService.validate_channel(guildInfo);
-    	if (isPortal) return callback(null);
+    	if (isPortal) return;
 
     	///Check Game Intent
     	const isGame = await this.gameService.validateGame(guildInfo);
-    	if (isGame) return callback(null);
+    	if (isGame) return;
 		
     	///Non-English Detection (Only Detects Hindi)
     	if (guildInfo?.featureFlag?.hindi) {
@@ -75,12 +79,12 @@ export class EventsHandler implements EventsServiceHandlers{
     	if (guildInfo?.featureFlag?.strongLanguage) { 
     		///Strong Language Detection
     		const isStrongLang = await this.langFilter.strong_language_detection(guildInfo);
-    		if (isStrongLang) return callback(null);
+    		if (isStrongLang) return;
     	}
 
     	///Commands
     	const isCommand = await this.commandService.validateCommand(guildInfo);
-    	if (isCommand) return callback(null);
+    	if (isCommand) return;
 
     	///Wake Words
     	this.wakeService.validate(guildInfo);
@@ -90,9 +94,14 @@ export class EventsHandler implements EventsServiceHandlers{
 
     	///Log Good Text Count
     	this.loggerService.text_count_logger(guildInfo);
-
-    	///Close gRPC call
-    	callback(null, {message: 'ok'});
     }
- 
+	
+    /**Add Message Reaction Events */
+    async messageReactionAdd(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
+    	callback(null);
+
+    	const payload = call.request as IMessageReaction;
+    	this.rolesService.setReactionRole(payload);
+
+	 }
 }

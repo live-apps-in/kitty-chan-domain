@@ -11,7 +11,6 @@ export interface IGuild {
   'avatar'?: (string);
   'messageContent'?: (string);
   'isBot'?: (boolean);
-  'payload'?: (string);
 }
 
 export interface IGuild__Output {
@@ -24,5 +23,4 @@ export interface IGuild__Output {
   'avatar'?: (string);
   'messageContent'?: (string);
   'isBot'?: (boolean);
-  'payload'?: (string);
 }
