@@ -1,7 +1,7 @@
 // Original file: src/proto/kitty_chan.proto
 
-import type * as grpc from '@grpc/grpc-js';
-import type { MethodDefinition } from '@grpc/proto-loader';
+import type * as grpc from '@grpc/grpc-js'
+import type { MethodDefinition } from '@grpc/proto-loader'
 import type { GetAllUserGuildReq as _kitty_chan_GetAllUserGuildReq, GetAllUserGuildReq__Output as _kitty_chan_GetAllUserGuildReq__Output } from '../kitty_chan/GetAllUserGuildReq';
 import type { GetAllUserGuildRes as _kitty_chan_GetAllUserGuildRes, GetAllUserGuildRes__Output as _kitty_chan_GetAllUserGuildRes__Output } from '../kitty_chan/GetAllUserGuildRes';
 

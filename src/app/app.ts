@@ -148,12 +148,12 @@ export class App{
 		 * All Events from Discord API
 		 * Currently using this for Message Reaction Remove
 		 */
-		client.on('raw', async (event) => {
-			if (event.t === 'MESSAGE_REACTION_REMOVE') {
-				const guild = this.sharedService.extractGuildFromRaw(event);
-				this.rolesService.removeReactionRole(guild);
-			}
-		});
+		// client.on('raw', async (event) => {
+		// 	if (event.t === 'MESSAGE_REACTION_REMOVE') {
+		// 		const guild = this.sharedService.extractGuildFromRaw(event);
+		// 		this.rolesService.removeReactionRole(guild);
+		// 	}
+		// });
 
 
 		/**

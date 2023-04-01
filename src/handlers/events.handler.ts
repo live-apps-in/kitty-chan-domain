@@ -103,5 +103,13 @@ export class EventsHandler implements EventsServiceHandlers{
     	const payload = call.request as IMessageReaction;
     	this.rolesService.setReactionRole(payload);
 
+	}
+	
+    /**Add Message Reaction Events */
+    async messageReactionRemove(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
+    	callback(null);
+    	const payload = call.request as IMessageReaction;
+    	this.rolesService.removeReactionRole(payload);
+
 	 }
 }

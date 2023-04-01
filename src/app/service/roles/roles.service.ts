@@ -176,19 +176,20 @@ export class RolesService{
 
 	///Handle Role React
 	async removeReactionRole(guild: IMessageReaction) {
-		if (guild.isBot) return false;
+		const {emoji, isBot, messageId, userId} = guild
+		if (isBot) return false;
 
-		const reaction_role = await ReactionRole.findOne({ messageId: guild.messageId });
+		const reaction_role = await ReactionRole.findOne({ messageId});
 		if (!reaction_role) return false;
 
-		const emojiType = guild.emoji.id ? 'guild' : 'standard';
+		const emojiType = emoji.id ? 'guild' : 'standard';
 		let role;
 		if (emojiType === 'guild') {
-			role = reaction_role.rolesMapping.find((e: any) => e.emoji.id === guild.emoji.id);
+			role = reaction_role.rolesMapping.find((e: any) => e.emoji.id === emoji.id);
 		}
 
 		if (emojiType === 'standard') {
-			role = reaction_role.rolesMapping.find((e: any) => e.emoji.standardEmoji === guild.emoji.name);
+			role = reaction_role.rolesMapping.find((e: any) => e.emoji.standardEmoji === emoji.name);
 		}
 
 		if (!role) return false;
@@ -201,7 +202,7 @@ export class RolesService{
 			guild: {
 				guildId: reaction_role.guildId,
 				channelId: reaction_role.channelId,
-				userId: guild.userId
+				userId
 			},
 			body: {
 				roleId: role.roleId

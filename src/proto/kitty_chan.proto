@@ -7,6 +7,7 @@ package kitty_chan;
 service EventsService{
   rpc messageCreate (IGuild) returns (NoResponse);
   rpc messageReactionAdd (IMessageReaction) returns (NoResponse);
+  rpc messageReactionRemove (IMessageReaction) returns (NoResponse);
 }
 
 

@@ -1,7 +1,7 @@
 // Original file: src/proto/kitty_chan.proto
 
-import type * as grpc from '@grpc/grpc-js';
-import type { MethodDefinition } from '@grpc/proto-loader';
+import type * as grpc from '@grpc/grpc-js'
+import type { MethodDefinition } from '@grpc/proto-loader'
 import type { ReactionRoleActionReqDto as _kitty_chan_ReactionRoleActionReqDto, ReactionRoleActionReqDto__Output as _kitty_chan_ReactionRoleActionReqDto__Output } from '../kitty_chan/ReactionRoleActionReqDto';
 import type { ReactionRoleActionResDto as _kitty_chan_ReactionRoleActionResDto, ReactionRoleActionResDto__Output as _kitty_chan_ReactionRoleActionResDto__Output } from '../kitty_chan/ReactionRoleActionResDto';
 
