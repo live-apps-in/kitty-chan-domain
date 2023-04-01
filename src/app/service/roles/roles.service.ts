@@ -176,7 +176,7 @@ export class RolesService{
 
 	///Handle Role React
 	async removeReactionRole(guild: IMessageReaction) {
-		const {emoji, isBot, messageId, userId} = guild
+		const {emoji, isBot, messageId, userId} = guild;
 		if (isBot) return false;
 
 		const reaction_role = await ReactionRole.findOne({ messageId});

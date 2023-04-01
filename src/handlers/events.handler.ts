@@ -2,7 +2,7 @@ import { sendUnaryData, ServerUnaryCall } from '@grpc/grpc-js';
 import { Message } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { client } from '../app/app';
-import { IGuild, IMessageReaction } from '../app/interface/shared.interface';
+import { IBasicGuild, IGuild, IMessageReaction } from '../app/interface/shared.interface';
 import { CommandService } from '../app/service/commands.service';
 import { GamesService } from '../app/service/games/games.service';
 import { GuildService } from '../app/service/guild.service';
@@ -103,13 +103,21 @@ export class EventsHandler implements EventsServiceHandlers{
     	const payload = call.request as IMessageReaction;
     	this.rolesService.setReactionRole(payload);
 
-	}
+    }
 	
-    /**Add Message Reaction Events */
+    /**Remove Message Reaction Events */
     async messageReactionRemove(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
     	callback(null);
     	const payload = call.request as IMessageReaction;
     	this.rolesService.removeReactionRole(payload);
 
-	 }
+    }
+
+    /**Guild Create Events */
+    async guildCreate(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
+    	callback(null);
+    	const payload = call.request as IBasicGuild;
+		
+    	///Create new method to handle guild create
+    }
 }

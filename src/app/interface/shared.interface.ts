@@ -15,6 +15,12 @@ export class IGuild{
         public featureFlag?: any,
 	){}
 }
+
+export class IBasicGuild{
+	guildId?: string;
+	guildName?: string;
+}
+
 export class IGuildMember{
 	constructor(
         public guildId?: string,

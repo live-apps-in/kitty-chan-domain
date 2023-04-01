@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import { inject } from 'inversify';
 import { controller, httpPatch } from 'inversify-express-utils';
 import { Req } from '../../../../core/custom_types';

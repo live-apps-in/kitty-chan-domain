@@ -1,8 +1,6 @@
 import { client } from '../app/app';
 import DataLibs from '../model/data_libs.model';
 import ReactionRoles from '../model/reaction_roles.model';
-import server from '../model/server';
-import redisClient from '../database/redis';
 /**
  * Data Libs
  */

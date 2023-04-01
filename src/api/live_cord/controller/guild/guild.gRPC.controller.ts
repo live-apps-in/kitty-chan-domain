@@ -7,8 +7,6 @@ import { GuildServiceHandlers } from '../../../../proto/kitty_chan/GuildService'
 
 export class GuildGrpcController implements GuildServiceHandlers{
     [name: string]: any;
-
-    constructor() { }
     
     async getAllUserGuilds(call: ServerUnaryCall<GetAllUserGuildReq, GetAllUserGuildRes>, callback: sendUnaryData<any>) {
     	console.log(call.request);

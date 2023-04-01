@@ -7,8 +7,6 @@ import '../api/controller/text.controller';
 import '../api/controller/dashboard.controller';
 import '../api/controller/alexa.controller';
 import '../api/controller/conversation/conversation.controller';
-import '../api/controller/feature_flag.controller';
-import '../api/controller/config.controller';
 /**
  * LiveCord Controller
  */

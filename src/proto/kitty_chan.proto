@@ -8,6 +8,7 @@ service EventsService{
   rpc messageCreate (IGuild) returns (NoResponse);
   rpc messageReactionAdd (IMessageReaction) returns (NoResponse);
   rpc messageReactionRemove (IMessageReaction) returns (NoResponse);
+  rpc guildCreate (IBasicGuild) returns (NoResponse);
 }
 
 
@@ -32,6 +33,11 @@ message IGuild{
   string avatar = 7;
   string messageContent = 8;
   bool isBot = 9;
+}
+
+message IBasicGuild{
+  string guildId = 1;
+  string guildName = 2;
 }
 
 message IGuildMember{

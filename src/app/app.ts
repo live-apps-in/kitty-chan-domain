@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../core/inversify.types';
 import { LanguageFilter } from './service/languageFilter.service';
-import { ActivityType, Client, GatewayIntentBits, GuildMember, MessageReaction } from 'discord.js';
+import { ActivityType, Client, GatewayIntentBits, GuildMember } from 'discord.js';
 import { SharedService } from './shared/shared.service';
 import { LoggerService } from './service/logger.service';
 import { CommandService } from './service/commands.service';
