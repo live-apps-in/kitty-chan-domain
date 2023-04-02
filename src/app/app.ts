@@ -209,17 +209,17 @@ export class App{
 		/**
 		 * User Joining Guild
 		 */
-		client.on('guildMemberAdd', (member: GuildMember) => {
-			const guild: IGuildMember = this.sharedService.extractGuildFromMember(member);
+		// client.on('guildMemberAdd', (member: GuildMember) => {
+		// 	const guild: IGuildMember = this.sharedService.extractGuildFromMember(member);
 		
-			this.guildService.syncCreateMemberWithLiveCord(guild);
-		});
+		// 	this.guildService.syncCreateMemberWithLiveCord(guild);
+		// });
 
-		client.on('guildMemberRemove', (member: GuildMember) => {
-			const guild: IGuildMember = this.sharedService.extractGuildFromMember(member);
+		// client.on('guildMemberRemove', (member: GuildMember) => {
+		// 	const guild: IGuildMember = this.sharedService.extractGuildFromMember(member);
 		
-			this.guildService.syncRemoveMemberWithLiveCord(guild);
-		});
+		// 	this.guildService.syncRemoveMemberWithLiveCord(guild);
+		// });
 
 		///Login kitty chan
 		client.login(process.env.KITTY_CHAN_TOKEN);

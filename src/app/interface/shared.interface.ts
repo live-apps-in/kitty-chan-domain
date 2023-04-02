@@ -22,10 +22,8 @@ export class IBasicGuild{
 }
 
 export class IGuildMember{
-	constructor(
-        public guildId?: string,
-        public userId?: string,
-	){}
+	public guildId?: string;
+	public userId?: string;
 }
 
 /**Discord Message Reaction */

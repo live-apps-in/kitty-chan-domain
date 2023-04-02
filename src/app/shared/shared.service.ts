@@ -66,12 +66,11 @@ export class SharedService{
 	}
 	////Extract users and channel info
 	extractGuildFromMember(member: GuildMember) {
-		const guild = new IGuildMember(
-			member.guild.id,
-			member.user.id
-		);
-
-		return guild;
+		const guildMember: IGuildMember = {
+			guildId: member.guild.id,
+			userId: member.user.id
+		};
+		return guildMember;
 	}
 
 	////Extract Info from raw events

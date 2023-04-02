@@ -9,6 +9,9 @@ service EventsService{
   rpc messageReactionAdd (IMessageReaction) returns (NoResponse);
   rpc messageReactionRemove (IMessageReaction) returns (NoResponse);
   rpc guildCreate (IBasicGuild) returns (NoResponse);
+  rpc guildDelete (IBasicGuild) returns (NoResponse);
+  rpc guildMemberAdd (IGuildMember) returns (NoResponse);
+  rpc guildMemberRemove (IGuildMember) returns (NoResponse);
 }
 
 

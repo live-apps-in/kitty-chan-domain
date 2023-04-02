@@ -2,7 +2,7 @@ import { sendUnaryData, ServerUnaryCall } from '@grpc/grpc-js';
 import { Message } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { client } from '../app/app';
-import { IBasicGuild, IGuild, IMessageReaction } from '../app/interface/shared.interface';
+import { IBasicGuild, IGuild, IGuildMember, IMessageReaction } from '../app/interface/shared.interface';
 import { CommandService } from '../app/service/commands.service';
 import { GamesService } from '../app/service/games/games.service';
 import { GuildService } from '../app/service/guild.service';
@@ -119,5 +119,29 @@ export class EventsHandler implements EventsServiceHandlers{
     	const payload = call.request as IBasicGuild;
 		
     	///Create new method to handle guild create
+    }
+	
+    /**Guild Create Events */
+    async guildDelete(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
+    	callback(null);
+    	const payload = call.request as IBasicGuild;
+		
+    	///Create new method to handle guild create
+    }
+	
+    /**Guild Member Add */
+    async guildMemberAdd(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
+    	callback(null);
+    	const payload = call.request as IGuildMember;
+		
+    	this.guildService.syncCreateMemberWithLiveCord(payload);
+    }
+	
+    /**Guild Member Remove */
+    async guildMemberRemove(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
+    	callback(null);
+    	const payload = call.request as IGuildMember;
+		
+    	this.guildService.syncRemoveMemberWithLiveCord(payload);
     }
 }
