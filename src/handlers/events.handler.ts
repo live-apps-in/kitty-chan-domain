@@ -108,6 +108,7 @@ export class EventsHandler implements EventsServiceHandlers{
     /**Remove Message Reaction Events */
     async messageReactionRemove(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
     	callback(null);
+		
     	const payload = call.request as IMessageReaction;
     	this.rolesService.removeReactionRole(payload);
 
@@ -116,17 +117,17 @@ export class EventsHandler implements EventsServiceHandlers{
     /**Guild Create Events */
     async guildCreate(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
     	callback(null);
-    	const payload = call.request as IBasicGuild;
 		
-    	///Create new method to handle guild create
+    	const payload = call.request as IBasicGuild;
+    	this.guildService.guildCreate(payload);
     }
 	
     /**Guild Create Events */
     async guildDelete(call: ServerUnaryCall<any, NoResponse>, callback: sendUnaryData<any>) {
     	callback(null);
-    	const payload = call.request as IBasicGuild;
 		
-    	///Create new method to handle guild create
+    	const payload = call.request as IBasicGuild;
+    	this.guildService.guildDelete(payload);
     }
 	
     /**Guild Member Add */
