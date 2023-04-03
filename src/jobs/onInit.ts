@@ -1,27 +1,11 @@
-import { client } from '../app/app';
 import DataLibs from '../model/data_libs.model';
-import ReactionRoles from '../model/reaction_roles.model';
-/**
- * Data Libs
- */
+
+/* Data Libs */
 export let bad_words = [];
 export let hinglish_words = [];
 export class OnInit{
 	async bootstrap() {
-		await this.loadReactionRoles();
 		await this.loadDataLibs();
-	}
-	
-	/**
-	 * Fetch Reaction Role Messages and cache
-	 */
-	private async loadReactionRoles() {
-		console.log('Loading Reaction Roles Cache');
-		const messages = await ReactionRoles.find({}, { messageId: 1, channelId: 1 });
-		for (const message of messages) {
-			const channel: any = await client.channels.fetch(message.channelId);
-			await channel.messages.fetch(message.messageId);
-		}
 	}
 
 	/**
