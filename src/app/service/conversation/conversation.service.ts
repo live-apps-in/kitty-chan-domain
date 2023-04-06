@@ -49,7 +49,7 @@ export class ConversationService{
 		}
 
 		if (!resPhrase) return;
-		return await this.reply(resPhrase, guild);
+		return this.reply(resPhrase, guild);
 	}
 
 	private async reply(phrase: string, guild: IGuild) {

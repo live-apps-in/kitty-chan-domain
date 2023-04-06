@@ -19,7 +19,7 @@ export class ResponseService{
     
 	async respond(payload: RespondConfig): Promise<void> {
 		const config = await new ResponseFactory().getResponseConfig(payload.type, payload.guild, payload.body);
-		return await this.sharedService.axiosInstance({
+		return this.sharedService.axiosInstance({
 			method: config.method,
 			route: config.route,
 			body: payload.body
@@ -41,7 +41,7 @@ export class ResponseService{
 	 * Message Embeds
 	 */
 	async embedMessage(embeds: DiscordEmbeds[], guild: IGuild) {
-		return await this.respond({
+		return this.respond({
 			type: REPLY.sendEmbed,
 			guild,
 			body: {
@@ -52,7 +52,7 @@ export class ResponseService{
 	}
 
 	async editEmbedMessage(embeds: DiscordEmbeds[], guild: IGuild) {
-		return await this.respond({
+		return this.respond({
 			type: REPLY.editEmbed,
 			guild,
 			body: {

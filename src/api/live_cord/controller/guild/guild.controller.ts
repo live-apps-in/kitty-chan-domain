@@ -18,7 +18,7 @@ export class GuildController {
 		const { discord_id } = req.userData;
 		const { guildId } = req.body;
 
-		return await this.guildService.fetch_guild_profile(discord_id, guildId);
+		return this.guildService.fetch_guild_profile(discord_id, guildId);
         
 	}
 
@@ -28,7 +28,7 @@ export class GuildController {
     	const { discord_id } = req.userData;
     	const { guildId, features } = req.body;
     
-    	return await this.guildService.edit_guild_features(discord_id, guildId, features);
+    	return this.guildService.edit_guild_features(discord_id, guildId, features);
         
     }
 }

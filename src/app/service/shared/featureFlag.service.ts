@@ -28,10 +28,10 @@ export class FeatureFlagService{
 	}
 
 	async viewAllFeatureFlag() {
-		return await this.serverRepo.get();
+		return this.serverRepo.get();
 	}
 
 	async update_featureFlag(_id: Types.ObjectId, payload: any) {
-		return await this.serverRepo.update(_id, payload);
+		return this.serverRepo.update(_id, payload);
 	}
 }
