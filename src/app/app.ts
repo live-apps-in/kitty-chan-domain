@@ -1,22 +1,8 @@
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../core/inversify.types';
-import { LanguageFilter } from './service/languageFilter.service';
-import { ActivityType, Client, GatewayIntentBits, GuildMember } from 'discord.js';
-import { SharedService } from './shared/shared.service';
-import { LoggerService } from './service/logger.service';
-import { CommandService } from './service/commands.service';
-import { WakeService } from './service/wake.service';
-import { FeatureFlagService } from './service/shared/featureFlag.service';
-import { PortalService } from './service/portal.service';
-import { GamesService } from './service/games/games.service';
-import server from '../model/server';
+import { injectable } from 'inversify';
+import { ActivityType, Client, GatewayIntentBits } from 'discord.js';
 import './config/command_init';
 import 'dotenv/config';
 import { OnInit } from '../jobs/onInit';
-import { RolesService } from './service/roles/roles.service';
-import { RedisService } from '../shared/redis.service';
-import { IGuildMember } from './interface/shared.interface';
-import { GuildService } from './service/guild.service';
 
 /**
  * Discord JS Client Config
