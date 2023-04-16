@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
-import { client } from '../../../app/app';
-import { ServerRepo } from '../../../app/repository/server.repo';
+import { client } from '../../../modules/app';
+import { ServerRepo } from '../../../modules/repository/server.repo';
 import { HttpException } from '../../../core/exception';
 import { TYPES } from '../../../core/inversify.types';
 

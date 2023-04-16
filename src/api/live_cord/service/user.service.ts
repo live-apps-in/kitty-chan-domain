@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
-import { client } from '../../../app/app';
-import { ACTIONS } from '../../../app/enum/action';
-import { ActionService } from '../../../app/service/shared/action.service';
+import { client } from '../../../modules/app';
+import { ACTIONS } from '../../../modules/enum/action';
+import { ActionService } from '../../../modules/service/shared/action.service';
 import { HttpException } from '../../../core/exception';
 import { TYPES } from '../../../core/inversify.types';
 

@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { RolesService } from '../../../../app/service/roles/roles.service';
+import { RolesService } from '../../../../modules/service/roles/roles.service';
 import { HttpException } from '../../../../core/exception';
 import { TYPES } from '../../../../core/inversify.types';
 import { ReactionRoleActions } from '../../enum/roles.enum';

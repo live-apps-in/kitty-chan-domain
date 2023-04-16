@@ -1,23 +1,23 @@
 import { sendUnaryData, ServerUnaryCall } from '@grpc/grpc-js';
 import { Message } from 'discord.js';
 import { inject, injectable } from 'inversify';
-import { client } from '../app/app';
+import { client } from '../modules/app';
 import {
   IBasicGuild,
   IGuild,
   IGuildMember,
   IMessageReaction,
-} from '../app/interface/shared.interface';
-import { CommandService } from '../app/service/commands.service';
-import { GamesService } from '../app/service/games/games.service';
-import { GuildService } from '../app/service/guild.service';
-import { LanguageFilter } from '../app/service/languageFilter.service';
-import { LoggerService } from '../app/service/logger.service';
-import { PortalService } from '../app/service/portal.service';
-import { RolesService } from '../app/service/roles/roles.service';
-import { FeatureFlagService } from '../app/service/shared/featureFlag.service';
-import { WakeService } from '../app/service/wake.service';
-import { SharedService } from '../app/shared/shared.service';
+} from '../modules/interface/shared.interface';
+import { CommandService } from '../modules/service/commands.service';
+import { GamesService } from '../modules/service/games/games.service';
+import { GuildService } from '../modules/service/guild.service';
+import { LanguageFilter } from '../modules/service/languageFilter.service';
+import { LoggerService } from '../modules/service/logger.service';
+import { PortalService } from '../modules/service/portal.service';
+import { RolesService } from '../modules/service/roles/roles.service';
+import { FeatureFlagService } from '../modules/service/shared/featureFlag.service';
+import { WakeService } from '../modules/service/wake.service';
+import { SharedService } from '../modules/shared/shared.service';
 import { TYPES } from '../core/inversify.types';
 import { EventsServiceHandlers } from '../proto/kitty_chan/EventsService';
 import { NoResponse } from '../proto/kitty_chan/NoResponse';

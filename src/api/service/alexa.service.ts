@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
-import { REPLY } from '../../app/enum/reply';
-import { ResponseService } from '../../app/service/shared/response.service';
+import { REPLY } from '../../modules/enum/reply';
+import { ResponseService } from '../../modules/service/shared/response.service';
 import { TYPES } from '../../core/inversify.types';
 import { TEXT } from '../types/text.types';
 

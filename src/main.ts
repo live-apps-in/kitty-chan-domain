@@ -4,7 +4,7 @@ import cors from 'cors';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import 'reflect-metadata';
 import container from './core/inversify.di';
-import { App } from './app/app';
+import { App } from './modules/app';
 import { TYPES } from './core/inversify.types';
 import * as hbs from 'express-handlebars';
 import path from 'path';
