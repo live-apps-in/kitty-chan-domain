@@ -1,10 +1,9 @@
 // Original file: src/proto/kitty_chan.proto
 
-
 export interface MessageCreateReq {
-  'discordId'?: (string);
+  discordId?: string;
 }
 
 export interface MessageCreateReq__Output {
-  'discordId'?: (string);
+  discordId?: string;
 }

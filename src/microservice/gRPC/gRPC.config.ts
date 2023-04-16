@@ -24,18 +24,24 @@ import { RedisService } from '../../shared/redis.service';
  */
 const PROTO_FILE = './src/proto/kitty_chan.proto';
 const packageDefinition = protoLoader.loadSync(PROTO_FILE);
-const proto = (grpc.loadPackageDefinition(packageDefinition) as unknown) as ProtoGrpcType;
+const proto = grpc.loadPackageDefinition(
+  packageDefinition,
+) as unknown as ProtoGrpcType;
 
 /**
  * gRPC Controller
  */
 const rolesApiService = container.get<RolesAPIService>(TYPES.RolesAPIService);
-const languageFilterService = container.get<LanguageFilter>(TYPES.LanguageFilter);
+const languageFilterService = container.get<LanguageFilter>(
+  TYPES.LanguageFilter,
+);
 const sharedService = container.get<SharedService>(TYPES.SharedService);
 const loggerService = container.get<LoggerService>(TYPES.LoggerService);
 const wakeService = container.get<WakeService>(TYPES.WakeService);
 const commandService = container.get<CommandService>(TYPES.CommandService);
-const featureFlagService = container.get<FeatureFlagService>(TYPES.FeatureFlagService);
+const featureFlagService = container.get<FeatureFlagService>(
+  TYPES.FeatureFlagService,
+);
 const portalService = container.get<PortalService>(TYPES.PortalService);
 const gameService = container.get<GamesService>(TYPES.GameService);
 const rolesService = container.get<RolesService>(TYPES.RolesService);
@@ -43,17 +49,17 @@ const guildService = container.get<GuildService>(TYPES.GuildService);
 const redisService = container.get<RedisService>(TYPES.RedisService);
 
 const eventsGrpcController = new EventsHandler(
-	languageFilterService,
-	sharedService,
-	loggerService,
-	wakeService,
-	commandService,
-	featureFlagService,
-	portalService,
-	gameService,
-	rolesService,
-	guildService,
-	redisService
+  languageFilterService,
+  sharedService,
+  loggerService,
+  wakeService,
+  commandService,
+  featureFlagService,
+  portalService,
+  gameService,
+  rolesService,
+  guildService,
+  redisService,
 );
 const rolesGrpcController = new RolesGrpcController(rolesApiService);
 const guildGrpcController = new GuildGrpcController();
@@ -70,18 +76,28 @@ function middleware(call: grpc.ServerUnaryCall<any, any>, callback: grpc.sendUna
 }
  */
 const gRpcServer = new grpc.Server();
-gRpcServer.addService(proto.kitty_chan.ReactionRoleService.service, rolesGrpcController);
-gRpcServer.addService(proto.kitty_chan.GuildService.service, guildGrpcController);
-gRpcServer.addService(proto.kitty_chan.EventsService.service, eventsGrpcController);
+gRpcServer.addService(
+  proto.kitty_chan.ReactionRoleService.service,
+  rolesGrpcController,
+);
+gRpcServer.addService(
+  proto.kitty_chan.GuildService.service,
+  guildGrpcController,
+);
+gRpcServer.addService(
+  proto.kitty_chan.EventsService.service,
+  eventsGrpcController,
+);
 
-
-gRpcServer.bindAsync(process.env.GRPC_URL, grpc.ServerCredentials.createInsecure(), (err, port) => {
-	if (err) {
-		console.error(`Failed to start gRPC server: ${err}`);
-		return;
-	}
-	console.log(`gRPC Server listening on port ${port}`);
-	gRpcServer.start();
-});
-
-
+gRpcServer.bindAsync(
+  process.env.GRPC_URL,
+  grpc.ServerCredentials.createInsecure(),
+  (err, port) => {
+    if (err) {
+      console.error(`Failed to start gRPC server: ${err}`);
+      return;
+    }
+    console.log(`gRPC Server listening on port ${port}`);
+    gRpcServer.start();
+  },
+);

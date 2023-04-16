@@ -1,8 +1,8 @@
 /**
  * Reaction Roles
  */
-export enum ReactionRoleActions{
-    SET = 'set',
-    PATCH = 'patch',
-    DELETE = 'delete'
+export enum ReactionRoleActions {
+  SET = 'set',
+  PATCH = 'patch',
+  DELETE = 'delete',
 }

@@ -13,202 +13,227 @@ import { IMessageReaction } from '../../interface/shared.interface';
 import { compareRolesMapping } from '../../../utils/roles_mapping';
 import { patchRoleRateLimiter } from '../../../jobs/rate-limiter';
 
-
 @injectable()
-export class RolesService{
-	constructor(
-        @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
-        @inject(TYPES.ActionService) private readonly actionService: ActionService,
-	) { }
-    
-	///Trigger from LiveCord
-	///Create Reaction Role
-	async createReactionRole(dto: ReactionRolesActionDto) {
-		const { guildId, channelId, rolesMapping } = dto;
-		const embed: DiscordEmbeds[] = [{
-			...dto.discordEmbedConfig
-		}];
-		
-		const res:any = await this.responseService.embedMessage(embed, {
-			guildId: dto.guildId,
-			channelId: dto.channelId
-		});
+export class RolesService {
+  constructor(
+    @inject(TYPES.ResponseService)
+    private readonly responseService: ResponseService,
+    @inject(TYPES.ActionService) private readonly actionService: ActionService,
+  ) {}
 
-		if (!res?.id) throw new HttpException('Unable to create Reaction Role', 400);
+  ///Trigger from LiveCord
+  ///Create Reaction Role
+  async createReactionRole(dto: ReactionRolesActionDto) {
+    const { guildId, channelId, rolesMapping } = dto;
+    const embed: DiscordEmbeds[] = [
+      {
+        ...dto.discordEmbedConfig,
+      },
+    ];
 
-		///Persist Role mapping
-		await ReactionRoles.insertMany({
-			name: dto.name,
-			guildId: dto.guildId,
-			channelId: dto.channelId,
-			rolesMapping: dto.rolesMapping,
-			messageId: res.id
-		});
+    const res: any = await this.responseService.embedMessage(embed, {
+      guildId: dto.guildId,
+      channelId: dto.channelId,
+    });
 
-		///Map all emoji
-		for (let index = 0; index < rolesMapping.length; index++) {
-			const emoji= rolesMapping[index].emoji;
-			await this.responseService.respond({
-				type: REPLY.addReaction,
-				guild: { guildId, channelId, messageId: res.id },
-				body: {
-					emoji: emoji.type ===  'standard' ? encodeURIComponent(emoji.standardEmoji) :  encodeURIComponent(`${emoji.name}:${emoji.id}`)
-				}
-			});
-		}
+    if (!res?.id)
+      throw new HttpException('Unable to create Reaction Role', 400);
 
-		const reactionRoleMessageRef = res.id;
-		return {
-			reactionRoleMessageRef
-		};
-	}
+    ///Persist Role mapping
+    await ReactionRoles.insertMany({
+      name: dto.name,
+      guildId: dto.guildId,
+      channelId: dto.channelId,
+      rolesMapping: dto.rolesMapping,
+      messageId: res.id,
+    });
 
-	///Update Reaction Role
-	async updateReactionRole(dto: ReactionRolesActionDto) {
-		const { guildId, channelId, rolesMapping, reactionRoleMessageRef } = dto;
-		const embed: DiscordEmbeds[] = [{
-			...dto.discordEmbedConfig
-		}];
+    ///Map all emoji
+    for (let index = 0; index < rolesMapping.length; index++) {
+      const emoji = rolesMapping[index].emoji;
+      await this.responseService.respond({
+        type: REPLY.addReaction,
+        guild: { guildId, channelId, messageId: res.id },
+        body: {
+          emoji:
+            emoji.type === 'standard'
+              ? encodeURIComponent(emoji.standardEmoji)
+              : encodeURIComponent(`${emoji.name}:${emoji.id}`),
+        },
+      });
+    }
 
-		const reaction_role = await ReactionRole.findOne({ messageId: reactionRoleMessageRef });
-		if (!reaction_role) throw new HttpException('Cannot find Reaction Role', 400);
-		
+    const reactionRoleMessageRef = res.id;
+    return {
+      reactionRoleMessageRef,
+    };
+  }
 
-		///Update Message
-		await this.responseService.editEmbedMessage(embed, {
-			guildId,
-			channelId,
-			messageId: reactionRoleMessageRef
-		});
+  ///Update Reaction Role
+  async updateReactionRole(dto: ReactionRolesActionDto) {
+    const { guildId, channelId, rolesMapping, reactionRoleMessageRef } = dto;
+    const embed: DiscordEmbeds[] = [
+      {
+        ...dto.discordEmbedConfig,
+      },
+    ];
 
-		///Update Roles Mapping Changes
-		await ReactionRole.updateOne({ _id: reaction_role._id }, {
-			$set: {
-				rolesMapping
-			}
-		});
+    const reaction_role = await ReactionRole.findOne({
+      messageId: reactionRoleMessageRef,
+    });
+    if (!reaction_role)
+      throw new HttpException('Cannot find Reaction Role', 400);
 
-		const emojiToBeUpdated: any[] = compareRolesMapping(rolesMapping, reaction_role.rolesMapping);
-		
-		for (let index = 0; index < emojiToBeUpdated.length; index++) {
-			const emoji= emojiToBeUpdated[index].emoji;
-			await this.responseService.respond({
-				type: REPLY.addReaction,
-				guild: { guildId, channelId, messageId: reactionRoleMessageRef },
-				body: {
-					emoji: emoji.type ===  'standard' ? encodeURIComponent(emoji.standardEmoji) :  encodeURIComponent(`${emoji.name}:${emoji.id}`)
-				}
-			});
-			
-		}
+    ///Update Message
+    await this.responseService.editEmbedMessage(embed, {
+      guildId,
+      channelId,
+      messageId: reactionRoleMessageRef,
+    });
 
-		return {
-			reactionRoleMessageRef
-		};
-	}
+    ///Update Roles Mapping Changes
+    await ReactionRole.updateOne(
+      { _id: reaction_role._id },
+      {
+        $set: {
+          rolesMapping,
+        },
+      },
+    );
 
-	async deleteReactionRole(dto: ReactionRolesActionDto) {
-		const { guildId, channelId, reactionRoleMessageRef } = dto;
+    const emojiToBeUpdated: any[] = compareRolesMapping(
+      rolesMapping,
+      reaction_role.rolesMapping,
+    );
 
-		const reaction_role = await ReactionRole.findOne({ messageId: reactionRoleMessageRef });
-		if (!reaction_role) throw new HttpException('Cannot find Reaction Role', 400);
-		
+    for (let index = 0; index < emojiToBeUpdated.length; index++) {
+      const emoji = emojiToBeUpdated[index].emoji;
+      await this.responseService.respond({
+        type: REPLY.addReaction,
+        guild: { guildId, channelId, messageId: reactionRoleMessageRef },
+        body: {
+          emoji:
+            emoji.type === 'standard'
+              ? encodeURIComponent(emoji.standardEmoji)
+              : encodeURIComponent(`${emoji.name}:${emoji.id}`),
+        },
+      });
+    }
 
-		///Update Message
-		await this.responseService.deleteMessage({
-			guildId,
-			channelId,
-			messageId: reactionRoleMessageRef
-		});
+    return {
+      reactionRoleMessageRef,
+    };
+  }
 
-		await ReactionRoles.deleteOne({ messageId: reactionRoleMessageRef });
+  async deleteReactionRole(dto: ReactionRolesActionDto) {
+    const { guildId, channelId, reactionRoleMessageRef } = dto;
 
-		return {
-			reactionRoleMessageRef
-		};
-	}
+    const reaction_role = await ReactionRole.findOne({
+      messageId: reactionRoleMessageRef,
+    });
+    if (!reaction_role)
+      throw new HttpException('Cannot find Reaction Role', 400);
 
-	async deleteReactionRolesByGuild(guildId: string) {
-		await ReactionRoles.deleteMany({guildId });
-	}
+    ///Update Message
+    await this.responseService.deleteMessage({
+      guildId,
+      channelId,
+      messageId: reactionRoleMessageRef,
+    });
 
-	/**
-	 * Role Reactions
-	 * Handle Reactions
-	 */
-	async setReactionRole(payload: IMessageReaction) {
-		const { isBot, messageId, emoji, userId } = payload;
+    await ReactionRoles.deleteOne({ messageId: reactionRoleMessageRef });
 
-		if (isBot) return false;
+    return {
+      reactionRoleMessageRef,
+    };
+  }
 
-		const reaction_role = await ReactionRole.findOne({ messageId });
-		if (!reaction_role) return false;
+  async deleteReactionRolesByGuild(guildId: string) {
+    await ReactionRoles.deleteMany({ guildId });
+  }
 
-		const emojiType = emoji.id ? 'guild' : 'standard';
-		let role: any;
-		
-		if (emojiType === 'guild') {
-			role = reaction_role.rolesMapping.find((e: any) => e.emoji.id === emoji.id);
-		}
+  /**
+   * Role Reactions
+   * Handle Reactions
+   */
+  async setReactionRole(payload: IMessageReaction) {
+    const { isBot, messageId, emoji, userId } = payload;
 
-		if (emojiType === 'standard') {
-			role = reaction_role.rolesMapping.find((e: any) => e.emoji.standardEmoji === emoji.name);
-		}
+    if (isBot) return false;
 
-		if (!role) return false;
-		
-		///Add role to User
-		//Rate Limit API call to Discord
-		await patchRoleRateLimiter(); //BETA
-		return this.actionService.call({
-			type: ACTIONS.setRole,
-			guild: {
-				guildId: reaction_role.guildId,
-				channelId: reaction_role.channelId,
-				userId
-			},
-			body: {
-				roleId: role.roleId
-			}
-		});
+    const reaction_role = await ReactionRole.findOne({ messageId });
+    if (!reaction_role) return false;
 
-	}
+    const emojiType = emoji.id ? 'guild' : 'standard';
+    let role: any;
 
-	///Handle Role React
-	async removeReactionRole(guild: IMessageReaction) {
-		const {emoji, isBot, messageId, userId} = guild;
-		if (isBot) return false;
+    if (emojiType === 'guild') {
+      role = reaction_role.rolesMapping.find(
+        (e: any) => e.emoji.id === emoji.id,
+      );
+    }
 
-		const reaction_role = await ReactionRole.findOne({ messageId});
-		if (!reaction_role) return false;
+    if (emojiType === 'standard') {
+      role = reaction_role.rolesMapping.find(
+        (e: any) => e.emoji.standardEmoji === emoji.name,
+      );
+    }
 
-		const emojiType = emoji.id ? 'guild' : 'standard';
-		let role;
-		if (emojiType === 'guild') {
-			role = reaction_role.rolesMapping.find((e: any) => e.emoji.id === emoji.id);
-		}
+    if (!role) return false;
 
-		if (emojiType === 'standard') {
-			role = reaction_role.rolesMapping.find((e: any) => e.emoji.standardEmoji === emoji.name);
-		}
+    ///Add role to User
+    //Rate Limit API call to Discord
+    await patchRoleRateLimiter(); //BETA
+    return this.actionService.call({
+      type: ACTIONS.setRole,
+      guild: {
+        guildId: reaction_role.guildId,
+        channelId: reaction_role.channelId,
+        userId,
+      },
+      body: {
+        roleId: role.roleId,
+      },
+    });
+  }
 
-		if (!role) return false;
+  ///Handle Role React
+  async removeReactionRole(guild: IMessageReaction) {
+    const { emoji, isBot, messageId, userId } = guild;
+    if (isBot) return false;
 
-		///Add role to User
-		//Rate Limit API call to Discord
-		await patchRoleRateLimiter(); //BETA
-		this.actionService.call({
-			type: ACTIONS.deleteRole,
-			guild: {
-				guildId: reaction_role.guildId,
-				channelId: reaction_role.channelId,
-				userId
-			},
-			body: {
-				roleId: role.roleId
-			}
-		});
+    const reaction_role = await ReactionRole.findOne({ messageId });
+    if (!reaction_role) return false;
 
-	}
+    const emojiType = emoji.id ? 'guild' : 'standard';
+    let role;
+    if (emojiType === 'guild') {
+      role = reaction_role.rolesMapping.find(
+        (e: any) => e.emoji.id === emoji.id,
+      );
+    }
 
+    if (emojiType === 'standard') {
+      role = reaction_role.rolesMapping.find(
+        (e: any) => e.emoji.standardEmoji === emoji.name,
+      );
+    }
+
+    if (!role) return false;
+
+    ///Add role to User
+    //Rate Limit API call to Discord
+    await patchRoleRateLimiter(); //BETA
+    this.actionService.call({
+      type: ACTIONS.deleteRole,
+      guild: {
+        guildId: reaction_role.guildId,
+        channelId: reaction_role.channelId,
+        userId,
+      },
+      body: {
+        roleId: role.roleId,
+      },
+    });
+  }
 }

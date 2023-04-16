@@ -1,2 +1,1 @@
-export class DiscordEmbedBuilder{ 
-}
+export class DiscordEmbedBuilder {}

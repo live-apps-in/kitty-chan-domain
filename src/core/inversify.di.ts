@@ -38,7 +38,7 @@ import { PortalService } from '../app/service/portal.service';
 import { GamesService } from '../app/service/games/games.service';
 import { RPSGameService } from '../app/service/games/RPSGame.service';
 import { MathService } from '../app/service/math.service';
-import { imageService } from '../app/service/image.service';
+import { ImageService } from '../app/service/image.service';
 import { GuildAPIService } from '../api/live_cord/service/guild.service';
 import { RolesAPIService } from '../api/live_cord/service/roles/roles.service';
 import { RolesService } from '../app/service/roles/roles.service';
@@ -48,15 +48,19 @@ import { QueueService } from '../shared/queue.service';
 import { GuildService } from '../app/service/guild.service';
 
 const container = new Container({
-	defaultScope: 'Singleton'
+  defaultScope: 'Singleton',
 });
 
 ///App Service
 container.bind<App>(TYPES.App).to(App);
 container.bind<LanguageFilter>(TYPES.LanguageFilter).to(LanguageFilter);
 container.bind<ResponseService>(TYPES.ResponseService).to(ResponseService);
-container.bind<ViolationRepository>(TYPES.ViolationRepository).to(ViolationRepository);
-container.bind<TextLogRepository>(TYPES.TextLogRepository).to(TextLogRepository);
+container
+  .bind<ViolationRepository>(TYPES.ViolationRepository)
+  .to(ViolationRepository);
+container
+  .bind<TextLogRepository>(TYPES.TextLogRepository)
+  .to(TextLogRepository);
 container.bind<CommandService>(TYPES.CommandService).to(CommandService);
 container.bind<WakeService>(TYPES.WakeService).to(WakeService);
 container.bind<PortalService>(TYPES.PortalService).to(PortalService);
@@ -71,18 +75,22 @@ container.bind<GamesService>(TYPES.GameService).to(GamesService);
 container.bind<RPSGameService>(TYPES.RPSGameService).to(RPSGameService);
 
 ///Conversation Service
-container.bind<ConversationService>(TYPES.ConversationService).to(ConversationService);
+container
+  .bind<ConversationService>(TYPES.ConversationService)
+  .to(ConversationService);
 
 ///Math Service
 container.bind<MathService>(TYPES.MathService).to(MathService);
 
 ///image Service
-container.bind<imageService>(TYPES.imageService).to(imageService);
+container.bind<ImageService>(TYPES.imageService).to(ImageService);
 
 ///API Service
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);
 container.bind<AlexaService>(TYPES.AlexaService).to(AlexaService);
-container.bind<ConversationAPIService>(TYPES.ConversationAPIService).to(ConversationAPIService);
+container
+  .bind<ConversationAPIService>(TYPES.ConversationAPIService)
+  .to(ConversationAPIService);
 
 ///LiveCord Service
 container.bind<UserService>(TYPES.UserService).to(UserService);
@@ -90,9 +98,10 @@ container.bind<GuildAPIService>(TYPES.GuildAPIService).to(GuildAPIService);
 container.bind<RolesAPIService>(TYPES.RolesAPIService).to(RolesAPIService);
 
 ///Repository
-container.bind<ConversationRepository>(TYPES.ConversationRepository).to(ConversationRepository);
+container
+  .bind<ConversationRepository>(TYPES.ConversationRepository)
+  .to(ConversationRepository);
 container.bind<ServerRepo>(TYPES.ServerRepo).to(ServerRepo);
-
 
 ///Shared Service
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);
@@ -101,7 +110,8 @@ container.bind<QueueService>(TYPES.QueueService).to(QueueService);
 container.bind<ActionService>(TYPES.ActionService).to(ActionService);
 container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
 container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService);
-container.bind<FeatureFlagService>(TYPES.FeatureFlagService).to(FeatureFlagService);
-
+container
+  .bind<FeatureFlagService>(TYPES.FeatureFlagService)
+  .to(FeatureFlagService);
 
 export default container;

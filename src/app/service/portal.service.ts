@@ -8,244 +8,269 @@ import { ServerRepo } from '../repository/server.repo';
 import { ResponseService } from './shared/response.service';
 import { ActionService } from './shared/action.service';
 import { ACTIONS } from '../enum/action';
-import { portal_active_description, portal_inactive_description } from '../content/descriptions';
+import {
+  portal_active_description,
+  portal_inactive_description,
+} from '../content/descriptions';
 import { SharedService } from '../shared/shared.service';
 import { globalRoleRateLimiter } from '../../jobs/rate-limiter';
 
-
 @injectable()
-export class PortalService{
-	constructor(
-        @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
-        @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
-        @inject(TYPES.ActionService) private readonly actionService: ActionService,
-        @inject(TYPES.SharedService) private readonly sharedService: SharedService,
-	) {}
+export class PortalService {
+  constructor(
+    @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
+    @inject(TYPES.ResponseService)
+    private readonly responseService: ResponseService,
+    @inject(TYPES.ActionService) private readonly actionService: ActionService,
+    @inject(TYPES.SharedService) private readonly sharedService: SharedService,
+  ) {}
 
-	/////VALIDATION
-	async validate(messageChunk: string[], guild: IGuild) {
-        
-		if (messageChunk[2] === 'set') {
-			await this.setPortal(guild);
-		}
+  /////VALIDATION
+  async validate(messageChunk: string[], guild: IGuild) {
+    if (messageChunk[2] === 'set') {
+      await this.setPortal(guild);
+    }
 
-		if (messageChunk[2] === 'join') {
-			await this.join(guild, messageChunk[3]);
-		}
+    if (messageChunk[2] === 'join') {
+      await this.join(guild, messageChunk[3]);
+    }
 
-		if (messageChunk[2] === 'leave') {
-			await this.leave(guild);
-		}
-	}
+    if (messageChunk[2] === 'leave') {
+      await this.leave(guild);
+    }
+  }
 
-	////Validate Channel
-	async validate_channel(guild: IGuild) {
-		const guildId = guild.guildId.toString();
-		const channelId = guild.channelId.toString();
-		const server = await Server.findOne({ guildId });
+  ////Validate Channel
+  async validate_channel(guild: IGuild) {
+    const guildId = guild.guildId.toString();
+    const channelId = guild.channelId.toString();
+    const server = await Server.findOne({ guildId });
 
-		///Check if portal command
-		const messageChunk = guild.messageContent.split(' ');
-		if (messageChunk[1] === 'portal') return;
-		if (server?.portal?.channel !== channelId) return;
-        
-		
-		///Check for active portal members
-		const portal = await Portal.findOne({'guild.guildId': guildId});
-		if (!portal || portal?.guild?.length === 1) return;
-		
-		///Check if message contains mentions
-		const { everyone, user, channel, role } = await this.sharedService.filterMentions(guild);
-		if (everyone || user.size !== 0 || channel.size !== 0 || role.size !== 0) {
-			await this.reply('You cannot use mentions in Portal ⚠. This message will not be delivered to other Portals but can be seen by members within this server.', guild);
-			return;
-		}
+    ///Check if portal command
+    const messageChunk = guild.messageContent.split(' ');
+    if (messageChunk[1] === 'portal') return;
+    if (server?.portal?.channel !== channelId) return;
 
-		///Check if message contains attachments
-		if (guild.payload.attachments.size !== 0) {
-			await this.reply('We don\'t allow attachments currently ⚠. We\'ll add support for media soon ;)', guild);
-			return;
-		}
+    ///Check for active portal members
+    const portal = await Portal.findOne({ 'guild.guildId': guildId });
+    if (!portal || portal?.guild?.length === 1) return;
 
-		///Check if message contains website links
-		const { isLink, isTrustable, domain } = await this.sharedService.filterWebLinks(guild);
-		if (isLink && !isTrustable) {
-			await this.reply('We don\'t allow this URL ⚠. Avoid sending website links in this Portal.', guild);
-			return;
-		}
+    ///Check if message contains mentions
+    const { everyone, user, channel, role } =
+      await this.sharedService.filterMentions(guild);
+    if (everyone || user.size !== 0 || channel.size !== 0 || role.size !== 0) {
+      await this.reply(
+        'You cannot use mentions in Portal ⚠. This message will not be delivered to other Portals but can be seen by members within this server.',
+        guild,
+      );
+      return;
+    }
 
-		///Notify Other Portal Members
-		const getSessionGuild = await this.getSessionMembers(guild);
-		if (!getSessionGuild || getSessionGuild.length === 0) return;
+    ///Check if message contains attachments
+    if (guild.payload.attachments.size !== 0) {
+      await this.reply(
+        "We don't allow attachments currently ⚠. We'll add support for media soon ;)",
+        guild,
+      );
+      return;
+    }
 
-		getSessionGuild.map(e => {
-			if (domain === 'tenor.com') {
-				e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent} \n`;
-			} else {
-				e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent}`;
-			}
-		});
+    ///Check if message contains website links
+    const { isLink, isTrustable, domain } =
+      await this.sharedService.filterWebLinks(guild);
+    if (isLink && !isTrustable) {
+      await this.reply(
+        "We don't allow this URL ⚠. Avoid sending website links in this Portal.",
+        guild,
+      );
+      return;
+    }
 
-		await this.message(getSessionGuild);
-		return true;
+    ///Notify Other Portal Members
+    const getSessionGuild = await this.getSessionMembers(guild);
+    if (!getSessionGuild || getSessionGuild.length === 0) return;
 
-	}
+    getSessionGuild.map((e) => {
+      if (domain === 'tenor.com') {
+        e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent} \n`;
+      } else {
+        e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent}`;
+      }
+    });
 
-	///Set current channel as Portal
-	private async setPortal(guild: IGuild) {
-		const guildId = guild.guildId.toString();
+    await this.message(getSessionGuild);
+    return true;
+  }
 
-		///Update Portal Channel
-		await this.serverRepo.update_by_guildId(guildId, {
-			portal: {
-				channel: guild.channelId.toString()
-			}
-		});
+  ///Set current channel as Portal
+  private async setPortal(guild: IGuild) {
+    const guildId = guild.guildId.toString();
 
-		await this.reply('I have updated the Portal! 💫. This channel will receive messages from other server Portals!', guild);
-	}
+    ///Update Portal Channel
+    await this.serverRepo.update_by_guildId(guildId, {
+      portal: {
+        channel: guild.channelId.toString(),
+      },
+    });
 
+    await this.reply(
+      'I have updated the Portal! 💫. This channel will receive messages from other server Portals!',
+      guild,
+    );
+  }
 
-	///Join an existing Portal Connection
-	private async join(guild: IGuild, pass: string) {
-		const guildId = guild.guildId.toString();
-		const channelId = guild.channelId.toString();
-		const server = await Server.findOne({ guildId });
+  ///Join an existing Portal Connection
+  private async join(guild: IGuild, pass: string) {
+    const guildId = guild.guildId.toString();
+    const channelId = guild.channelId.toString();
+    const server = await Server.findOne({ guildId });
 
-		///Check for valid Portal Channel
-		if (server?.portal?.channel !== channelId) {
-			await this.reply('You should be in the Portal channel to Join a Session!  ⭕', guild);
-			return;
-		}
+    ///Check for valid Portal Channel
+    if (server?.portal?.channel !== channelId) {
+      await this.reply(
+        'You should be in the Portal channel to Join a Session!  ⭕',
+        guild,
+      );
+      return;
+    }
 
-		///Check for existing Portal Session
-		const getPortal = await Portal.findOne({ 'guild.guildId': guildId });
-		if (getPortal) {
-			await this.reply('A Portal session is already active!  ⭕', guild);
-			return;
-		}
+    ///Check for existing Portal Session
+    const getPortal = await Portal.findOne({ 'guild.guildId': guildId });
+    if (getPortal) {
+      await this.reply('A Portal session is already active!  ⭕', guild);
+      return;
+    }
 
-		///Join Session
-		await Portal.updateOne({}, {
-			$push: {
-				guild: {
-					serverName: guild.guildName,
-					guildId,
-					channelId
-				}
-			}
-		});
-		await this.reply('Successfully Joined the Portal! ✔', guild);
+    ///Join Session
+    await Portal.updateOne(
+      {},
+      {
+        $push: {
+          guild: {
+            serverName: guild.guildName,
+            guildId,
+            channelId,
+          },
+        },
+      },
+    );
+    await this.reply('Successfully Joined the Portal! ✔', guild);
 
-		///Update Channel Topic
-		await this.actionService.call({
-			type: ACTIONS.editChannel,
-			guild: guild,
-			body: {
-				topic: portal_active_description
-			}
-		});
+    ///Update Channel Topic
+    await this.actionService.call({
+      type: ACTIONS.editChannel,
+      guild: guild,
+      body: {
+        topic: portal_active_description,
+      },
+    });
 
-		///Notify Other Portal Members
-		const getSessionGuild = await this.getSessionMembers(guild);
-		if (!getSessionGuild || getSessionGuild.length === 0) return;
-		getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Joined the Portal! 🎉`);
+    ///Notify Other Portal Members
+    const getSessionGuild = await this.getSessionMembers(guild);
+    if (!getSessionGuild || getSessionGuild.length === 0) return;
+    getSessionGuild.map(
+      (e) => (e.message = `[ **${guild.guildName}** ]: Joined the Portal! 🎉`),
+    );
 
-		await this.message(getSessionGuild);
+    await this.message(getSessionGuild);
+  }
 
-	}
+  ///Leave Portal Session
+  private async leave(guild: IGuild) {
+    const guildId = guild.guildId.toString();
 
-	///Leave Portal Session
-	private async leave(guild: IGuild) {
-		const guildId = guild.guildId.toString();
+    ///Get Current Portal session
+    const portal = await Portal.findOne({ 'guild.guildId': guildId });
+    if (!portal) {
+      await this.reply('No current sessions found! ⭕', guild);
+      return;
+    }
 
-		///Get Current Portal session
-		const portal = await Portal.findOne({ 'guild.guildId': guildId });
-		if (!portal) {
-			await this.reply('No current sessions found! ⭕', guild);
-			return;
-		}
-	
-		///Notify other portal members if any
-		const getSessionGuild = await this.getSessionMembers(guild);
-		if (getSessionGuild || getSessionGuild.length !== 0) { 
-			getSessionGuild.map(e => e.message = `[ **${guild.guildName}** ]: Left the Portal! ❌`);
-		}
+    ///Notify other portal members if any
+    const getSessionGuild = await this.getSessionMembers(guild);
+    if (getSessionGuild || getSessionGuild.length !== 0) {
+      getSessionGuild.map(
+        (e) => (e.message = `[ **${guild.guildName}** ]: Left the Portal! ❌`),
+      );
+    }
 
-		await this.message(getSessionGuild);
+    await this.message(getSessionGuild);
 
-		await Portal.updateOne({ 'guild.guildId': guildId }, {
-			$pull: {
-				guild: {
-					guildId
-				}
-			}
-		});
+    await Portal.updateOne(
+      { 'guild.guildId': guildId },
+      {
+        $pull: {
+          guild: {
+            guildId,
+          },
+        },
+      },
+    );
 
-		///Update Channel Topic
-		await this.actionService.call({
-			type: ACTIONS.editChannel,
-			guild: guild,
-			body: {
-				topic: portal_inactive_description
-			}
-		});
-		
-		await this.reply('Portal Session Ended ❌', guild);
-		return;
-	}
+    ///Update Channel Topic
+    await this.actionService.call({
+      type: ACTIONS.editChannel,
+      guild: guild,
+      body: {
+        topic: portal_inactive_description,
+      },
+    });
 
-	private async getSessionMembers(guild: IGuild) {
-		const guildId = guild.guildId.toString();
+    await this.reply('Portal Session Ended ❌', guild);
+    return;
+  }
 
-		const portal = await Portal.findOne({ 'guild.guildId': guildId });
-		if (!portal) return [];
+  private async getSessionMembers(guild: IGuild) {
+    const guildId = guild.guildId.toString();
 
-		const guilds: any[] = [];
-       
-		for (let index = 0; index < portal.guild.length; index++) {
-			const e = portal.guild[index];
+    const portal = await Portal.findOne({ 'guild.guildId': guildId });
+    if (!portal) return [];
 
-			if (e.guildId !== guildId) {
-				guilds.push({
-					serverName: e.serverName,
-					guildId: e.guildId,
-					channelId: e.channelId
-				});
-			}
-		}
+    const guilds: any[] = [];
 
-		return guilds;
-	}
+    for (let index = 0; index < portal.guild.length; index++) {
+      const e = portal.guild[index];
 
-	////Common Reply Handler
-	private async reply(content: string, guild: IGuild) {
-		await this.responseService.respond({
-			type: REPLY.replyMessage,
-			guild,
-			body: {
-				content,
-				message_reference: {
-					message_id: guild.messageId
-				}
-			}
-		});
+      if (e.guildId !== guildId) {
+        guilds.push({
+          serverName: e.serverName,
+          guildId: e.guildId,
+          channelId: e.channelId,
+        });
+      }
+    }
 
-		return;
-	}
+    return guilds;
+  }
 
-	private async message(guilds: any[]) {
-		guilds.map(async e => {
-			await globalRoleRateLimiter();
-			await this.responseService.respond({
-			    type: REPLY.sendMessage,
-			    guild: {
-				    channelId: e.channelId
-			    },
-			    body: {
-				    content: e.message
-			    }
-		    });
-		});
-	}
+  ////Common Reply Handler
+  private async reply(content: string, guild: IGuild) {
+    await this.responseService.respond({
+      type: REPLY.replyMessage,
+      guild,
+      body: {
+        content,
+        message_reference: {
+          message_id: guild.messageId,
+        },
+      },
+    });
+
+    return;
+  }
+
+  private async message(guilds: any[]) {
+    guilds.map(async (e) => {
+      await globalRoleRateLimiter();
+      await this.responseService.respond({
+        type: REPLY.sendMessage,
+        guild: {
+          channelId: e.channelId,
+        },
+        body: {
+          content: e.message,
+        },
+      });
+    });
+  }
 }

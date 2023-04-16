@@ -3,7 +3,10 @@ import { IGuild } from '../interface/shared.interface';
 import 'dotenv/config';
 import { TYPES } from '../../core/inversify.types';
 import { ActionService } from './shared/action.service';
-import { VALORANT_RANK, VALORANT_RANK_ROLES } from '../data/valorant/valorant_ranks';
+import {
+  VALORANT_RANK,
+  VALORANT_RANK_ROLES,
+} from '../data/valorant/valorant_ranks';
 import { ResponseService } from './shared/response.service';
 import { REPLY } from '../enum/reply';
 import { RANK_MESSAGES } from '../content/rank.content';
@@ -13,190 +16,195 @@ import { ACTIONS } from '../enum/action';
 import { ConversationService } from './conversation/conversation.service';
 import { PortalService } from './portal.service';
 import { MathService } from './math.service';
-import { imageService } from './image.service';
+import { ImageService } from './image.service';
 
 @injectable()
-export class CommandService{
-	kitty_chan_id = process.env.KITTY_CHAN_ID;
-	constructor(
-        @inject(TYPES.ActionService) private readonly actionService: ActionService,
-        @inject(TYPES.ResponseService) private readonly responseService: ResponseService,
-        @inject(TYPES.UtilityService) private readonly utilityService: UtilityService,
-        @inject(TYPES.ConversationService) private readonly conversationService: ConversationService,
-        @inject(TYPES.PortalService) private readonly portalService: PortalService,
-        @inject(TYPES.MathService) private readonly mathService: MathService,
-        @inject(TYPES.imageService) private readonly imageService: imageService,
-	) { }
-    
-	///Validate and Filter Command
-	async validateCommand(guild: IGuild) {
-		const message = (guild.messageContent).trim().toLowerCase();
-		let messageChunk = message.split(' ');
-		
-		messageChunk = messageChunk.filter(element => {
-			return element !== '';
-		});
-		
-		///Check if kitty tagged
-		if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return false;
-		
-		///Check Rank Set Command
-		if (messageChunk[1] === 'rank' && guild?.featureFlag?.valorant_set_rank) {
-			await this.set_rank(guild, messageChunk[2]);
-			return true;
-		}
+export class CommandService {
+  kitty_chan_id = process.env.KITTY_CHAN_ID;
+  constructor(
+    @inject(TYPES.ActionService) private readonly actionService: ActionService,
+    @inject(TYPES.ResponseService)
+    private readonly responseService: ResponseService,
+    @inject(TYPES.UtilityService)
+    private readonly utilityService: UtilityService,
+    @inject(TYPES.ConversationService)
+    private readonly conversationService: ConversationService,
+    @inject(TYPES.PortalService) private readonly portalService: PortalService,
+    @inject(TYPES.MathService) private readonly mathService: MathService,
+    @inject(TYPES.imageService) private readonly imageService: ImageService,
+  ) {}
 
-		///Flip a coin
-		if (messageChunk[1] === 'flip') {
-			await this.flip_a_coin(guild, messageChunk);
-			return true;
-		}
+  ///Validate and Filter Command
+  async validateCommand(guild: IGuild) {
+    const message = guild.messageContent.trim().toLowerCase();
+    let messageChunk = message.split(' ');
 
-		///Flip a coin
-		if (messageChunk[1] === 'portal') {
-			await this.portalService.validate(messageChunk, guild);
-			return true;
-		}
+    messageChunk = messageChunk.filter((element) => {
+      return element !== '';
+    });
 
-		///Math Equation
-		if (messageChunk[1] === 'math') {
-			await this.mathService.evaluate(messageChunk[2], guild);
-			return true;
-		}
+    ///Check if kitty tagged
+    if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return false;
 
-		///Image
-		if (messageChunk[1] === 'image') {
-			await this.imageService.validate(messageChunk, guild);
-			return true;
-		}
-		
-		///Detect conversation (One Way)
-		const tempChunk = [...messageChunk];
-		let cleanMessage = '';
-		for (let index = 1; index < tempChunk.length; index++) {
-			cleanMessage += tempChunk[index] + ' ';
-			
-		}
-		cleanMessage = cleanMessage.trim();
-		const checkConversation = await this.conversationService.filter(messageChunk, cleanMessage, guild);
-		if (checkConversation) return true;
-		return;
-	}
+    ///Check Rank Set Command
+    if (messageChunk[1] === 'rank' && guild?.featureFlag?.valorant_set_rank) {
+      await this.set_rank(guild, messageChunk[2]);
+      return true;
+    }
 
-	async set_rank(guild: IGuild, rank: string) {
-		if (!rank) {
-            
-			await this.responseService.respond({
-				type: REPLY.replyMessage,
-				guild,
-				body: {
-					content: RANK_MESSAGES.invalid_rank,
-					message_reference: {
-						message_id: guild.messageId
-					}
-				}
-			});
-            
-			return;
-		}
+    ///Flip a coin
+    if (messageChunk[1] === 'flip') {
+      await this.flip_a_coin(guild, messageChunk);
+      return true;
+    }
 
-		///Check if roles exists
-		const userRoles = guild.payload.member.roles.cache;
-		let currentRank;
-		VALORANT_RANK.map(rank => {
-			if (userRoles.some(role => (role.name).split('-')[0] === rank)) {
-				currentRank = rank;
-				return;
-			}
-			return;
-		});
+    ///Flip a coin
+    if (messageChunk[1] === 'portal') {
+      await this.portalService.validate(messageChunk, guild);
+      return true;
+    }
 
-		if (currentRank) {
-			await this.actionService.call({
-				type: ACTIONS.deleteRole,
-				guild,
-				body: {
-					roleId: VALORANT_RANK_ROLES[currentRank]
-				}
-			});
-		}
+    ///Math Equation
+    if (messageChunk[1] === 'math') {
+      await this.mathService.evaluate(messageChunk[2], guild);
+      return true;
+    }
 
-		///Validate & Assign Roles
-		let isRoleValid = false;
-		for (let index = 0; index < VALORANT_RANK.length; index++) {
-			const element = VALORANT_RANK[index];
-			if (element.toLowerCase() === rank.toLowerCase()) {
-				///Call API
-				await this.actionService.call({
-					type: ACTIONS.setRole,
-					guild,
-					body: {
-						roleId: VALORANT_RANK_ROLES[element]
-					}
-				});
-				isRoleValid = true;
-				break;
-			}
-		}
+    ///Image
+    if (messageChunk[1] === 'image') {
+      await this.imageService.validate(messageChunk, guild);
+      return true;
+    }
 
-		if (!isRoleValid) {
-			await this.responseService.respond({
-				type: REPLY.replyMessage,
-				guild,
-				body: {
-					content: RANK_MESSAGES.invalid_rank,
-					message_reference: {
-						message_id: guild.messageId
-					}
-				}
-			});
-			return;
-		} else {
-			await this.responseService.respond({
-				type: REPLY.replyMessage,
-				guild,
-				body: {
-					content: RANK_MESSAGES.after_setRank,
-					message_reference: {
-						message_id: guild.messageId
-					}
-				}
-			});
-			return;
-		}
+    ///Detect conversation (One Way)
+    const tempChunk = [...messageChunk];
+    let cleanMessage = '';
+    for (let index = 1; index < tempChunk.length; index++) {
+      cleanMessage += tempChunk[index] + ' ';
+    }
+    cleanMessage = cleanMessage.trim();
+    const checkConversation = await this.conversationService.filter(
+      messageChunk,
+      cleanMessage,
+      guild,
+    );
+    if (checkConversation) return true;
+    return;
+  }
 
-        
-	}
+  async set_rank(guild: IGuild, rank: string) {
+    if (!rank) {
+      await this.responseService.respond({
+        type: REPLY.replyMessage,
+        guild,
+        body: {
+          content: RANK_MESSAGES.invalid_rank,
+          message_reference: {
+            message_id: guild.messageId,
+          },
+        },
+      });
 
-	private async flip_a_coin(guild: IGuild, messageChunk: string[]) {
-		const { isMatch } = await this.utilityService.match_wake_phrase(messageChunk, flip_coin_wake_word);
-		if (!isMatch) return;
+      return;
+    }
 
-		let response: any= {};
-		if(Math.random() < 0.50) {
-			response = {
-				outcome: 'heads',
-				message: 'It\'s Heads!'
-			};
-		} else {
-			response = {
-				outcome: 'tails',
-				message: 'It\'s Tails!'
-			};
-		}
+    ///Check if roles exists
+    const userRoles = guild.payload.member.roles.cache;
+    let currentRank;
+    VALORANT_RANK.map((rank) => {
+      if (userRoles.some((role) => role.name.split('-')[0] === rank)) {
+        currentRank = rank;
+        return;
+      }
+      return;
+    });
 
-		await this.responseService.respond({
-			type: REPLY.replyMessage,
-			guild,
-			body: {
-				content: response.message,
-				message_reference: {
-					message_id: guild.messageId
-				}
-			}
-		});
-		
-		return;
+    if (currentRank) {
+      await this.actionService.call({
+        type: ACTIONS.deleteRole,
+        guild,
+        body: {
+          roleId: VALORANT_RANK_ROLES[currentRank],
+        },
+      });
+    }
 
-	}
+    ///Validate & Assign Roles
+    let isRoleValid = false;
+    for (let index = 0; index < VALORANT_RANK.length; index++) {
+      const element = VALORANT_RANK[index];
+      if (element.toLowerCase() === rank.toLowerCase()) {
+        ///Call API
+        await this.actionService.call({
+          type: ACTIONS.setRole,
+          guild,
+          body: {
+            roleId: VALORANT_RANK_ROLES[element],
+          },
+        });
+        isRoleValid = true;
+        break;
+      }
+    }
+
+    if (!isRoleValid) {
+      await this.responseService.respond({
+        type: REPLY.replyMessage,
+        guild,
+        body: {
+          content: RANK_MESSAGES.invalid_rank,
+          message_reference: {
+            message_id: guild.messageId,
+          },
+        },
+      });
+      return;
+    } else {
+      await this.responseService.respond({
+        type: REPLY.replyMessage,
+        guild,
+        body: {
+          content: RANK_MESSAGES.after_setRank,
+          message_reference: {
+            message_id: guild.messageId,
+          },
+        },
+      });
+      return;
+    }
+  }
+
+  private async flip_a_coin(guild: IGuild, messageChunk: string[]) {
+    const { isMatch } = await this.utilityService.match_wake_phrase(
+      messageChunk,
+      flip_coin_wake_word,
+    );
+    if (!isMatch) return;
+
+    let response: any = {};
+    if (Math.random() < 0.5) {
+      response = {
+        outcome: 'heads',
+        message: "It's Heads!",
+      };
+    } else {
+      response = {
+        outcome: 'tails',
+        message: "It's Tails!",
+      };
+    }
+
+    await this.responseService.respond({
+      type: REPLY.replyMessage,
+      guild,
+      body: {
+        content: response.message,
+        message_reference: {
+          message_id: guild.messageId,
+        },
+      },
+    });
+
+    return;
+  }
 }

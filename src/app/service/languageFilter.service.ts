@@ -11,66 +11,67 @@ require('dotenv/config');
 
 @injectable()
 export class LanguageFilter {
-	constructor(
-		@inject(TYPES.ResponseService) private readonly responseService: ResponseService,
-		@inject(TYPES.LoggerService) private readonly LoggerService: LoggerService
-	) { }
-    
-	///Non-English Detection
-	async non_english_detection(guild: IGuild): Promise<boolean>{
-		let { messageContent } = guild;
-		
-		messageContent = messageContent.toLowerCase().trim();
-		const messageChunk = messageContent.split(' ');
-		let isNonEnglish = false;
-		
-		messageChunk.map((e) => {
-			if (hinglish_words.includes(e)) isNonEnglish = true;
-		});
+  constructor(
+    @inject(TYPES.ResponseService)
+    private readonly responseService: ResponseService,
+    @inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
+  ) {}
 
-		if (isNonEnglish) {
-			
-			await this.responseService.respond({
-				type: REPLY.addReaction,
-				guild,
-				body: {
-					emoji: '%E2%9A%A0%EF%B8%8F'
-				}
-			});
+  ///Non-English Detection
+  async non_english_detection(guild: IGuild): Promise<boolean> {
+    let { messageContent } = guild;
 
-			///Log Violation
-			await this.LoggerService.violation_logger(guild, VIOLATIONS.non_english);
-		}
+    messageContent = messageContent.toLowerCase().trim();
+    const messageChunk = messageContent.split(' ');
+    let isNonEnglish = false;
 
-		
-		return isNonEnglish;
-	}
+    messageChunk.map((e) => {
+      if (hinglish_words.includes(e)) isNonEnglish = true;
+    });
 
-	///Strong Language Detection
-	async strong_language_detection(guild: IGuild): Promise<boolean> {
-		let { messageContent } = guild;
-		messageContent = messageContent.toLowerCase().trim();
-		const messageChunk: string[] = messageContent.split(' ');
-		let isStrongLanguage = false;
+    if (isNonEnglish) {
+      await this.responseService.respond({
+        type: REPLY.addReaction,
+        guild,
+        body: {
+          emoji: '%E2%9A%A0%EF%B8%8F',
+        },
+      });
 
-		messageChunk.map((e) => {
-			if (bad_words.includes(e)) isStrongLanguage = true;
-		});
+      ///Log Violation
+      await this.loggerService.violation_logger(guild, VIOLATIONS.non_english);
+    }
 
-		if (isStrongLanguage) {
-			await this.responseService.respond({
-				type: REPLY.addReaction,
-				guild,
-				body: {
-					emoji: '%E2%9A%A0%EF%B8%8F'
-				}
-			});
+    return isNonEnglish;
+  }
 
-			///Log Violation
-			await this.LoggerService.violation_logger(guild, VIOLATIONS.strong_language);
-		}
-		
-		return isStrongLanguage;
-	}
+  ///Strong Language Detection
+  async strong_language_detection(guild: IGuild): Promise<boolean> {
+    let { messageContent } = guild;
+    messageContent = messageContent.toLowerCase().trim();
+    const messageChunk: string[] = messageContent.split(' ');
+    let isStrongLanguage = false;
 
+    messageChunk.map((e) => {
+      if (bad_words.includes(e)) isStrongLanguage = true;
+    });
+
+    if (isStrongLanguage) {
+      await this.responseService.respond({
+        type: REPLY.addReaction,
+        guild,
+        body: {
+          emoji: '%E2%9A%A0%EF%B8%8F',
+        },
+      });
+
+      ///Log Violation
+      await this.loggerService.violation_logger(
+        guild,
+        VIOLATIONS.strong_language,
+      );
+    }
+
+    return isStrongLanguage;
+  }
 }

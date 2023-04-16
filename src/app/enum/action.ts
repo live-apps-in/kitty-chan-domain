@@ -1,14 +1,14 @@
-export enum ACTIONS{
-    ///User
-    searchGuildUser = 'searchGuildUser',
+export enum ACTIONS {
+  ///User
+  searchGuildUser = 'searchGuildUser',
 
-    ///Role
-    setRole = 'setRole',
-    deleteRole = 'deleteRole',
+  ///Role
+  setRole = 'setRole',
+  deleteRole = 'deleteRole',
 
-    ///Channel
-    editChannel = 'editChannel',
+  ///Channel
+  editChannel = 'editChannel',
 
-    ///Thread
-    createThreadFromMessage = 'createThreadFromMessage'
+  ///Thread
+  createThreadFromMessage = 'createThreadFromMessage',
 }
