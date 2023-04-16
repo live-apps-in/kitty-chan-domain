@@ -21,9 +21,6 @@ export const TYPES = {
   ///Conversation Service
   ConversationService: Symbol.for('ConversationService'),
 
-  ///Math Service
-  MathService: Symbol.for('MathService'),
-
   ///image Service
   imageService: Symbol.for('imageService'),
 

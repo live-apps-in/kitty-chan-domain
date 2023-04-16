@@ -37,7 +37,6 @@ import { FeatureFlagService } from '../app/service/shared/featureFlag.service';
 import { PortalService } from '../app/service/portal.service';
 import { GamesService } from '../app/service/games/games.service';
 import { RPSGameService } from '../app/service/games/RPSGame.service';
-import { MathService } from '../app/service/math.service';
 import { ImageService } from '../app/service/image.service';
 import { GuildAPIService } from '../api/live_cord/service/guild.service';
 import { RolesAPIService } from '../api/live_cord/service/roles/roles.service';
@@ -78,9 +77,6 @@ container.bind<RPSGameService>(TYPES.RPSGameService).to(RPSGameService);
 container
   .bind<ConversationService>(TYPES.ConversationService)
   .to(ConversationService);
-
-///Math Service
-container.bind<MathService>(TYPES.MathService).to(MathService);
 
 ///image Service
 container.bind<ImageService>(TYPES.imageService).to(ImageService);
