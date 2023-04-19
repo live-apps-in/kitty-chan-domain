@@ -5,12 +5,13 @@ import Server from '../../model/server';
 import { client } from '../app';
 import { TYPES } from '../../core/inversify.types';
 import { RolesService } from './roles/roles.service';
+import { RedisService } from '../../shared/redis.service';
 
 @injectable()
 export class GuildService {
-  redisService: any;
   constructor(
     @inject(TYPES.RolesService) private readonly rolesService: RolesService,
+    @inject(TYPES.RedisService) private readonly redisService: RedisService,
   ) {}
 
   async guildCreate(guild: IBasicGuild) {
