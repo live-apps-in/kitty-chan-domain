@@ -68,6 +68,23 @@ export class CommandService {
       return true;
     }
 
+    /**Help Command
+     * temp - will be refactored soon
+     */
+    if (messageChunk[1] === 'help') {
+      const content = `Hey there! I'm kitty chan. I'm currently at very early stage of development.
+ You will be invited when a stable version is released :)`;
+
+      await this.responseService.respond({
+        type: REPLY.sendMessage,
+        guild,
+        body: {
+          content,
+        },
+      });
+      return true;
+    }
+
     ///Detect conversation (One Way)
     const tempChunk = [...messageChunk];
     let cleanMessage = '';
