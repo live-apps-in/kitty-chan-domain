@@ -4,6 +4,7 @@ import { DiscordEmbeds } from '../../../types/discord.types';
 import { REPLY } from '../../enum/reply';
 import { IGuild } from '../../interface/shared.interface';
 import { SharedService } from '../../shared/shared.service';
+import { liveClient } from '../../app';
 
 interface RespondConfig {
   type: string;
@@ -64,16 +65,7 @@ export class ResponseService {
     });
   }
   async replyMessage(content: string, guild: IGuild) {
-    await this.respond({
-      type: REPLY.replyMessage,
-      guild,
-      body: {
-        content,
-        message_reference: {
-          message_id: guild.messageId,
-        },
-      },
-    });
+    liveClient.message.reply(guild.channelId, guild.messageId, content);
 
     return;
   }

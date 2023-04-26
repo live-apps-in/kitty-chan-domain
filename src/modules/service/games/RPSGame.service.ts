@@ -1,27 +1,21 @@
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../../core/inversify.types';
+import { injectable } from 'inversify';
 import { RPS_GAME_Content } from '../../content/games/rpsGame.content';
-import { REPLY } from '../../enum/reply';
 import { IGuild } from '../../interface/shared.interface';
-import { ActionService } from '../shared/action.service';
-import { ResponseService } from '../shared/response.service';
 import GameSession from '../../../model/game_session';
 import { randomNumber } from '../../../utils/calc';
+import { liveClient } from '../../app';
 
 @injectable()
 export class RPSGameService {
-  constructor(
-    @inject(TYPES.ActionService) private readonly actionService: ActionService,
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
-  ) {}
-
   async initiate(guild: IGuild) {
-    const thread = await guild.payload.startThread({
-      name: `kitty chan VS ${guild.username}`,
-      autoArchiveDuration: 60,
-      reason: `An insane Rock Paper Scissors battle between kitty chan & ${guild.username}`,
-    });
+    const thread = await liveClient.message.createThread(
+      guild.channelId,
+      guild.messageId,
+      {
+        name: `kitty chan VS ${guild.username}`,
+        auto_archive_duration: 60,
+      },
+    );
 
     ///Check Ongoing session
     if (!thread) return;
@@ -55,9 +49,9 @@ export class RPSGameService {
       },
     });
 
-    await this.reply(
-      REPLY.sendMessage,
-      { channelId: thread.id },
+    liveClient.message.reply(
+      guild.channelId,
+      guild.messageId,
       RPS_GAME_Content.start,
     );
 
@@ -89,7 +83,10 @@ export class RPSGameService {
   }
 
   ///Shoot
-  private async shoot(action: string, guild: IGuild) {
+  private async shoot(
+    action: string,
+    { channelId, messageId, username }: IGuild,
+  ) {
     const userAction = action;
     const game_actions = ['rock', 'paper', 'scissors'];
     const kittyAction = game_actions[randomNumber(0, 2)];
@@ -98,7 +95,7 @@ export class RPSGameService {
 
     ///Get Game Session
     const gameSession = await GameSession.findOne({
-      threadId: guild.channelId,
+      threadId: channelId,
       status: 'started',
     });
     if (!gameSession) return;
@@ -118,7 +115,7 @@ export class RPSGameService {
         : game_data.kitty_win_count;
 
     const resContent = {
-      username: guild.username,
+      username,
       userAction,
       kittyAction,
       isDraw: tryShoot.isDraw,
@@ -137,7 +134,7 @@ export class RPSGameService {
 
     ///Update Game Session
     await GameSession.updateOne(
-      { threadId: guild.channelId },
+      { threadId: channelId },
       {
         $set: {
           'game_data.rounds_completed': currentRound,
@@ -148,9 +145,9 @@ export class RPSGameService {
       },
     );
 
-    await this.reply(
-      REPLY.sendMessage,
-      { channelId: guild.channelId },
+    liveClient.message.reply(
+      channelId,
+      messageId,
       RPS_GAME_Content.shoot(resContent),
     );
   }
@@ -168,12 +165,11 @@ export class RPSGameService {
       },
     );
 
-    await this.reply(
-      REPLY.sendMessage,
-      { channelId: guild.channelId },
+    liveClient.message.reply(
+      guild.channelId,
+      guild.messageId,
       RPS_GAME_Content.start,
     );
-
     return;
   }
 
@@ -186,7 +182,7 @@ export class RPSGameService {
   ///End Game
   private async delete(guild: IGuild) {
     ///Delete Thread
-    guild.payload.channel.delete();
+    liveClient.message.delete(guild.channelId, guild.messageId);
 
     ///Delete Game Session
     await GameSession.deleteOne({ threadId: guild.channelId });
@@ -217,24 +213,5 @@ export class RPSGameService {
       res.winner = 'kitty';
 
     return res;
-  }
-
-  private async reply(
-    type: string,
-    guild: IGuild,
-    content: string,
-    payload?: any,
-  ) {
-    if (type === REPLY.sendMessage) {
-      await this.responseService.respond({
-        type: REPLY.sendMessage,
-        guild: { channelId: guild.channelId },
-        body: {
-          content: content,
-        },
-      });
-      return;
-    }
-    return;
   }
 }

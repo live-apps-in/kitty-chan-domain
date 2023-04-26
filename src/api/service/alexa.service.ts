@@ -1,33 +1,19 @@
-import { inject, injectable } from 'inversify';
-import { REPLY } from '../../modules/enum/reply';
-import { ResponseService } from '../../modules/service/shared/response.service';
-import { TYPES } from '../../core/inversify.types';
+import { injectable } from 'inversify';
 import { TEXT } from '../types/text.types';
+import { liveClient } from '../../modules/app';
 
 @injectable()
 export class AlexaService {
-  constructor(
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
-  ) {}
-
   async textServer(message: string, username: string, messageType: string) {
-    console.log('text service');
+    const channelId = '928902191983517717'; ///Need to change to dynamic - TODO
+
     const buildMessage = await this.buildMessage(
       message,
       username,
       messageType,
     );
-    console.log(buildMessage, 'build message');
-    await this.responseService.respond({
-      type: REPLY.sendMessage,
-      guild: {
-        channelId: '928902191983517717', ///Need to change to dynamic - TODO
-      },
-      body: {
-        content: buildMessage,
-      },
-    });
+
+    liveClient.message.send(channelId, buildMessage);
   }
 
   private async buildMessage(

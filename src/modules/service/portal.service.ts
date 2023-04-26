@@ -1,27 +1,20 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';
 import Server from '../../model/server';
 import Portal from '../../model/portal';
 import { ServerRepo } from '../repository/server.repo';
-import { ResponseService } from './shared/response.service';
-import { ActionService } from './shared/action.service';
-import { ACTIONS } from '../enum/action';
 import {
   portal_active_description,
   portal_inactive_description,
 } from '../content/descriptions';
 import { SharedService } from '../shared/shared.service';
-import { globalRoleRateLimiter } from '../../jobs/rate-limiter';
+import { liveClient } from '../app';
 
 @injectable()
 export class PortalService {
   constructor(
     @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
-    @inject(TYPES.ActionService) private readonly actionService: ActionService,
     @inject(TYPES.SharedService) private readonly sharedService: SharedService,
   ) {}
 
@@ -157,12 +150,8 @@ export class PortalService {
     await this.reply('Successfully Joined the Portal! ✔', guild);
 
     ///Update Channel Topic
-    await this.actionService.call({
-      type: ACTIONS.editChannel,
-      guild: guild,
-      body: {
-        topic: portal_active_description,
-      },
+    liveClient.channel.edit(guild.channelId, {
+      topic: portal_active_description,
     });
 
     ///Notify Other Portal Members
@@ -208,12 +197,8 @@ export class PortalService {
     );
 
     ///Update Channel Topic
-    await this.actionService.call({
-      type: ACTIONS.editChannel,
-      guild: guild,
-      body: {
-        topic: portal_inactive_description,
-      },
+    liveClient.channel.edit(guild.channelId, {
+      topic: portal_inactive_description,
     });
 
     await this.reply('Portal Session Ended ❌', guild);
@@ -245,32 +230,13 @@ export class PortalService {
 
   ////Common Reply Handler
   private async reply(content: string, guild: IGuild) {
-    await this.responseService.respond({
-      type: REPLY.replyMessage,
-      guild,
-      body: {
-        content,
-        message_reference: {
-          message_id: guild.messageId,
-        },
-      },
-    });
-
+    liveClient.message.reply(guild.channelId, guild.messageId, content);
     return;
   }
 
   private async message(guilds: any[]) {
     guilds.map(async (e) => {
-      await globalRoleRateLimiter();
-      await this.responseService.respond({
-        type: REPLY.sendMessage,
-        guild: {
-          channelId: e.channelId,
-        },
-        body: {
-          content: e.message,
-        },
-      });
+      liveClient.message.send(e.channelId, e.message);
     });
   }
 }

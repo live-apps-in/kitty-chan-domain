@@ -2,17 +2,15 @@ import { inject, injectable } from 'inversify';
 import { ConversationRepository } from '../../../api/repository/conversation.repo';
 import { TYPES } from '../../../core/inversify.types';
 import { randomNumber } from '../../../utils/calc';
-import { REPLY } from '../../enum/reply';
 import { IGuild } from '../../interface/shared.interface';
 import { ResponseService } from '../shared/response.service';
 import { UtilityService } from '../shared/utils.service';
+import { liveClient } from '../../app';
 
 @injectable()
 export class ConversationService {
   constructor(
     @inject(TYPES.UtilityService) private readonly utilService: UtilityService,
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
     @inject(TYPES.ConversationRepository)
     private readonly conversationRepo: ConversationRepository,
   ) {}
@@ -60,16 +58,7 @@ export class ConversationService {
   }
 
   private async reply(phrase: string, guild: IGuild) {
-    await this.responseService.respond({
-      type: REPLY.replyMessage,
-      guild,
-      body: {
-        content: phrase,
-        message_reference: {
-          message_id: guild.messageId,
-        },
-      },
-    });
+    liveClient.message.reply(guild.channelId, guild.messageId, phrase);
 
     return true;
   }

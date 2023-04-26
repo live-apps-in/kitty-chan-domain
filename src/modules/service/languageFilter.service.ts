@@ -3,10 +3,10 @@ import { injectable, inject } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { ResponseService } from './shared/response.service';
 import { IGuild } from '../interface/shared.interface';
-import { REPLY } from '../enum/reply';
 import { LoggerService } from './logger.service';
 import { VIOLATIONS } from '../enum/violations';
 import { bad_words, hinglish_words } from '../../jobs/onInit';
+import { liveClient } from '../app';
 require('dotenv/config');
 
 @injectable()
@@ -30,13 +30,11 @@ export class LanguageFilter {
     });
 
     if (isNonEnglish) {
-      await this.responseService.respond({
-        type: REPLY.addReaction,
-        guild,
-        body: {
-          emoji: '%E2%9A%A0%EF%B8%8F',
-        },
-      });
+      liveClient.message.react(
+        guild.channelId,
+        guild.messageId,
+        '%E2%9A%A0%EF%B8%8F',
+      );
 
       ///Log Violation
       await this.loggerService.violation_logger(guild, VIOLATIONS.non_english);
@@ -57,13 +55,11 @@ export class LanguageFilter {
     });
 
     if (isStrongLanguage) {
-      await this.responseService.respond({
-        type: REPLY.addReaction,
-        guild,
-        body: {
-          emoji: '%E2%9A%A0%EF%B8%8F',
-        },
-      });
+      liveClient.message.react(
+        guild.channelId,
+        guild.messageId,
+        '%E2%9A%A0%EF%B8%8F',
+      );
 
       ///Log Violation
       await this.loggerService.violation_logger(

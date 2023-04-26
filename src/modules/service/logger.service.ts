@@ -7,7 +7,6 @@ import { ViolationRepository } from '../repository/violation.repo';
 import kitty_chan from '../../model/kitty_chan';
 import Server from '../../model/server';
 import io from '../../main';
-import { QueueService } from '../../shared/queue.service';
 import MessageLog from '../../model/message_logs.model';
 @injectable()
 export class LoggerService {
@@ -16,7 +15,6 @@ export class LoggerService {
     private readonly violationRepo: ViolationRepository,
     @inject(TYPES.TextLogRepository)
     private readonly textLogRepo: TextLogRepository,
-    @inject(TYPES.QueueService) private readonly queueService: QueueService,
   ) {}
 
   async log_message_count(guild: IGuild) {

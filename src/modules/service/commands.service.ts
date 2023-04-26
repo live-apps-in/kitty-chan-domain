@@ -2,28 +2,22 @@ import { inject, injectable } from 'inversify';
 import { IGuild } from '../interface/shared.interface';
 import 'dotenv/config';
 import { TYPES } from '../../core/inversify.types';
-import { ActionService } from './shared/action.service';
 import {
   VALORANT_RANK,
   VALORANT_RANK_ROLES,
 } from '../data/valorant/valorant_ranks';
-import { ResponseService } from './shared/response.service';
-import { REPLY } from '../enum/reply';
 import { RANK_MESSAGES } from '../content/rank.content';
 import { UtilityService } from './shared/utils.service';
 import { flip_coin_wake_word } from '../data/wake_words/general';
-import { ACTIONS } from '../enum/action';
 import { ConversationService } from './conversation/conversation.service';
 import { PortalService } from './portal.service';
 import { ImageService } from './image.service';
+import { liveClient } from '../app';
 
 @injectable()
 export class CommandService {
   kitty_chan_id = process.env.KITTY_CHAN_ID;
   constructor(
-    @inject(TYPES.ActionService) private readonly actionService: ActionService,
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
     @inject(TYPES.UtilityService)
     private readonly utilityService: UtilityService,
     @inject(TYPES.ConversationService)
@@ -73,15 +67,9 @@ export class CommandService {
      */
     if (messageChunk[1] === 'help') {
       const content = `Hey there! I'm kitty chan. I'm currently at very early stage of development.
- You will be invited when a stable version is released :)`;
+You will be invited when a stable version is released :)`;
 
-      await this.responseService.respond({
-        type: REPLY.sendMessage,
-        guild,
-        body: {
-          content,
-        },
-      });
+      liveClient.message.reply(guild.channelId, guild.messageId, content);
       return true;
     }
 
@@ -103,16 +91,11 @@ export class CommandService {
 
   async set_rank(guild: IGuild, rank: string) {
     if (!rank) {
-      await this.responseService.respond({
-        type: REPLY.replyMessage,
-        guild,
-        body: {
-          content: RANK_MESSAGES.invalid_rank,
-          message_reference: {
-            message_id: guild.messageId,
-          },
-        },
-      });
+      liveClient.message.reply(
+        guild.channelId,
+        guild.messageId,
+        RANK_MESSAGES.invalid_rank,
+      );
 
       return;
     }
@@ -129,13 +112,11 @@ export class CommandService {
     });
 
     if (currentRank) {
-      await this.actionService.call({
-        type: ACTIONS.deleteRole,
-        guild,
-        body: {
-          roleId: VALORANT_RANK_ROLES[currentRank],
-        },
-      });
+      liveClient.roles.set(
+        guild.guildId,
+        guild.userId,
+        VALORANT_RANK_ROLES[currentRank],
+      );
     }
 
     ///Validate & Assign Roles
@@ -143,42 +124,32 @@ export class CommandService {
     for (let index = 0; index < VALORANT_RANK.length; index++) {
       const element = VALORANT_RANK[index];
       if (element.toLowerCase() === rank.toLowerCase()) {
-        ///Call API
-        await this.actionService.call({
-          type: ACTIONS.setRole,
-          guild,
-          body: {
-            roleId: VALORANT_RANK_ROLES[element],
-          },
-        });
+        liveClient.roles.set(
+          guild.guildId,
+          guild.userId,
+          VALORANT_RANK_ROLES[element],
+        );
+
         isRoleValid = true;
         break;
       }
     }
 
     if (!isRoleValid) {
-      await this.responseService.respond({
-        type: REPLY.replyMessage,
-        guild,
-        body: {
-          content: RANK_MESSAGES.invalid_rank,
-          message_reference: {
-            message_id: guild.messageId,
-          },
-        },
-      });
+      liveClient.message.reply(
+        guild.channelId,
+        guild.messageId,
+        RANK_MESSAGES.invalid_rank,
+      );
+
       return;
     } else {
-      await this.responseService.respond({
-        type: REPLY.replyMessage,
-        guild,
-        body: {
-          content: RANK_MESSAGES.after_setRank,
-          message_reference: {
-            message_id: guild.messageId,
-          },
-        },
-      });
+      liveClient.message.reply(
+        guild.channelId,
+        guild.messageId,
+        RANK_MESSAGES.after_setRank,
+      );
+
       return;
     }
   }
@@ -203,16 +174,11 @@ export class CommandService {
       };
     }
 
-    await this.responseService.respond({
-      type: REPLY.replyMessage,
-      guild,
-      body: {
-        content: response.message,
-        message_reference: {
-          message_id: guild.messageId,
-        },
-      },
-    });
+    liveClient.message.reply(
+      guild.channelId,
+      guild.messageId,
+      response.message,
+    );
 
     return;
   }

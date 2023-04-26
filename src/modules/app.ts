@@ -3,6 +3,8 @@ import { ActivityType, Client, GatewayIntentBits } from 'discord.js';
 import './config/command_init';
 import 'dotenv/config';
 import { OnInit } from '../jobs/onInit';
+import { Client as LiveClient } from '@live-apps/discord';
+import { DiscordEvents } from '@live-apps/discord/dist/shared/enum/events.enum';
 
 /**
  * Discord JS Client Config
@@ -16,6 +18,25 @@ export const client = new Client({
     GatewayIntentBits.GuildMessageReactions,
   ],
   shards: 'auto',
+});
+
+/**
+ * LiveCord Discord Client Config
+ */
+export const liveClient = new LiveClient({
+  events: [
+    DiscordEvents.guildCreate,
+    DiscordEvents.guildDelete,
+    DiscordEvents.messageCreate,
+    DiscordEvents.guildMemberAdd,
+    DiscordEvents.guildMemberRemove,
+    DiscordEvents.guildUpdate,
+    DiscordEvents.messageDelete,
+    DiscordEvents.messageUpdate,
+    DiscordEvents.raw,
+  ],
+  sync: false,
+  token: process.env.KITTY_CHAN_TOKEN,
 });
 
 @injectable()

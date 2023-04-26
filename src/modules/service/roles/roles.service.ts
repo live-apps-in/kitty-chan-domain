@@ -1,40 +1,27 @@
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { ReactionRolesActionDto } from '../../../api/live_cord/_dto/roles.dto';
-import { TYPES } from '../../../core/inversify.types';
 import { DiscordEmbeds } from '../../../types/discord.types';
 import ReactionRoles from '../../../model/reaction_roles.model';
-import { ResponseService } from '../shared/response.service';
 import { HttpException } from '../../../core/exception';
-import { REPLY } from '../../enum/reply';
 import ReactionRole from '../../../model/reaction_roles.model';
-import { ActionService } from '../shared/action.service';
-import { ACTIONS } from '../../enum/action';
 import { IMessageReaction } from '../../interface/shared.interface';
 import { compareRolesMapping } from '../../../utils/roles_mapping';
-import { patchRoleRateLimiter } from '../../../jobs/rate-limiter';
+import { liveClient } from '../../app';
 
 @injectable()
 export class RolesService {
-  constructor(
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
-    @inject(TYPES.ActionService) private readonly actionService: ActionService,
-  ) {}
-
   ///Trigger from LiveCord
+
   ///Create Reaction Role
   async createReactionRole(dto: ReactionRolesActionDto) {
-    const { guildId, channelId, rolesMapping } = dto;
+    const { channelId, rolesMapping } = dto;
     const embed: DiscordEmbeds[] = [
       {
         ...dto.discordEmbedConfig,
       },
     ];
 
-    const res: any = await this.responseService.embedMessage(embed, {
-      guildId: dto.guildId,
-      channelId: dto.channelId,
-    });
+    const res: any = await liveClient.message.sendEmbed(channelId, embed);
 
     if (!res?.id)
       throw new HttpException('Unable to create Reaction Role', 400);
@@ -51,16 +38,14 @@ export class RolesService {
     ///Map all emoji
     for (let index = 0; index < rolesMapping.length; index++) {
       const emoji = rolesMapping[index].emoji;
-      await this.responseService.respond({
-        type: REPLY.addReaction,
-        guild: { guildId, channelId, messageId: res.id },
-        body: {
-          emoji:
-            emoji.type === 'standard'
-              ? encodeURIComponent(emoji.standardEmoji)
-              : encodeURIComponent(`${emoji.name}:${emoji.id}`),
-        },
-      });
+
+      liveClient.message.react(
+        channelId,
+        res.id,
+        emoji.type === 'standard'
+          ? encodeURIComponent(emoji.standardEmoji)
+          : encodeURIComponent(`${emoji.name}:${emoji.id}`),
+      );
     }
 
     const reactionRoleMessageRef = res.id;
@@ -71,7 +56,7 @@ export class RolesService {
 
   ///Update Reaction Role
   async updateReactionRole(dto: ReactionRolesActionDto) {
-    const { guildId, channelId, rolesMapping, reactionRoleMessageRef } = dto;
+    const { channelId, rolesMapping, reactionRoleMessageRef } = dto;
     const embed: DiscordEmbeds[] = [
       {
         ...dto.discordEmbedConfig,
@@ -85,11 +70,7 @@ export class RolesService {
       throw new HttpException('Cannot find Reaction Role', 400);
 
     ///Update Message
-    await this.responseService.editEmbedMessage(embed, {
-      guildId,
-      channelId,
-      messageId: reactionRoleMessageRef,
-    });
+    liveClient.message.editEmbed(channelId, reactionRoleMessageRef, embed);
 
     ///Update Roles Mapping Changes
     await ReactionRole.updateOne(
@@ -108,16 +89,14 @@ export class RolesService {
 
     for (let index = 0; index < emojiToBeUpdated.length; index++) {
       const emoji = emojiToBeUpdated[index].emoji;
-      await this.responseService.respond({
-        type: REPLY.addReaction,
-        guild: { guildId, channelId, messageId: reactionRoleMessageRef },
-        body: {
-          emoji:
-            emoji.type === 'standard'
-              ? encodeURIComponent(emoji.standardEmoji)
-              : encodeURIComponent(`${emoji.name}:${emoji.id}`),
-        },
-      });
+
+      liveClient.message.react(
+        channelId,
+        reactionRoleMessageRef,
+        emoji.type === 'standard'
+          ? encodeURIComponent(emoji.standardEmoji)
+          : encodeURIComponent(`${emoji.name}:${emoji.id}`),
+      );
     }
 
     return {
@@ -126,7 +105,7 @@ export class RolesService {
   }
 
   async deleteReactionRole(dto: ReactionRolesActionDto) {
-    const { guildId, channelId, reactionRoleMessageRef } = dto;
+    const { channelId, reactionRoleMessageRef } = dto;
 
     const reaction_role = await ReactionRole.findOne({
       messageId: reactionRoleMessageRef,
@@ -134,12 +113,8 @@ export class RolesService {
     if (!reaction_role)
       throw new HttpException('Cannot find Reaction Role', 400);
 
-    ///Update Message
-    await this.responseService.deleteMessage({
-      guildId,
-      channelId,
-      messageId: reactionRoleMessageRef,
-    });
+    ///Delete Message
+    liveClient.message.delete(channelId, reactionRoleMessageRef);
 
     await ReactionRoles.deleteOne({ messageId: reactionRoleMessageRef });
 
@@ -182,19 +157,7 @@ export class RolesService {
     if (!role) return false;
 
     ///Add role to User
-    //Rate Limit API call to Discord
-    await patchRoleRateLimiter(); //BETA
-    return this.actionService.call({
-      type: ACTIONS.setRole,
-      guild: {
-        guildId: reaction_role.guildId,
-        channelId: reaction_role.channelId,
-        userId,
-      },
-      body: {
-        roleId: role.roleId,
-      },
-    });
+    return liveClient.roles.set(reaction_role.guildId, userId, role.roleId);
   }
 
   ///Handle Role React
@@ -222,18 +185,6 @@ export class RolesService {
     if (!role) return false;
 
     ///Add role to User
-    //Rate Limit API call to Discord
-    await patchRoleRateLimiter(); //BETA
-    this.actionService.call({
-      type: ACTIONS.deleteRole,
-      guild: {
-        guildId: reaction_role.guildId,
-        channelId: reaction_role.channelId,
-        userId,
-      },
-      body: {
-        roleId: role.roleId,
-      },
-    });
+    liveClient.roles.remove(reaction_role.guildId, userId, role.roleId);
   }
 }

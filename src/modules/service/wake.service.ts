@@ -14,19 +14,13 @@ import {
   valorant_call_signs,
   valorant_comp_calls,
 } from '../data/wake_words/valorant';
-import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';
-import { ResponseService } from './shared/response.service';
 import { UtilityService } from './shared/utils.service';
-import { ValorantService } from './valorant/valorant.service';
+import { liveClient } from '../app';
 
 @injectable()
 export class WakeService {
   constructor(
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
-    @inject(TYPES.ValorantService)
-    private readonly valorantService: ValorantService,
     @inject(TYPES.UtilityService)
     private readonly utilityService: UtilityService,
   ) {}
@@ -76,16 +70,7 @@ export class WakeService {
     let replyContent = find_valo_unranked_template(guild);
     if (isComp) replyContent = await find_valo_comp_template(guild);
 
-    await this.responseService.respond({
-      guild,
-      type: REPLY.replyMessage,
-      body: {
-        content: replyContent,
-        message_reference: {
-          message_id: guild.messageId,
-        },
-      },
-    });
+    liveClient.message.reply(guild.channelId, guild.messageId, replyContent);
 
     return true;
   }
@@ -100,16 +85,7 @@ export class WakeService {
     if (!isMatch) return;
     const buildResponse = await sad_phrase_response_builder(libIndex);
 
-    await this.responseService.respond({
-      guild,
-      type: REPLY.replyMessage,
-      body: {
-        content: buildResponse,
-        message_reference: {
-          message_id: guild.messageId,
-        },
-      },
-    });
+    liveClient.message.reply(guild.channelId, guild.messageId, buildResponse);
     return true;
   }
 }

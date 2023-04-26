@@ -1,24 +1,18 @@
 import axios from 'axios';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../core/inversify.types';
+import { injectable } from 'inversify';
 import { image_content } from '../content/image';
-import { REPLY } from '../enum/reply';
 import { IGuild } from '../interface/shared.interface';
-import { ResponseService } from './shared/response.service';
+import { liveClient } from '../app';
 
 @injectable()
 export class ImageService {
-  constructor(
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
-  ) {}
-
   async validate(messageChunk: string[], guild: IGuild) {
     ///If params undefined
     if (!messageChunk[2]) {
-      await this.responseService.replyMessage(
+      liveClient.message.reply(
+        guild.channelId,
+        guild.messageId,
         image_content.missing_config,
-        guild,
       );
       return;
     }
@@ -43,9 +37,10 @@ export class ImageService {
         break;
 
       default:
-        await this.responseService.replyMessage(
+        liveClient.message.reply(
+          guild.channelId,
+          guild.messageId,
           'Invalid Size. Try *mobile* or *pc*',
-          guild,
         );
         return;
     }
@@ -61,23 +56,14 @@ export class ImageService {
     // response.request.res.responseUrl
     const randomUrl = unsplash?.request?.res.responseUrl;
     if (!randomUrl) {
-      await this.responseService.replyMessage(
-        'Sorry, Live Apps - Image Services are currently Offline!',
-        guild,
-      );
+      const content =
+        'Sorry, Live Apps - Image Services are currently Offline!';
+
+      liveClient.message.reply(guild.channelId, guild.messageId, content);
       return;
     }
 
-    await this.responseService.respond({
-      type: REPLY.sendMessage,
-      guild: guild,
-      body: {
-        content: randomUrl,
-        message_reference: {
-          message_id: guild.messageId,
-        },
-      },
-    });
+    liveClient.message.reply(guild.channelId, guild.messageId, randomUrl);
 
     return;
   }
