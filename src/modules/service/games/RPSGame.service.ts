@@ -28,10 +28,7 @@ export class RPSGameService {
       await GameSession.deleteOne({ _id: getOngoingSession._id }).then(
         async (res) => {
           if (res.deletedCount === 1) {
-            const thisThread = guild.payload.guild.channels.cache.find(
-              (x) => x.id === getOngoingSession.threadId,
-            );
-            await thisThread.delete();
+            liveClient.message.delete(guild.channelId, guild.messageId);
           }
         },
       );
