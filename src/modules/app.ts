@@ -1,6 +1,5 @@
 import { injectable } from 'inversify';
 import { ActivityType, Client, GatewayIntentBits } from 'discord.js';
-import './config/command_init';
 import 'dotenv/config';
 import { OnInit } from '../jobs/onInit';
 import { Client as LiveClient } from '@live-apps/discord';

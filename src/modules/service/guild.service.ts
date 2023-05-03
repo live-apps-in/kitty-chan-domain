@@ -31,7 +31,6 @@ export class GuildService {
         strongLanguage: false,
         hindi: false,
         valorant_find_players: false,
-        valorant_set_rank: false,
       }),
     );
 

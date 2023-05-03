@@ -1,9 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import {
-  find_valo_comp_template,
-  find_valo_unranked_template,
-} from '../content/rank.content';
+import { find_valo_unranked_template } from '../content/rank.content';
 import { sad_phrase_response_builder } from '../content/sad_phrase.content';
 import {
   valorant_find_player_comp,
@@ -47,10 +44,9 @@ export class WakeService {
   ///Detect phrase for VALORANT Ranked and Unranked
   private async find_val_players(messageChunk: string[], guild: IGuild) {
     let isValidCalSign = false;
-    let isComp = false;
+    const isComp = false;
     messageChunk.map((e) => {
       if (valorant_call_signs.includes(e.toLowerCase())) isValidCalSign = true;
-      if (valorant_comp_calls.includes(e.toLowerCase())) isComp = true;
     });
 
     ///Return if no match
@@ -67,8 +63,7 @@ export class WakeService {
 
     if (!isMatch) return false;
     ///Notify content for Unranked and Comp
-    let replyContent = find_valo_unranked_template(guild);
-    if (isComp) replyContent = await find_valo_comp_template(guild);
+    const replyContent = find_valo_unranked_template(guild);
 
     liveClient.message.reply(guild.channelId, guild.messageId, replyContent);
 

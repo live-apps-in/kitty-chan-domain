@@ -17,7 +17,6 @@ import '../api/live_cord/controller/roles/roles.controller';
 import { LanguageFilter } from '../modules/service/languageFilter.service';
 import { TYPES } from './inversify.types';
 import { App } from '../modules/app';
-import { ResponseService } from '../modules/service/shared/response.service';
 import { SharedService } from '../modules/shared/shared.service';
 import { ViolationRepository } from '../modules/repository/violation.repo';
 import { LoggerService } from '../modules/service/logger.service';
@@ -27,7 +26,6 @@ import { ActionService } from '../modules/service/shared/action.service';
 import { AnalyticsService } from '../api/service/analytics.service';
 import { WakeService } from '../modules/service/wake.service';
 import { AlexaService } from '../api/service/alexa.service';
-import { ValorantService } from '../modules/service/valorant/valorant.service';
 import { UtilityService } from '../modules/service/shared/utils.service';
 import { ConversationService } from '../modules/service/conversation/conversation.service';
 import { ConversationAPIService } from '../api/service/conversation/conversation_api.service';
@@ -37,7 +35,6 @@ import { FeatureFlagService } from '../modules/service/shared/featureFlag.servic
 import { PortalService } from '../modules/service/portal.service';
 import { GamesService } from '../modules/service/games/games.service';
 import { RPSGameService } from '../modules/service/games/RPSGame.service';
-import { ImageService } from '../modules/service/image.service';
 import { GuildAPIService } from '../api/live_cord/service/guild.service';
 import { RolesAPIService } from '../api/live_cord/service/roles/roles.service';
 import { RolesService } from '../modules/service/roles/roles.service';
@@ -53,7 +50,6 @@ const container = new Container({
 ///App Service
 container.bind<App>(TYPES.App).to(App);
 container.bind<LanguageFilter>(TYPES.LanguageFilter).to(LanguageFilter);
-container.bind<ResponseService>(TYPES.ResponseService).to(ResponseService);
 container
   .bind<ViolationRepository>(TYPES.ViolationRepository)
   .to(ViolationRepository);
@@ -66,9 +62,6 @@ container.bind<PortalService>(TYPES.PortalService).to(PortalService);
 container.bind<RolesService>(TYPES.RolesService).to(RolesService);
 container.bind<GuildService>(TYPES.GuildService).to(GuildService);
 
-///VALORANT Service
-container.bind<ValorantService>(TYPES.ValorantService).to(ValorantService);
-
 ///Game Service
 container.bind<GamesService>(TYPES.GameService).to(GamesService);
 container.bind<RPSGameService>(TYPES.RPSGameService).to(RPSGameService);
@@ -77,9 +70,6 @@ container.bind<RPSGameService>(TYPES.RPSGameService).to(RPSGameService);
 container
   .bind<ConversationService>(TYPES.ConversationService)
   .to(ConversationService);
-
-///image Service
-container.bind<ImageService>(TYPES.imageService).to(ImageService);
 
 ///API Service
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);

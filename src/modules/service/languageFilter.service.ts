@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import { ResponseService } from './shared/response.service';
 import { IGuild } from '../interface/shared.interface';
 import { LoggerService } from './logger.service';
 import { VIOLATIONS } from '../enum/violations';
@@ -12,8 +11,6 @@ require('dotenv/config');
 @injectable()
 export class LanguageFilter {
   constructor(
-    @inject(TYPES.ResponseService)
-    private readonly responseService: ResponseService,
     @inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
   ) {}
 

@@ -28,7 +28,7 @@ export class AlexaService {
         buildMessage = `[ ${username} from Alexa ]: ${message}`;
         break;
 
-      case TEXT.playGame:
+      case TEXT.playGame: //DEPRECATED
         buildMessage = `[ ${username} from Alexa ]: ${username} wants to play VALORANT now!`;
         break;
 
