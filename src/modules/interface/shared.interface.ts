@@ -25,10 +25,36 @@ export class IGuildMessage {
   public username?: string;
   public avatar?: string;
   public messageContent?: string;
-  public mentions?: MessageMentions;
-  public attachments?: Collection<string, Attachment>;
+  public mentions?: IMessageMentions;
+  public attachments?: IMessageAttachments[];
   public isBot?: boolean;
-  public payload?: Message;
+}
+
+export class IMessageMentions {
+  public hasMention?: boolean;
+  public everyone?: boolean;
+  public users?: IMessageMentionsUser[];
+  public roles?: IMessageMentionsRole[];
+}
+
+export class IMessageMentionsUser {
+  public userId?: string;
+}
+export class IMessageMentionsRole {
+  public roleId?: string;
+}
+
+export class IMessageAttachments{
+  public name: string;
+  public id: string;
+  public size: number;
+  public url: string;
+  public proxyURL: string;
+  public height: number;
+  public width: number;
+  public contentType: string;
+  public description: string;
+  public ephemeral: boolean;
 }
 
 export class IGuildMessageWithFF extends IGuildMessage {

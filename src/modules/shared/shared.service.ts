@@ -4,6 +4,7 @@ import { injectable } from 'inversify';
 import {
   IGuild,
   IGuildMember,
+  IGuildMessage,
   IMessageReaction,
 } from '../interface/shared.interface';
 
@@ -43,7 +44,6 @@ export class SharedService {
       })
       .catch((err) => {
         console.log(err.message);
-        // console.log(err.response);
       });
     return resData;
   }
@@ -90,22 +90,7 @@ export class SharedService {
     return guild;
   }
 
-  /**
-   * Message Reply or Role Mentions
-   */
-  async filterMentions(guild: IGuild) {
-    const mentions = guild.payload.mentions;
-    return {
-      everyone: mentions.everyone,
-      user: mentions.members,
-      channel: mentions.channels,
-      role: mentions.roles,
-    };
-  }
-
-  async filterWebLinks(guild: IGuild) {
-    const message = guild.payload;
-
+  async filterWebLinks(message: IGuildMessage) {
     const trustedDomains = ['jaga.live', 'tenor.com'];
     const res = {
       isLink: false,
@@ -113,7 +98,8 @@ export class SharedService {
       domain: '',
     };
 
-    const links = message.content.match(/(https?:\/\/|www\.)\S+/gi) || [];
+    const links = message.messageContent.match(/(https?:\/\/|www\.)\S+/gi) || [];
+    
     for (const link of links) {
       res.isLink = true;
       const url = new URL(link);

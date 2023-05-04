@@ -1,9 +1,10 @@
 // Original file: src/proto/kitty_chan.proto
 
+
 export interface DiscordEmbedFooter {
-  text?: string;
+  'text'?: (string);
 }
 
 export interface DiscordEmbedFooter__Output {
-  text?: string;
+  'text'?: (string);
 }

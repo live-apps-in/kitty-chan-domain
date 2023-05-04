@@ -53,12 +53,6 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
 
     const guildInfo = call.request as IGuildMessageWithFF;
-    console.log(guildInfo);
-    /**IMPORTANT
-     * Temp fix until we use custom API methods
-     */
-    guildInfo.payload = guildInfo.payload;
-    /**IMPORTANT */
 
     //Validate if Bot message
     if (guildInfo.isBot) return;

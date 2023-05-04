@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import { IGuild } from '../interface/shared.interface';
+import { IGuild, IGuildMessage } from '../interface/shared.interface';
 import Server from '../../model/server';
 import Portal from '../../model/portal';
 import { ServerRepo } from '../repository/server.repo';
@@ -34,7 +34,7 @@ export class PortalService {
   }
 
   ////Validate Channel
-  async validate_channel(guild: IGuild) {
+  async validate_channel(guild: IGuildMessage) {
     const guildId = guild.guildId.toString();
     const channelId = guild.channelId.toString();
     const server = await Server.findOne({ guildId });
@@ -49,9 +49,8 @@ export class PortalService {
     if (!portal || portal?.guild?.length === 1) return;
 
     ///Check if message contains mentions
-    const { everyone, user, channel, role } =
-      await this.sharedService.filterMentions(guild);
-    if (everyone || user.size !== 0 || channel.size !== 0 || role.size !== 0) {
+    const { hasMention } = guild.mentions
+    if (hasMention) {
       await this.reply(
         'You cannot use mentions in Portal ⚠. This message will not be delivered to other Portals but can be seen by members within this server.',
         guild,
@@ -60,7 +59,7 @@ export class PortalService {
     }
 
     ///Check if message contains attachments
-    if (guild.payload.attachments.size !== 0) {
+    if (guild.attachments && guild.attachments.length !== 0) {
       await this.reply(
         "We don't allow attachments currently ⚠. We'll add support for media soon ;)",
         guild,

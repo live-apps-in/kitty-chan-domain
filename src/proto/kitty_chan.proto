@@ -5,7 +5,7 @@ package kitty_chan;
 * Handle Events from kitty chan Events
 **/
 service EventsService{
-  rpc messageCreate (IGuild) returns (NoResponse);
+  rpc messageCreate (IGuildMessage) returns (NoResponse);
   rpc messageReactionAdd (IMessageReaction) returns (NoResponse);
   rpc messageReactionRemove (IMessageReaction) returns (NoResponse);
   rpc guildCreate (IBasicGuild) returns (NoResponse);
@@ -26,7 +26,8 @@ service ReactionRoleService {
 /**Common**/
 message NoResponse{}
 
-message IGuild{
+/**Guild Message**/
+message IGuildMessage{
   string guildId = 1;
   string guildName = 2;
   string channelId = 3;
@@ -35,7 +36,37 @@ message IGuild{
   string username = 6;
   string avatar = 7;
   string messageContent = 8;
-  bool isBot = 9;
+  IMessageMentions mentions = 9;
+  repeated IMessageAttachments attachments = 10;
+  bool isBot = 11;
+}
+
+message IMessageMentions{
+  bool hasMention = 1;
+  bool everyone = 2;
+  repeated IMessageMentionUsers users = 3;
+  repeated IMessageMentionRoles roles = 4;
+}
+
+message IMessageMentionUsers{
+  string userId = 1;
+}
+
+message IMessageMentionRoles{
+  string roleId = 1;
+}
+
+message IMessageAttachments{
+  string name = 1;
+  string id = 2;
+  int64 size = 3;
+  string url = 4;
+  string proxyURL = 5;
+  int64 height = 6;
+  int64 width = 7;
+  string contentType = 8;
+  string description = 9;
+  bool ephemeral = 10;
 }
 
 message IBasicGuild{
@@ -64,6 +95,10 @@ message IEmoji{
   string name = 3;
   string createdAt = 4;
 }
+
+/**END
+  Kitty chan Events
+**/
 
 /** Guild Service **/
 message GetAllUserGuildReq{
