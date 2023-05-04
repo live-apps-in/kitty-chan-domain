@@ -53,7 +53,7 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
 
     const guildInfo = call.request as IGuildMessageWithFF;
-console.log(guildInfo)
+    console.log(guildInfo);
     /**IMPORTANT
      * Temp fix until we use custom API methods
      */
