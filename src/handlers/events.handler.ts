@@ -6,6 +6,8 @@ import {
   IBasicGuild,
   IGuild,
   IGuildMember,
+  IGuildMessage,
+  IGuildMessageWithFF,
   IMessageReaction,
 } from '../modules/interface/shared.interface';
 import { CommandService } from '../modules/service/commands.service';
@@ -50,14 +52,12 @@ export class EventsHandler implements EventsServiceHandlers {
     ///Acknowledge gRPC call
     callback(null);
 
-    const guildInfo = call.request as IGuild;
-
+    const guildInfo = call.request as IGuildMessageWithFF;
+console.log(guildInfo)
     /**IMPORTANT
      * Temp fix until we use custom API methods
      */
-    const channel = client.channels.cache.get(guildInfo.channelId) as any;
-    const message: Message = await channel.messages.fetch(guildInfo.messageId);
-    guildInfo.payload = message;
+    guildInfo.payload = guildInfo.payload;
     /**IMPORTANT */
 
     //Validate if Bot message

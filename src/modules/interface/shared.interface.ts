@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Attachment, Collection, Message, MessageMentions } from 'discord.js';
 
 export class IGuild {
   constructor(
@@ -14,6 +14,25 @@ export class IGuild {
     public payload?: Message,
     public featureFlag?: any,
   ) {}
+}
+
+export class IGuildMessage{
+    public guildId?: string
+    public guildName?: string
+    public channelId?: string
+    public messageId?: string
+    public userId?: string
+    public username?: string
+    public avatar?: string
+    public messageContent?: string
+    public mentions?: MessageMentions
+    public attachments?: Collection<string, Attachment>
+    public isBot?: boolean
+    public payload?: Message
+}
+
+export class IGuildMessageWithFF extends IGuildMessage{
+  public featureFlag?: any
 }
 
 export class IBasicGuild {
