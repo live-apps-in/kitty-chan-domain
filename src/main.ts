@@ -11,7 +11,6 @@ import path from 'path';
 import './database/mongo';
 import { HttpException, ValidationException } from './core/exception';
 import { createServer } from 'http';
-import './infrastructure/sockets';
 import { Server } from 'socket.io';
 import './microservice/gRPC/gRPC.config';
 
