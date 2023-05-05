@@ -49,7 +49,7 @@ export class PortalService {
     if (!portal || portal?.guild?.length === 1) return;
 
     ///Check if message contains mentions
-    const { hasMention } = guild.mentions
+    const { hasMention } = guild.mentions;
     if (hasMention) {
       await this.reply(
         'You cannot use mentions in Portal ⚠. This message will not be delivered to other Portals but can be seen by members within this server.',

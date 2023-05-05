@@ -44,7 +44,7 @@ export class IMessageMentionsRole {
   public roleId?: string;
 }
 
-export class IMessageAttachments{
+export class IMessageAttachments {
   public name: string;
   public id: string;
   public size: number;
