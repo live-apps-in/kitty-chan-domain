@@ -23,17 +23,7 @@ export const client = new Client({
  * LiveApps Discord Client Config
  */
 export const liveClient = new LiveClient({
-  events: [
-    DiscordEvents.guildCreate,
-    DiscordEvents.guildDelete,
-    DiscordEvents.messageCreate,
-    DiscordEvents.guildMemberAdd,
-    DiscordEvents.guildMemberRemove,
-    DiscordEvents.guildUpdate,
-    DiscordEvents.messageDelete,
-    DiscordEvents.messageUpdate,
-    DiscordEvents.raw,
-  ],
+  events: [],
   sync: true,
   redisOptions: {
     host: process.env.REDIS_HOST,
