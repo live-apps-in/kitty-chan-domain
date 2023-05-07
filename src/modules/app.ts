@@ -20,7 +20,7 @@ export const client = new Client({
 });
 
 /**
- * LiveCord Discord Client Config
+ * LiveApps Discord Client Config
  */
 export const liveClient = new LiveClient({
   events: [
@@ -41,10 +41,8 @@ export const liveClient = new LiveClient({
 @injectable()
 export class App {
   /**
-   * Planning to migrate from monolith to Events & Domain microservice
-   * Discord JS is not optimized at shards level
-   * Discord API custom rate-limiter is still experimental
-   * Currently focusing on LiveCord and kitty chan gRPC endpoints
+   * All of sockets listeners are migrated from monolith to Events & Domain microservice
+   * This app receives gRPC call from kitty chan events
    */
   async start() {
     /**

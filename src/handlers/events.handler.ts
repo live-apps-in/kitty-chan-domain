@@ -1,12 +1,8 @@
 import { sendUnaryData, ServerUnaryCall } from '@grpc/grpc-js';
-import { Message } from 'discord.js';
 import { inject, injectable } from 'inversify';
-import { client } from '../modules/app';
 import {
   IBasicGuild,
-  IGuild,
   IGuildMember,
-  IGuildMessage,
   IGuildMessageWithFF,
   IMessageReaction,
 } from '../modules/interface/shared.interface';

@@ -2,24 +2,14 @@ version: "3.9"
 services:
   kittychan:
     build: .
-    image: kittychan_domain
-    container_name: kittychan_domain
+    image: kittychan-domain
+    container_name: kittychan-domain
     ports:
       - "5000:5000"
-      - "5030:5030"
-    depends_on:
-      - redis
+    networks:
+    - kittychan-network
     restart: always
-  
-  redis:
-    image: redis
-    container_name: kittychan-domain-redis
-    restart: always
-    env_file:
-      - .env
-    command: "redis-server --requirepass ${REDIS_PASS}"
-    volumes:
-      - redis_data:/data
 
-volumes:
-  redis_data:
+networks:
+  kittychan-network:
+    name: kittychan-network

@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  redis:
+    image: redis
+    container_name: kittychan-redis
+    hostname: kittychan-redis
+    restart: always
+    env_file:
+      - .env
+    command: "redis-server --requirepass ${REDIS_PASS}"
+    volumes:
+      - redis_data:/data
+    networks:
+      - kittychan-network
+
+volumes:
+  redis_data:
+
+networks:
+  kittychan-network:
+    name: kittychan-network
