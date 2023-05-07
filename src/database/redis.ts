@@ -4,7 +4,7 @@ const client = new Redis({
   host: process.env.REDIS_HOST,
   port: 6379,
   password: process.env.REDIS_PASS,
-  db: 0,
+  db: 1,
   retryStrategy: () => {
     return null;
   },

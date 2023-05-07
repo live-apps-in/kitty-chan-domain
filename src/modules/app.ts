@@ -34,7 +34,13 @@ export const liveClient = new LiveClient({
     DiscordEvents.messageUpdate,
     DiscordEvents.raw,
   ],
-  sync: false,
+  sync: true,
+  redisOptions: {
+    host: process.env.REDIS_HOST,
+    db: 0,
+    port: 6379,
+    pass: process.env.REDIS_PASS,
+  },
   token: process.env.KITTY_CHAN_TOKEN,
 });
 

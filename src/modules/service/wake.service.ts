@@ -7,9 +7,7 @@ import {
   valorant_find_player_unranked,
 } from '../data/valorant/valorant_call';
 import { sad_phrase } from '../data/wake_phrase/sad_phrase';
-import {
-  valorant_call_signs
-} from '../data/wake_words/valorant';
+import { valorant_call_signs } from '../data/wake_words/valorant';
 import { IGuild } from '../interface/shared.interface';
 import { UtilityService } from './shared/utils.service';
 import { liveClient } from '../app';
