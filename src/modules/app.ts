@@ -3,7 +3,6 @@ import { ActivityType, Client, GatewayIntentBits } from 'discord.js';
 import 'dotenv/config';
 import { OnInit } from '../jobs/onInit';
 import { Client as LiveClient } from '@live-apps/discord';
-import { DiscordEvents } from '@live-apps/discord/dist/shared/enum/events.enum';
 
 /**
  * Discord JS Client Config

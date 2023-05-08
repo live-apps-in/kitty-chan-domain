@@ -8,6 +8,9 @@ services:
     env_file:
       - .env
     command: "redis-server --requirepass ${REDIS_PASS}"
+    #Exposing Redis for local use
+    ports:
+      - "6379:6379"
     volumes:
       - redis_data:/data
     networks:

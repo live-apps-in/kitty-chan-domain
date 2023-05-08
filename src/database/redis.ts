@@ -11,11 +11,11 @@ const client = new Redis({
 });
 
 client.on('connect', () => {
-  console.log('Redis connection established.');
+  console.log('kitty chan Domain Redis connection established.');
 });
 
 client.on('error', (err) => {
-  console.log('Error connecting to Redis: ' + err);
+  console.log('Error connecting to kitty chan Domain Redis: ' + err);
 });
 
 export default client;
