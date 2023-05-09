@@ -5,9 +5,9 @@ import type {
   RolesMapping__Output as _kitty_chan_RolesMapping__Output,
 } from '../kitty_chan/RolesMapping';
 import type {
-  DiscordEmbedConfig as _kitty_chan_DiscordEmbedConfig,
-  DiscordEmbedConfig__Output as _kitty_chan_DiscordEmbedConfig__Output,
-} from '../kitty_chan/DiscordEmbedConfig';
+  DiscordEmbed as _kitty_chan_DiscordEmbed,
+  DiscordEmbed__Output as _kitty_chan_DiscordEmbed__Output,
+} from '../kitty_chan/DiscordEmbed';
 
 export interface ReactionRoleActionReqDto {
   name?: string;
@@ -15,7 +15,7 @@ export interface ReactionRoleActionReqDto {
   guildId?: string;
   channelId?: string;
   rolesMapping?: _kitty_chan_RolesMapping[];
-  discordEmbedConfig?: _kitty_chan_DiscordEmbedConfig | null;
+  discordEmbedConfig?: _kitty_chan_DiscordEmbed | null;
   reactionRoleMessageRef?: string;
 }
 
@@ -25,6 +25,6 @@ export interface ReactionRoleActionReqDto__Output {
   guildId?: string;
   channelId?: string;
   rolesMapping?: _kitty_chan_RolesMapping__Output[];
-  discordEmbedConfig?: _kitty_chan_DiscordEmbedConfig__Output;
+  discordEmbedConfig?: _kitty_chan_DiscordEmbed__Output;
   reactionRoleMessageRef?: string;
 }

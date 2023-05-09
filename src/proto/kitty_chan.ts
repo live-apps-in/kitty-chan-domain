@@ -23,9 +23,14 @@ type SubtypeConstructor<
 
 export interface ProtoGrpcType {
   kitty_chan: {
-    DiscordEmbedConfig: MessageTypeDefinition;
-    DiscordEmbedFields: MessageTypeDefinition;
+    DiscordEmbed: MessageTypeDefinition;
+    DiscordEmbedAuthor: MessageTypeDefinition;
+    DiscordEmbedField: MessageTypeDefinition;
     DiscordEmbedFooter: MessageTypeDefinition;
+    DiscordEmbedImage: MessageTypeDefinition;
+    DiscordEmbedProvider: MessageTypeDefinition;
+    DiscordEmbedThumbnail: MessageTypeDefinition;
+    DiscordEmbedVideo: MessageTypeDefinition;
     EventsService: SubtypeConstructor<
       typeof grpc.Client,
       _kitty_chan_EventsServiceClient

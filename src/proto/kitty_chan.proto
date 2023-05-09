@@ -116,7 +116,7 @@ message ReactionRoleActionReqDto {
   string guildId = 3;
   string channelId = 4;
   repeated RolesMapping rolesMapping = 5;
-  DiscordEmbedConfig discordEmbedConfig = 6;
+  DiscordEmbed discordEmbedConfig = 6;
   string reactionRoleMessageRef = 7;
 }
 
@@ -141,21 +141,63 @@ message RolesMappingEmoji{
 /*****/
 
 /**Discord Embed **/
-message DiscordEmbedConfig{
+message DiscordEmbed {
   string title = 1;
-  string description = 2;
-  int32 color = 3;
-  DiscordEmbedFooter footer = 4;
-  repeated DiscordEmbedFields fields = 5;
+  string type = 2; // always "rich" for webhook embeds
+  string description = 3;
+  string url = 4;
+  string timestamp = 5; // ISO8601 timestamp
+  int32 color = 6; // color code of the embed
+  DiscordEmbedFooter footer = 7;
+  DiscordEmbedImage image = 8;
+  DiscordEmbedThumbnail thumbnail = 9;
+  DiscordEmbedVideo video = 10;
+  DiscordEmbedProvider provider = 11;
+  DiscordEmbedAuthor author = 12;
+  repeated DiscordEmbedField fields = 13;
 }
 
-message DiscordEmbedFooter{
-  string text = 1;
+message DiscordEmbedFooter {
+  string text = 1; // footer text
+  string icon_url = 2; // url of footer icon (only supports http(s) and attachments)
+  string proxy_icon_url = 3; // a proxied url of footer icon
 }
 
-message DiscordEmbedFields{
-  string name = 1;
-  string value = 2;
-  bool inline = 3;
+message DiscordEmbedThumbnail {
+  string url = 1; // source url of thumbnail (only supports http(s) and attachments)
+  string proxy_url = 2; // a proxied url of the thumbnail
+  int32 height = 3; // height of thumbnail
+  int32 width = 4; // width of thumbnail
 }
-/****/
+
+message DiscordEmbedVideo {
+  string url = 1; // source url of video
+  string proxy_url = 2; // a proxied url of the video
+  int32 height = 3; // height of video
+  int32 width = 4; // width of video
+}
+
+message DiscordEmbedImage {
+  string url = 1; // source url of image (only supports http(s) and attachments)
+  string proxy_url = 2; // a proxied url of the image
+  int32 height = 3; // height of image
+  int32 width = 4; // width of image
+}
+
+message DiscordEmbedProvider {
+  string name = 1; // name of provider
+  string url = 2; // url of provider
+}
+
+message DiscordEmbedAuthor {
+  string name = 1; // name of author
+  string url = 2; // url of author (only supports http(s))
+  string icon_url = 3; // url of author icon (only supports http(s) and attachments)
+  string proxy_icon_url = 4; // a proxied url of author icon
+}
+
+message DiscordEmbedField {
+  string name = 1; // name of the field
+  string value = 2; // value of the field
+  bool inline = 3; // whether or not this field should display inline
+}

@@ -1,3 +1,5 @@
+import { DiscordEmbeds } from '@live-apps/discord/dist/shared/interface/embed.interface';
+
 /**
  * Reaction Roles
  */
@@ -8,5 +10,5 @@ export class ReactionRolesActionDto {
   action: string;
   rolesMapping: any[];
   reactionRoleMessageRef: string;
-  discordEmbedConfig?: any;
+  discordEmbedConfig?: DiscordEmbeds;
 }

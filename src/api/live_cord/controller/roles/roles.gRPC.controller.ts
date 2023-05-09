@@ -5,7 +5,7 @@ import { ReactionRoleActionReqDto } from '../../../../proto/kitty_chan/ReactionR
 import { ReactionRoleActionResDto } from '../../../../proto/kitty_chan/ReactionRoleActionResDto';
 import { ReactionRoleServiceHandlers } from '../../../../proto/kitty_chan/ReactionRoleService';
 import { RolesAPIService } from '../../service/roles/roles.service';
-
+import { DiscordEmbeds } from '@live-apps/discord/dist/shared/interface/embed.interface';
 /*
  Roles gRPC Controller 
  */
@@ -31,6 +31,11 @@ export class RolesGrpcController implements ReactionRoleServiceHandlers {
       discordEmbedConfig,
     } = call.request;
 
+    /**proto 3 doesn't support required field
+     * So re-assigning to a new interface
+     */
+    const discordEmbeds = discordEmbedConfig as DiscordEmbeds;
+
     const res = await this.rolesAPIService.reactionRoleFactory({
       name,
       guildId,
@@ -38,7 +43,7 @@ export class RolesGrpcController implements ReactionRoleServiceHandlers {
       action,
       rolesMapping,
       reactionRoleMessageRef,
-      discordEmbedConfig,
+      discordEmbedConfig: discordEmbeds,
     });
 
     return callback(null, { ...res });
