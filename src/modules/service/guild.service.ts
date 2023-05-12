@@ -26,7 +26,7 @@ export class GuildService {
     });
 
     await this.redisService.set(
-      `guild:${guild.guildId}:flags`,
+      `guild:${guildId}:flags`,
       JSON.stringify({
         strongLanguage: false,
         hindi: false,

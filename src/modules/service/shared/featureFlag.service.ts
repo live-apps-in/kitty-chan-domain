@@ -16,12 +16,28 @@ export class FeatureFlagService {
     await this.serverRepo.create(payload);
   }
 
-  async getFeatureFlag(guild: IGuild) {
+  async getFeatureFlag({ guildId }: IGuild) {
     try {
-      const guildFlag = await this.redisService.get(
-        `guild:${guild.guildId}:flags`,
+      const redisGuildFF = await this.redisService.get(
+        `guild:${guildId}:flags`,
       );
-      return guildFlag ? JSON.parse(guildFlag) : null;
+
+      /**Create Feature flag in Redis if guild is available in MongoDB */
+      if (!redisGuildFF) {
+        const mongoGuildFF = await this.serverRepo.getByGuildId(guildId);
+
+        if (mongoGuildFF) {
+          await this.redisService.set(
+            `guild:${guildId}:flags`,
+            JSON.stringify({
+              strongLanguage: false,
+              hindi: false,
+              valorant_find_players: false,
+            }),
+          );
+        }
+      }
+      return redisGuildFF ? JSON.parse(redisGuildFF) : null;
     } catch (error) {
       return null;
     }

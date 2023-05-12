@@ -30,10 +30,9 @@ server.setConfig((app) => {
   );
   app.set('view engine', '.hbs');
 
+  /**Server React App */
   app.use(express.static(path.join(__dirname, '../client/build')));
 });
-
-///Server React Build
 
 ////Global Error Config
 server.setErrorConfig((app) => {
