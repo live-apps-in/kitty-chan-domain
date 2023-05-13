@@ -39,7 +39,7 @@ export class RolesService {
     for (let index = 0; index < rolesMapping.length; index++) {
       const emoji = rolesMapping[index].emoji;
 
-      liveClient.message.react(
+      await liveClient.message.react(
         channelId,
         res.id,
         emoji.type === 'standard'
