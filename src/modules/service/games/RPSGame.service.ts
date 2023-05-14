@@ -28,7 +28,7 @@ export class RPSGameService {
       await GameSession.deleteOne({ _id: getOngoingSession._id }).then(
         async (res) => {
           if (res.deletedCount === 1) {
-            liveClient.message.delete(guild.channelId, guild.messageId);
+            await liveClient.message.delete(guild.channelId, guild.messageId);
           }
         },
       );
@@ -46,7 +46,7 @@ export class RPSGameService {
       },
     });
 
-    liveClient.message.reply(
+    await liveClient.message.reply(
       guild.channelId,
       guild.messageId,
       RPS_GAME_Content.start,
@@ -142,7 +142,7 @@ export class RPSGameService {
       },
     );
 
-    liveClient.message.reply(
+    await liveClient.message.reply(
       channelId,
       messageId,
       RPS_GAME_Content.shoot(resContent),
@@ -162,7 +162,7 @@ export class RPSGameService {
       },
     );
 
-    liveClient.message.reply(
+    await liveClient.message.reply(
       guild.channelId,
       guild.messageId,
       RPS_GAME_Content.start,
@@ -179,7 +179,7 @@ export class RPSGameService {
   ///End Game
   private async delete(guild: IGuild) {
     ///Delete Thread
-    liveClient.message.delete(guild.channelId, guild.messageId);
+    await liveClient.message.delete(guild.channelId, guild.messageId);
 
     ///Delete Game Session
     await GameSession.deleteOne({ threadId: guild.channelId });

@@ -62,7 +62,11 @@ export class WakeService {
     ///Notify content for Unranked and Comp
     const replyContent = find_valo_unranked_template(guild);
 
-    liveClient.message.reply(guild.channelId, guild.messageId, replyContent);
+    await liveClient.message.reply(
+      guild.channelId,
+      guild.messageId,
+      replyContent,
+    );
 
     return true;
   }
@@ -77,7 +81,11 @@ export class WakeService {
     if (!isMatch) return;
     const buildResponse = await sad_phrase_response_builder(libIndex);
 
-    liveClient.message.reply(guild.channelId, guild.messageId, buildResponse);
+    await liveClient.message.reply(
+      guild.channelId,
+      guild.messageId,
+      buildResponse,
+    );
     return true;
   }
 }

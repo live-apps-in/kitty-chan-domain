@@ -1,4 +1,4 @@
-import { DiscordEmbeds } from '@live-apps/discord/dist/shared/interface/embed.interface';
+import { DiscordEmbeds } from '@live-apps/discord';
 
 /**
  * Reaction Roles

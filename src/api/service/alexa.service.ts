@@ -13,7 +13,7 @@ export class AlexaService {
       messageType,
     );
 
-    liveClient.message.send(channelId, buildMessage);
+    await liveClient.message.send(channelId, buildMessage);
   }
 
   private async buildMessage(

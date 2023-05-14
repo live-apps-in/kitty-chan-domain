@@ -57,7 +57,7 @@ export class ConversationService {
   }
 
   private async reply(phrase: string, guild: IGuild) {
-    liveClient.message.reply(guild.channelId, guild.messageId, phrase);
+    await liveClient.message.reply(guild.channelId, guild.messageId, phrase);
 
     return true;
   }

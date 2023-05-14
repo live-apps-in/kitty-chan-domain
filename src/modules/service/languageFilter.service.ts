@@ -27,7 +27,7 @@ export class LanguageFilter {
     });
 
     if (isNonEnglish) {
-      liveClient.message.react(
+      await liveClient.message.react(
         guild.channelId,
         guild.messageId,
         '%E2%9A%A0%EF%B8%8F',
@@ -52,7 +52,7 @@ export class LanguageFilter {
     });
 
     if (isStrongLanguage) {
-      liveClient.message.react(
+      await liveClient.message.react(
         guild.channelId,
         guild.messageId,
         '%E2%9A%A0%EF%B8%8F',

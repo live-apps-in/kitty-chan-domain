@@ -50,7 +50,7 @@ export class CommandService {
       const content = `Hey there! I'm kitty chan. I'm currently at very early stage of development.
 You will be invited when a stable version is released :)`;
 
-      liveClient.message.reply(guild.channelId, guild.messageId, content);
+      await liveClient.message.reply(guild.channelId, guild.messageId, content);
       return true;
     }
 
@@ -90,7 +90,7 @@ You will be invited when a stable version is released :)`;
       };
     }
 
-    liveClient.message.reply(
+    await liveClient.message.reply(
       guild.channelId,
       guild.messageId,
       response.message,

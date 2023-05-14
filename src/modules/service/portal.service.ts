@@ -149,7 +149,7 @@ export class PortalService {
     await this.reply('Successfully Joined the Portal! ✔', guild);
 
     ///Update Channel Topic
-    liveClient.channel.edit(guild.channelId, {
+    await liveClient.channel.edit(guild.channelId, {
       topic: portal_active_description,
     });
 
@@ -196,7 +196,7 @@ export class PortalService {
     );
 
     ///Update Channel Topic
-    liveClient.channel.edit(guild.channelId, {
+    await liveClient.channel.edit(guild.channelId, {
       topic: portal_inactive_description,
     });
 
@@ -229,13 +229,13 @@ export class PortalService {
 
   ////Common Reply Handler
   private async reply(content: string, guild: IGuild) {
-    liveClient.message.reply(guild.channelId, guild.messageId, content);
+    await liveClient.message.reply(guild.channelId, guild.messageId, content);
     return;
   }
 
   private async message(guilds: any[]) {
     guilds.map(async (e) => {
-      liveClient.message.send(e.channelId, e.message);
+      await liveClient.message.send(e.channelId, e.message);
     });
   }
 }

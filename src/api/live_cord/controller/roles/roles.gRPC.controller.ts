@@ -5,7 +5,7 @@ import { ReactionRoleActionReqDto } from '../../../../proto/kitty_chan/ReactionR
 import { ReactionRoleActionResDto } from '../../../../proto/kitty_chan/ReactionRoleActionResDto';
 import { ReactionRoleServiceHandlers } from '../../../../proto/kitty_chan/ReactionRoleService';
 import { RolesAPIService } from '../../service/roles/roles.service';
-import { DiscordEmbeds } from '@live-apps/discord/dist/shared/interface/embed.interface';
+import { DiscordEmbeds } from '@live-apps/discord';
 /*
  Roles gRPC Controller 
  */

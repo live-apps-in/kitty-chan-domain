@@ -70,7 +70,11 @@ export class RolesService {
       throw new HttpException('Cannot find Reaction Role', 400);
 
     ///Update Message
-    liveClient.message.editEmbed(channelId, reactionRoleMessageRef, embed);
+    await liveClient.message.editEmbed(
+      channelId,
+      reactionRoleMessageRef,
+      embed,
+    );
 
     ///Update Roles Mapping Changes
     await ReactionRole.updateOne(
@@ -90,7 +94,7 @@ export class RolesService {
     for (let index = 0; index < emojiToBeUpdated.length; index++) {
       const emoji = emojiToBeUpdated[index].emoji;
 
-      liveClient.message.react(
+      await liveClient.message.react(
         channelId,
         reactionRoleMessageRef,
         emoji.type === 'standard'
@@ -114,7 +118,7 @@ export class RolesService {
       throw new HttpException('Cannot find Reaction Role', 400);
 
     ///Delete Message
-    liveClient.message.delete(channelId, reactionRoleMessageRef);
+    await liveClient.message.delete(channelId, reactionRoleMessageRef);
 
     await ReactionRoles.deleteOne({ messageId: reactionRoleMessageRef });
 
@@ -185,6 +189,6 @@ export class RolesService {
     if (!role) return false;
 
     ///Add role to User
-    liveClient.roles.remove(reaction_role.guildId, userId, role.roleId);
+    await liveClient.roles.remove(reaction_role.guildId, userId, role.roleId);
   }
 }
