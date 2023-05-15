@@ -9,6 +9,7 @@ import { DiscordEmbedField } from '../../types/discord.types';
 import { QueueService } from '../../shared/queue.service';
 import { SharedService } from './shared.service';
 import { v4 } from 'uuid';
+import { GuildService } from '../service/guild.service';
 
 interface ServiceStats {
   service: string;
@@ -26,8 +27,11 @@ export class ServiceStatus {
     @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
     @inject(TYPES.QueueService) private readonly queueService: QueueService,
+    @inject(TYPES.GuildService) private readonly guildService: GuildService,
     @inject(TYPES.SharedService) private readonly sharedService: SharedService,
   ) {}
+
+  /**Fetch all service latency */
   async check() {
     const serviceStats: ServiceStats[] = [];
 
@@ -36,28 +40,35 @@ export class ServiceStatus {
     const ff = await this.featureFlag();
     const queue = await this.queue();
     const rest = await this.rest();
-    const liveAppsDiscord = await this.liveAppsDiscord();
+    const liveCordgRPC = await this.liveCordgRPC();
+    const liveAppsDiscordAPI = await this.liveAppsDiscordAPI();
+    const liveAppsDiscordCache = await this.liveAppsDiscordCache();
 
     serviceStats.push(mongo);
     serviceStats.push(redis);
     serviceStats.push(queue);
     serviceStats.push(ff);
     serviceStats.push(rest);
-    serviceStats.push(liveAppsDiscord);
+    serviceStats.push(liveCordgRPC);
+    serviceStats.push(liveAppsDiscordAPI);
+    serviceStats.push(liveAppsDiscordCache);
 
     return serviceStats;
   }
 
+  /**Build and send service status to discord channel
+   * Used by Commands
+   */
   async discord_command(channelId: string) {
     const serviceStats = await this.check();
 
     const embeds: DiscordEmbeds = {
-      title: 'kitty chan Service Status',
+      title: 'kitty chan Service Status 🛠',
       color: 10181010,
-      description: 'Status of all dependant services:',
+      description: 'Status of all dependent services:',
       fields: [],
       footer: {
-        text: `Server Region - Mumbai  |  Live Apps`,
+        text: `Server Region - Mumbai  |  Live Apps 💜`,
       },
     };
 
@@ -88,18 +99,20 @@ export class ServiceStatus {
 
       if (currentRow.length === servicesPerRow) {
         embeds.fields?.push(...currentRow);
+        embeds.fields?.push({ name: '', value: '' }); // Add an empty field for spacing
         currentRow = [];
       }
     }
 
-    // Add the remaining services if not enough to form a complete row
     if (currentRow.length > 0) {
       embeds.fields?.push(...currentRow);
+      embeds.fields?.push({ name: '', value: '' }); // Add an empty field for spacing
     }
 
     await liveClient.message.sendEmbed(channelId, [embeds]);
   }
 
+  /**MongoDB - Check by fetching home guild */
   private async mongo() {
     const start = performance.now();
     const getGuild = await this.serverRepo.getByGuildId(this.guildId);
@@ -120,6 +133,7 @@ export class ServiceStatus {
     } as ServiceStats;
   }
 
+  /**Redis - Check by Redis PING*/
   private async redis() {
     const start = performance.now();
     const getGuildFF = await this.redisService.ping();
@@ -140,6 +154,7 @@ export class ServiceStatus {
     } as ServiceStats;
   }
 
+  /**FeatureFlag - Check by fetching home guild Feature Flag*/
   private async featureFlag() {
     const start = performance.now();
     const getGuildFF = await this.redisService.get(
@@ -162,6 +177,7 @@ export class ServiceStatus {
     } as ServiceStats;
   }
 
+  /**RabbitMQ - pub/sub ping queue */
   private async queue() {
     const start = performance.now();
     const pubSub = await this.queueService.ping('kitty_chan_domain_queue');
@@ -182,7 +198,8 @@ export class ServiceStatus {
     } as ServiceStats;
   }
 
-  private async liveAppsDiscord() {
+  /**LiveApps Discord - API call */
+  private async liveAppsDiscordAPI() {
     const start = performance.now();
     const getGuild = await liveClient.guild.fetch(this.guildId, {
       ignoreCache: true,
@@ -191,19 +208,41 @@ export class ServiceStatus {
 
     if (!getGuild) {
       return {
-        service: 'LiveApps Discord',
+        service: 'LiveApps Discord (API)',
         isAvailable: false,
         latency: null,
       } as ServiceStats;
     }
 
     return {
-      service: 'LiveApps Discord',
+      service: 'LiveApps Discord (API)',
       isAvailable: true,
       latency: Number((end - start).toFixed(2)),
     } as ServiceStats;
   }
 
+  /**LiveApps Discord - Fetch Cache */
+  private async liveAppsDiscordCache() {
+    const start = performance.now();
+    const getGuild = await liveClient.guild.fetch(this.guildId);
+    const end = performance.now();
+
+    if (!getGuild) {
+      return {
+        service: 'LiveApps Discord (Cache)',
+        isAvailable: false,
+        latency: null,
+      } as ServiceStats;
+    }
+
+    return {
+      service: 'LiveApps Discord (Cache)',
+      isAvailable: true,
+      latency: Number((end - start).toFixed(2)),
+    } as ServiceStats;
+  }
+
+  /**REST - Ping API */
   private async rest() {
     const start = performance.now();
     const rest = await this.sharedService.axiosInstance({
@@ -214,14 +253,35 @@ export class ServiceStatus {
 
     if (!rest) {
       return {
-        service: 'REST service',
+        service: 'REST Service',
         isAvailable: false,
         latency: null,
       } as ServiceStats;
     }
 
     return {
-      service: 'REST service',
+      service: 'REST Service',
+      isAvailable: true,
+      latency: Number((end - start).toFixed(2)),
+    } as ServiceStats;
+  }
+
+  /**LiveCord - make a gRPC call */
+  private async liveCordgRPC() {
+    const start = performance.now();
+    const getGuild: any = await this.guildService.getGuildById(this.guildId);
+    const end = performance.now();
+
+    if (!getGuild?.name) {
+      return {
+        service: 'LiveCord gRPC',
+        isAvailable: false,
+        latency: null,
+      } as ServiceStats;
+    }
+
+    return {
+      service: 'LiveCord gRPC',
       isAvailable: true,
       latency: Number((end - start).toFixed(2)),
     } as ServiceStats;

@@ -15,6 +15,8 @@ type SubtypeConstructor<
 
 export interface ProtoGrpcType {
   live_cord: {
+    GetGuildReq: MessageTypeDefinition;
+    GetGuildRes: MessageTypeDefinition;
     GuildMemberReq: MessageTypeDefinition;
     GuildMemberRes: MessageTypeDefinition;
     GuildService: SubtypeConstructor<

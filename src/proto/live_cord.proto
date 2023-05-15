@@ -3,12 +3,21 @@ package live_cord;
 
 /** LiveCord Services */
 service GuildService{
+  rpc getGuildById (GetGuildReq) returns (GetGuildRes);
   rpc syncCreateGuildMember (GuildMemberReq) returns (GuildMemberRes);
   rpc syncRemoveGuildMember (GuildMemberReq) returns (GuildMemberRes);
 }
 
 
 /** Guild Service **/
+message GetGuildReq{
+  string guildId = 1;
+}
+
+message GetGuildRes{
+  string name = 1;
+}
+
 message GuildMemberReq{
   string guildId = 1;
   string userId = 2;

@@ -64,6 +64,23 @@ export class GuildService {
       .catch(console.error);
   }
 
+  async getGuildById(guildId: string) {
+    let guild: { name: string };
+
+    await new Promise((resolve, reject) => {
+      liveCordgRPC.getGuildById({ guildId }, (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          guild = res as any;
+          resolve(true);
+        }
+      });
+    });
+
+    return guild;
+  }
+
   async syncCreateMemberWithLiveCord(guild: IGuildMember) {
     const { guildId, userId } = guild;
     liveCordgRPC.syncCreateGuildMember(
