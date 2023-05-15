@@ -56,7 +56,7 @@ interface DiscordEmbedAuthor {
   proxy_icon_url?: string; // a proxied url of author icon
 }
 
-interface DiscordEmbedField {
+export interface DiscordEmbedField {
   name: string; // name of the field
   value: string; // value of the field
   inline?: boolean; // whether or not this field should display inline

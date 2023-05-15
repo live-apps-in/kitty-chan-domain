@@ -14,4 +14,8 @@ export class RedisService {
   async delete(key: string) {
     client.del(key);
   }
+
+  async ping() {
+    return client.ping();
+  }
 }

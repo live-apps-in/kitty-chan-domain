@@ -7,6 +7,7 @@ import { flip_coin_wake_word } from '../data/wake_words/general';
 import { ConversationService } from './conversation/conversation.service';
 import { PortalService } from './portal.service';
 import { liveClient } from '../app';
+import { ServiceStatus } from '../shared/service_status.service';
 
 @injectable()
 export class CommandService {
@@ -17,6 +18,7 @@ export class CommandService {
     @inject(TYPES.ConversationService)
     private readonly conversationService: ConversationService,
     @inject(TYPES.PortalService) private readonly portalService: PortalService,
+    @inject(TYPES.ServiceStatus) private readonly serviceStatus: ServiceStatus,
   ) {}
 
   ///Validate and Filter Command
@@ -51,6 +53,12 @@ export class CommandService {
 You will be invited when a stable version is released :)`;
 
       await liveClient.message.reply(guild.channelId, guild.messageId, content);
+      return true;
+    }
+
+    /**Service Availability */
+    if (messageChunk[1] === 'ping') {
+      await this.serviceStatus.discord_command(guild.channelId);
       return true;
     }
 

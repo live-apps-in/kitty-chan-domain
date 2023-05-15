@@ -9,33 +9,21 @@ import {
 } from '../interface/shared.interface';
 
 interface axiosConfig {
+  url: string;
   method: string;
-  route: string;
   body?: any;
 }
 
 @injectable()
 export class SharedService {
   /////Global Axios Config
-  async axiosInstance(payload: axiosConfig): Promise<any> {
-    const { method, route } = payload;
-    const headers = {
-      Authorization: `Bot ${process.env.KITTY_CHAN_TOKEN}`,
-      'content-type': 'application/json',
-    };
+  async axiosInstance(axiosConfig: axiosConfig): Promise<any> {
+    const { method } = axiosConfig;
     const data = {
-      ...payload.body,
+      ...axiosConfig.body,
     };
 
-    const axiosConfig: any = {
-      method,
-      url: `${process.env.DISCORD_API}${route}`,
-      headers,
-    };
-
-    if (['put', 'post', 'patch'].includes(method)) axiosConfig.data = data;
-
-    // console.log(axiosConfig)
+    if (['put', 'post', 'patch'].includes(method)) axiosConfig.body = data;
 
     let resData: any;
     await axios(axiosConfig)

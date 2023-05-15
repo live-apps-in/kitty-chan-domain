@@ -42,6 +42,7 @@ import { UserService } from '../api/live_cord/service/user.service';
 import { RedisService } from '../shared/redis.service';
 import { QueueService } from '../shared/queue.service';
 import { GuildService } from '../modules/service/guild.service';
+import { ServiceStatus } from '../modules/shared/service_status.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -99,5 +100,6 @@ container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService);
 container
   .bind<FeatureFlagService>(TYPES.FeatureFlagService)
   .to(FeatureFlagService);
+container.bind<ServiceStatus>(TYPES.ServiceStatus).to(ServiceStatus);
 
 export default container;

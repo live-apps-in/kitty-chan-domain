@@ -22,11 +22,11 @@ export class ActionService {
       payload.guild,
       payload.body,
     );
-    return this.sharedService.axiosInstance({
-      method: config.method,
-      route: config.route,
-      body: payload.body,
-    });
+    // return this.sharedService.axiosInstance({
+    //   method: config.method,
+    //   route: config.route,
+    //   body: payload.body,
+    // });
   }
 }
 
