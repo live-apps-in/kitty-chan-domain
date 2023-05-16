@@ -6,7 +6,7 @@ import {
   IGuildMember,
   IGuildMessage,
   IMessageReaction,
-} from '../interface/shared.interface';
+} from '../../interface/shared.interface';
 
 interface axiosConfig {
   url: string;

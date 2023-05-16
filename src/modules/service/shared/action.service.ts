@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../core/inversify.types';
 import { ACTIONS } from '../../enum/action';
 import { IGuild } from '../../interface/shared.interface';
-import { SharedService } from '../../shared/shared.service';
+import { SharedService } from '../shared/shared.service';
 
 interface RespondConfig {
   type: string;

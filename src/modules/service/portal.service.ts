@@ -8,7 +8,7 @@ import {
   portal_active_description,
   portal_inactive_description,
 } from '../content/descriptions';
-import { SharedService } from '../shared/shared.service';
+import { SharedService } from './shared/shared.service';
 import { liveClient } from '../app';
 
 @injectable()

@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { ConversationRepository } from '../../../api/repository/conversation.repo';
+import { ConversationRepository } from '../../repository/conversation.repo';
 import { TYPES } from '../../../core/inversify.types';
 import { randomNumber } from '../../../utils/calc';
 import { IGuild } from '../../interface/shared.interface';

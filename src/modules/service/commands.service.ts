@@ -7,7 +7,7 @@ import { flip_coin_wake_word } from '../data/wake_words/general';
 import { ConversationService } from './conversation/conversation.service';
 import { PortalService } from './portal.service';
 import { liveClient } from '../app';
-import { ServiceStatus } from '../shared/service_status.service';
+import { ServiceStatus } from './shared/service_status.service';
 
 @injectable()
 export class CommandService {

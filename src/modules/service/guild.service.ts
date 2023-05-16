@@ -2,7 +2,6 @@ import { inject, injectable } from 'inversify';
 import { liveCordgRPC } from '../../microservice/gRPC/grpcClient';
 import { IBasicGuild, IGuildMember } from '../interface/shared.interface';
 import Server from '../../model/server';
-import { client } from '../app';
 import { TYPES } from '../../core/inversify.types';
 import { RolesService } from './roles/roles.service';
 import { RedisService } from '../../shared/redis.service';
@@ -37,12 +36,7 @@ export class GuildService {
     ///Jaga's Discord ID
     const userId = '516438995824017420';
 
-    client.users
-      .fetch(userId)
-      .then((user) => {
-        user.send(`I've been added to ${guildName} - ${guildId}`);
-      })
-      .catch(console.error);
+    //TODO - Notify Bot owner
   }
 
   async guildDelete(guild: IBasicGuild) {
@@ -56,12 +50,8 @@ export class GuildService {
 
     ///Jaga's Discord ID
     const userId = '516438995824017420';
-    client.users
-      .fetch(userId)
-      .then((user) => {
-        user.send(`I've been removed from to ${guildName} - ${guildId}`);
-      })
-      .catch(console.error);
+
+    //TODO - Notify Bot owner
   }
 
   async getGuildById(guildId: string) {

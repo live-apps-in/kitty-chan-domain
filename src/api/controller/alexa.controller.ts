@@ -4,6 +4,7 @@ import { controller, httpPost } from 'inversify-express-utils';
 import { TYPES } from '../../core/inversify.types';
 import { AlexaService } from '../service/alexa.service';
 
+/**Invoked by AWS Lambda (kitty chan Alexa) */
 @controller('/alexa/ask')
 export class AlexaController {
   constructor(

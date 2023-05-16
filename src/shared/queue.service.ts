@@ -53,7 +53,7 @@ export class QueueService {
       const pingMessage = 'Ping!';
       await this.sendToQueue(pingMessage, queue);
 
-      const pongCallback = (message: any) => {
+      const pongCallback = () => {
         resolve(true);
       };
 

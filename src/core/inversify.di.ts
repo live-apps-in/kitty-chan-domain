@@ -1,23 +1,10 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 
-///Controller
-import '../api/controller/app.controller';
-import '../api/controller/text.controller';
-import '../api/controller/dashboard.controller';
-import '../api/controller/alexa.controller';
-import '../api/controller/conversation/conversation.controller';
-/**
- * LiveCord Controller
- */
-import '../api/live_cord/controller/user.controller';
-import '../api/live_cord/controller/guild/guild.controller';
-import '../api/live_cord/controller/roles/roles.controller';
-
 import { LanguageFilter } from '../modules/service/languageFilter.service';
 import { TYPES } from './inversify.types';
 import { App } from '../modules/app';
-import { SharedService } from '../modules/shared/shared.service';
+import { SharedService } from '../modules/service/shared/shared.service';
 import { ViolationRepository } from '../modules/repository/violation.repo';
 import { LoggerService } from '../modules/service/logger.service';
 import { TextLogRepository } from '../modules/repository/textLogRepo';
@@ -29,20 +16,25 @@ import { AlexaService } from '../api/service/alexa.service';
 import { UtilityService } from '../modules/service/shared/utils.service';
 import { ConversationService } from '../modules/service/conversation/conversation.service';
 import { ConversationAPIService } from '../api/service/conversation/conversation_api.service';
-import { ConversationRepository } from '../api/repository/conversation.repo';
+import { ConversationRepository } from '../modules/repository/conversation.repo';
 import { ServerRepo } from '../modules/repository/server.repo';
 import { FeatureFlagService } from '../modules/service/shared/featureFlag.service';
 import { PortalService } from '../modules/service/portal.service';
 import { GamesService } from '../modules/service/games/games.service';
 import { RPSGameService } from '../modules/service/games/RPSGame.service';
-import { GuildAPIService } from '../api/live_cord/service/guild.service';
 import { RolesAPIService } from '../api/live_cord/service/roles/roles.service';
 import { RolesService } from '../modules/service/roles/roles.service';
-import { UserService } from '../api/live_cord/service/user.service';
 import { RedisService } from '../shared/redis.service';
 import { QueueService } from '../shared/queue.service';
 import { GuildService } from '../modules/service/guild.service';
-import { ServiceStatus } from '../modules/shared/service_status.service';
+import { ServiceStatus } from '../modules/service/shared/service_status.service';
+
+///Controller
+import '../api/controller/app.controller';
+import '../api/controller/text.controller';
+import '../api/controller/dashboard.controller';
+import '../api/controller/alexa.controller';
+import '../api/controller/conversation/conversation.controller';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -80,8 +72,6 @@ container
   .to(ConversationAPIService);
 
 ///LiveCord Service
-container.bind<UserService>(TYPES.UserService).to(UserService);
-container.bind<GuildAPIService>(TYPES.GuildAPIService).to(GuildAPIService);
 container.bind<RolesAPIService>(TYPES.RolesAPIService).to(RolesAPIService);
 
 ///Repository

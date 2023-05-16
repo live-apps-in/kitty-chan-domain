@@ -12,7 +12,7 @@ import { PortalService } from '../../modules/service/portal.service';
 import { RolesService } from '../../modules/service/roles/roles.service';
 import { FeatureFlagService } from '../../modules/service/shared/featureFlag.service';
 import { WakeService } from '../../modules/service/wake.service';
-import { SharedService } from '../../modules/shared/shared.service';
+import { SharedService } from '../../modules/service/shared/shared.service';
 import container from '../../core/inversify.di';
 import { TYPES } from '../../core/inversify.types';
 import { EventsHandler } from '../../handlers/events.handler';

@@ -5,7 +5,7 @@ import ConversationResponse from '../../model/conversation_res.model';
 
 @injectable()
 export class ConversationRepository {
-  ///Conversation Wake Phrase
+  /**Conversation Wake Phrase */
   ///Create
   async create_phrase(payload: any) {
     const savePhrase = await ConversationPhrase.insertMany(payload);
