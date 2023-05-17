@@ -17,7 +17,7 @@ import container from '../../core/inversify.di';
 import { TYPES } from '../../core/inversify.types';
 import { EventsHandler } from '../../handlers/events.handler';
 import { ProtoGrpcType } from '../../proto/kitty_chan';
-import { RedisService } from '../../shared/redis.service';
+import { ServiceStatus } from '../../modules/service/shared/service_status.service';
 
 /**
  * Load Proto
@@ -46,7 +46,7 @@ const portalService = container.get<PortalService>(TYPES.PortalService);
 const gameService = container.get<GamesService>(TYPES.GameService);
 const rolesService = container.get<RolesService>(TYPES.RolesService);
 const guildService = container.get<GuildService>(TYPES.GuildService);
-const redisService = container.get<RedisService>(TYPES.RedisService);
+const serviceStatus = container.get<ServiceStatus>(TYPES.ServiceStatus);
 
 const eventsGrpcController = new EventsHandler(
   languageFilterService,
@@ -59,7 +59,7 @@ const eventsGrpcController = new EventsHandler(
   gameService,
   rolesService,
   guildService,
-  redisService,
+  serviceStatus,
 );
 const rolesGrpcController = new RolesGrpcController(rolesApiService);
 const guildGrpcController = new GuildGrpcController();

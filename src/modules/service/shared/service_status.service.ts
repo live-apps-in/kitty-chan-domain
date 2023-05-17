@@ -9,6 +9,7 @@ import { DiscordEmbedField } from '../../../types/discord.types';
 import { QueueService } from '../../../shared/queue.service';
 import { SharedService } from './shared.service';
 import { GuildService } from '../guild.service';
+import { IGuildMessageWithFF } from '../../interface/shared.interface';
 
 interface ServiceStats {
   service: string;
@@ -21,7 +22,7 @@ interface ServiceStats {
 export class ServiceStatus {
   private guildId = '1031566030507626607';
   private kittyChanPingUrl = 'https://kittychan.jaga.live/ping';
-
+  private kitty_chan_id = process.env.KITTY_CHAN_ID;
   constructor(
     @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
@@ -55,16 +56,40 @@ export class ServiceStatus {
     return serviceStats;
   }
 
+  /** */
+  async validateCommand({
+    guildId,
+    channelId,
+    messageContent,
+  }: IGuildMessageWithFF) {
+    const message = messageContent.trim().toLowerCase();
+    const messageChunk = message.split(' ');
+
+    ///Check if kitty chan tagged
+    if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return false;
+
+    /**Service Availability */
+    if (messageChunk[1] === 'ping') {
+      await this.discord_command(guildId, channelId);
+      return true;
+    }
+
+    return false;
+  }
+
   /**Build and send service status to discord channel
    * Used by Commands
    */
-  async discord_command(channelId: string) {
+  async discord_command(guildId: string, channelId: string) {
     const serviceStats = await this.check();
 
     const embeds: DiscordEmbeds = {
-      title: 'kitty chan Service Status 🛠',
+      title: 'kitty chan Service Stats 🛠',
       color: 10181010,
-      description: 'Status of all dependent services:',
+      description: `kitty chan tries fetching info on all dependent services connected to your 
+Guild - \`${guildId}\`
+
+Certain features won't work unless kitty chan can access these services. 💡`,
       fields: [],
       footer: {
         text: `Server Region - Mumbai  |  Live Apps 💜`,
@@ -267,8 +292,13 @@ export class ServiceStatus {
 
   /**LiveCord - make a gRPC call */
   private async liveCordgRPC() {
+    let getGuild: any;
     const start = performance.now();
-    const getGuild: any = await this.guildService.getGuildById(this.guildId);
+
+    try {
+      getGuild = await this.guildService.getGuildById(this.guildId);
+    } catch (error) {}
+
     const end = performance.now();
 
     if (!getGuild?.name) {

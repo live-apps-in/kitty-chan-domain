@@ -19,7 +19,7 @@ import { SharedService } from '../modules/service/shared/shared.service';
 import { TYPES } from '../core/inversify.types';
 import { EventsServiceHandlers } from '../proto/kitty_chan/EventsService';
 import { NoResponse } from '../proto/kitty_chan/NoResponse';
-import { RedisService } from '../shared/redis.service';
+import { ServiceStatus } from '../modules/service/shared/service_status.service';
 
 @injectable()
 export class EventsHandler implements EventsServiceHandlers {
@@ -37,7 +37,7 @@ export class EventsHandler implements EventsServiceHandlers {
     @inject(TYPES.GameService) private readonly gameService: GamesService,
     @inject(TYPES.RolesService) private readonly rolesService: RolesService,
     @inject(TYPES.GuildService) private readonly guildService: GuildService,
-    @inject(TYPES.RedisService) private readonly redisService: RedisService,
+    @inject(TYPES.ServiceStatus) private readonly serviceStatus: ServiceStatus,
   ) {}
 
   /**Message Create Events */
@@ -48,58 +48,61 @@ export class EventsHandler implements EventsServiceHandlers {
     ///Acknowledge gRPC call
     callback(null);
 
-    const guildInfo = call.request as IGuildMessageWithFF;
+    const guildMessage = call.request as IGuildMessageWithFF;
 
     //Validate if Bot message
-    if (guildInfo.isBot) return;
+    if (guildMessage.isBot) return;
 
     ///Log
-    this.loggerService.log_message_count(guildInfo);
+    this.loggerService.log_message_count(guildMessage);
 
     ///Service Stats
+    await this.serviceStatus.validateCommand(guildMessage);
 
     ///Fetch feature flags
-    const featureFlag = await this.featureFlagService.getFeatureFlag(guildInfo);
+    const featureFlag = await this.featureFlagService.getFeatureFlag(
+      guildMessage,
+    );
     if (!featureFlag) return;
 
-    guildInfo.featureFlag = { ...featureFlag };
+    guildMessage.featureFlag = { ...featureFlag };
 
     ///Check Portal Intent
-    const isPortal = await this.portalService.validate_channel(guildInfo);
+    const isPortal = await this.portalService.validate_channel(guildMessage);
     if (isPortal) return;
 
     ///Check Game Intent
-    const isGame = await this.gameService.validateGame(guildInfo);
+    const isGame = await this.gameService.validateGame(guildMessage);
     if (isGame) return;
 
     ///Non-English Detection (Only Detects Hindi)
-    if (guildInfo?.featureFlag?.hindi) {
+    if (guildMessage?.featureFlag?.hindi) {
       const isNonEnglish = await this.langFilter.non_english_detection(
-        guildInfo,
+        guildMessage,
       );
       if (isNonEnglish) return callback(null);
     }
 
-    if (guildInfo?.featureFlag?.strongLanguage) {
+    if (guildMessage?.featureFlag?.strongLanguage) {
       ///Strong Language Detection
       const isStrongLang = await this.langFilter.strong_language_detection(
-        guildInfo,
+        guildMessage,
       );
       if (isStrongLang) return;
     }
 
     ///Commands
-    const isCommand = await this.commandService.validateCommand(guildInfo);
+    const isCommand = await this.commandService.validateCommand(guildMessage);
     if (isCommand) return;
 
     ///Wake Words
-    this.wakeService.validate(guildInfo);
+    this.wakeService.validate(guildMessage);
 
     ///Games
-    this.gameService.call(guildInfo);
+    this.gameService.call(guildMessage);
 
     ///Log Good Text Count
-    this.loggerService.text_count_logger(guildInfo);
+    this.loggerService.text_count_logger(guildMessage);
   }
 
   /**Add Message Reaction Events */
