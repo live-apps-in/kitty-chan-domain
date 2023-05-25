@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../core/inversify.types';
-import { ServerRepo } from '../../repository/server.repo';
+import { GuildRepo } from '../../repository/guild.repo';
 import { performance } from 'perf_hooks';
 import { RedisService } from '../../../shared/redis.service';
 import { liveClient } from '../../app';
@@ -24,7 +24,7 @@ export class ServiceStatus {
   private kittyChanPingUrl = 'https://kittychan.jaga.live/ping';
   private kitty_chan_id = process.env.KITTY_CHAN_ID;
   constructor(
-    @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
+    @inject(TYPES.GuildRepo) private readonly guildRepo: GuildRepo,
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
     @inject(TYPES.QueueService) private readonly queueService: QueueService,
     @inject(TYPES.GuildService) private readonly guildService: GuildService,
@@ -139,7 +139,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   /**MongoDB - Check by fetching home guild */
   private async mongo() {
     const start = performance.now();
-    const getGuild = await this.serverRepo.getByGuildId(this.guildId);
+    const getGuild = await this.guildRepo.getByGuildId(this.guildId);
     const end = performance.now();
 
     if (!getGuild) {

@@ -3,7 +3,7 @@ import { TYPES } from '../../core/inversify.types';
 import { IGuild, IGuildMessage } from '../interface/shared.interface';
 import Server from '../../model/server';
 import Portal from '../../model/portal';
-import { ServerRepo } from '../repository/server.repo';
+import { GuildRepo } from '../repository/guild.repo';
 import {
   portal_active_description,
   portal_inactive_description,
@@ -14,7 +14,7 @@ import { liveClient } from '../app';
 @injectable()
 export class PortalService {
   constructor(
-    @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
+    @inject(TYPES.GuildRepo) private readonly guildRepo: GuildRepo,
     @inject(TYPES.SharedService) private readonly sharedService: SharedService,
   ) {}
 
@@ -99,7 +99,7 @@ export class PortalService {
     const guildId = guild.guildId.toString();
 
     ///Update Portal Channel
-    await this.serverRepo.update_by_guildId(guildId, {
+    await this.guildRepo.update_by_guildId(guildId, {
       portal: {
         channel: guild.channelId.toString(),
       },

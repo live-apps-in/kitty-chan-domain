@@ -3,17 +3,17 @@ import { Types } from 'mongoose';
 import { TYPES } from '../../../core/inversify.types';
 import { RedisService } from '../../../shared/redis.service';
 import { IGuild } from '../../interface/shared.interface';
-import { ServerRepo } from '../../repository/server.repo';
+import { GuildRepo } from '../../repository/guild.repo';
 
 @injectable()
 export class FeatureFlagService {
   constructor(
-    @inject(TYPES.ServerRepo) private readonly serverRepo: ServerRepo,
+    @inject(TYPES.GuildRepo) private readonly guildRepo: GuildRepo,
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
   ) {}
 
   async create_featureFlag(payload: any) {
-    await this.serverRepo.create(payload);
+    await this.guildRepo.create(payload);
   }
 
   async getFeatureFlag({ guildId }: IGuild) {
@@ -24,7 +24,7 @@ export class FeatureFlagService {
 
       /**Create Feature flag in Redis if guild is available in MongoDB */
       if (!redisGuildFF) {
-        const mongoGuildFF = await this.serverRepo.getByGuildId(guildId);
+        const mongoGuildFF = await this.guildRepo.getByGuildId(guildId);
 
         if (mongoGuildFF) {
           await this.redisService.set(
@@ -44,10 +44,10 @@ export class FeatureFlagService {
   }
 
   async viewAllFeatureFlag() {
-    return this.serverRepo.get();
+    return this.guildRepo.get();
   }
 
   async update_featureFlag(_id: Types.ObjectId, payload: any) {
-    return this.serverRepo.update(_id, payload);
+    return this.guildRepo.update(_id, payload);
   }
 }

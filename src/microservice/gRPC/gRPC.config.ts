@@ -18,6 +18,7 @@ import { TYPES } from '../../core/inversify.types';
 import { EventsHandler } from '../../handlers/events.handler';
 import { ProtoGrpcType } from '../../proto/kitty_chan';
 import { ServiceStatus } from '../../modules/service/shared/service_status.service';
+import { WelcomerService } from '../../modules/service/welcomer.service';
 
 /**
  * Load Proto
@@ -47,6 +48,7 @@ const gameService = container.get<GamesService>(TYPES.GameService);
 const rolesService = container.get<RolesService>(TYPES.RolesService);
 const guildService = container.get<GuildService>(TYPES.GuildService);
 const serviceStatus = container.get<ServiceStatus>(TYPES.ServiceStatus);
+const welcomerService = container.get<WelcomerService>(TYPES.WelcomerService);
 
 const eventsGrpcController = new EventsHandler(
   languageFilterService,
@@ -60,6 +62,7 @@ const eventsGrpcController = new EventsHandler(
   rolesService,
   guildService,
   serviceStatus,
+  welcomerService,
 );
 const rolesGrpcController = new RolesGrpcController(rolesApiService);
 const guildGrpcController = new GuildGrpcController();

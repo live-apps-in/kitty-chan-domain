@@ -20,6 +20,7 @@ import { TYPES } from '../core/inversify.types';
 import { EventsServiceHandlers } from '../proto/kitty_chan/EventsService';
 import { NoResponse } from '../proto/kitty_chan/NoResponse';
 import { ServiceStatus } from '../modules/service/shared/service_status.service';
+import { WelcomerService } from '../modules/service/welcomer.service';
 
 @injectable()
 export class EventsHandler implements EventsServiceHandlers {
@@ -38,6 +39,8 @@ export class EventsHandler implements EventsServiceHandlers {
     @inject(TYPES.RolesService) private readonly rolesService: RolesService,
     @inject(TYPES.GuildService) private readonly guildService: GuildService,
     @inject(TYPES.ServiceStatus) private readonly serviceStatus: ServiceStatus,
+    @inject(TYPES.WelcomerService)
+    private readonly welcomerService: WelcomerService,
   ) {}
 
   /**Message Create Events */
@@ -158,7 +161,7 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
     const payload = call.request as IGuildMember;
 
-    this.guildService.syncCreateMemberWithLiveCord(payload);
+    this.welcomerService.handle(payload);
   }
 
   /**Guild Member Remove */

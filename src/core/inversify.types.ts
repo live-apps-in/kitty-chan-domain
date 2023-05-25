@@ -10,6 +10,7 @@ export const TYPES = {
   PortalService: Symbol.for('PortalService'),
   RolesService: Symbol.for('RolesService'),
   GuildService: Symbol.for('GuildService'),
+  WelcomerService: Symbol.for('WelcomerService'),
 
   ///VALORANT Service
   ValorantService: Symbol.for('ValorantService'),
@@ -33,7 +34,7 @@ export const TYPES = {
 
   ///Repository
   ConversationRepository: Symbol.for('ConversationRepository'),
-  ServerRepo: Symbol.for('ServerRepo'),
+  GuildRepo: Symbol.for('GuildRepo'),
 
   ///Shared Service
   SharedService: Symbol.for('SharedService'),

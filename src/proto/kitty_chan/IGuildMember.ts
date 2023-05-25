@@ -2,10 +2,12 @@
 
 export interface IGuildMember {
   guildId?: string;
-  userid?: string;
+  guildName?: string;
+  userId?: string;
 }
 
 export interface IGuildMember__Output {
   guildId?: string;
-  userid?: string;
+  guildName?: string;
+  userId?: string;
 }

@@ -76,7 +76,8 @@ message IBasicGuild{
 
 message IGuildMember{
   string guildId = 1;
-  string userid = 2;
+  string guildName = 2;
+  string userId = 3;
 }
 
 message IMessageReaction{

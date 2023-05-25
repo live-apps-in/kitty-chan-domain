@@ -17,7 +17,7 @@ import { UtilityService } from '../modules/service/shared/utils.service';
 import { ConversationService } from '../modules/service/conversation/conversation.service';
 import { ConversationAPIService } from '../api/service/conversation/conversation_api.service';
 import { ConversationRepository } from '../modules/repository/conversation.repo';
-import { ServerRepo } from '../modules/repository/server.repo';
+import { GuildRepo } from '../modules/repository/guild.repo';
 import { FeatureFlagService } from '../modules/service/shared/featureFlag.service';
 import { PortalService } from '../modules/service/portal.service';
 import { GamesService } from '../modules/service/games/games.service';
@@ -35,6 +35,7 @@ import '../api/controller/text.controller';
 import '../api/controller/dashboard.controller';
 import '../api/controller/alexa.controller';
 import '../api/controller/conversation/conversation.controller';
+import { WelcomerService } from '../modules/service/welcomer.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -54,6 +55,7 @@ container.bind<WakeService>(TYPES.WakeService).to(WakeService);
 container.bind<PortalService>(TYPES.PortalService).to(PortalService);
 container.bind<RolesService>(TYPES.RolesService).to(RolesService);
 container.bind<GuildService>(TYPES.GuildService).to(GuildService);
+container.bind<WelcomerService>(TYPES.WelcomerService).to(WelcomerService);
 
 ///Game Service
 container.bind<GamesService>(TYPES.GameService).to(GamesService);
@@ -78,7 +80,7 @@ container.bind<RolesAPIService>(TYPES.RolesAPIService).to(RolesAPIService);
 container
   .bind<ConversationRepository>(TYPES.ConversationRepository)
   .to(ConversationRepository);
-container.bind<ServerRepo>(TYPES.ServerRepo).to(ServerRepo);
+container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);
 
 ///Shared Service
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);
