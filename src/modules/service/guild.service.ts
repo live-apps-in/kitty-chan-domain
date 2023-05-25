@@ -1,6 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { liveCordgRPC } from '../../microservice/gRPC/grpcClient';
-import { IBasicGuild, IGuildMember } from '../interface/shared.interface';
+import { IBasicGuild } from '../interface/shared.interface';
 import Server from '../../model/server';
 import { TYPES } from '../../core/inversify.types';
 import { RolesService } from './roles/roles.service';
@@ -40,7 +39,7 @@ export class GuildService {
   }
 
   async guildDelete(guild: IBasicGuild) {
-    const { guildId, guildName } = guild;
+    const { guildId } = guild;
 
     ///Remove feature flag in Redis
     await this.redisService.delete(`guild:${guildId}:flags`);
@@ -52,44 +51,5 @@ export class GuildService {
     const userId = '516438995824017420';
 
     //TODO - Notify Bot owner
-  }
-
-  async getGuildById(guildId: string) {
-    let guild: { name: string };
-
-    await new Promise((resolve, reject) => {
-      liveCordgRPC.getGuildById({ guildId }, (err, res) => {
-        if (err) {
-          reject(err);
-        } else {
-          guild = res as any;
-          resolve(true);
-        }
-      });
-    });
-
-    return guild;
-  }
-
-  async syncCreateMemberWithLiveCord(guild: IGuildMember) {
-    const { guildId, userId } = guild;
-    liveCordgRPC.syncCreateGuildMember(
-      {
-        guildId,
-        userId,
-      },
-      (err, res) => {},
-    );
-  }
-
-  async syncRemoveMemberWithLiveCord(guild: IGuildMember) {
-    const { guildId, userId } = guild;
-    liveCordgRPC.syncRemoveGuildMember(
-      {
-        guildId,
-        userId,
-      },
-      (err, res) => {},
-    );
   }
 }

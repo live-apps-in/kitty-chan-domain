@@ -27,7 +27,6 @@ export class EventsHandler implements EventsServiceHandlers {
   [name: string]: any;
   constructor(
     @inject(TYPES.LanguageFilter) private readonly langFilter: LanguageFilter,
-    @inject(TYPES.SharedService) private readonly sharedService: SharedService,
     @inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
     @inject(TYPES.WakeService) private readonly wakeService: WakeService,
     @inject(TYPES.CommandService)
@@ -162,6 +161,8 @@ export class EventsHandler implements EventsServiceHandlers {
     const payload = call.request as IGuildMember;
 
     this.welcomerService.handle(payload);
+
+    //TODO - Handler guild member add
   }
 
   /**Guild Member Remove */
@@ -172,6 +173,6 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
     const payload = call.request as IGuildMember;
 
-    this.guildService.syncRemoveMemberWithLiveCord(payload);
+    //TODO - Handler guild member remove
   }
 }

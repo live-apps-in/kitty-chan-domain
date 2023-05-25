@@ -8,7 +8,6 @@ import { DiscordEmbeds } from '@live-apps/discord';
 import { DiscordEmbedField } from '../../../types/discord.types';
 import { QueueService } from '../../../shared/queue.service';
 import { SharedService } from './shared.service';
-import { GuildService } from '../guild.service';
 import { IGuildMessageWithFF } from '../../interface/shared.interface';
 
 interface ServiceStats {
@@ -27,7 +26,6 @@ export class ServiceStatus {
     @inject(TYPES.GuildRepo) private readonly guildRepo: GuildRepo,
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
     @inject(TYPES.QueueService) private readonly queueService: QueueService,
-    @inject(TYPES.GuildService) private readonly guildService: GuildService,
     @inject(TYPES.SharedService) private readonly sharedService: SharedService,
   ) {}
 
@@ -86,8 +84,8 @@ export class ServiceStatus {
     const embeds: DiscordEmbeds = {
       title: 'kitty chan Service Stats 🛠',
       color: 10181010,
-      description: `kitty chan tries fetching info on all dependent services connected to your 
-Guild - \`${guildId}\`
+      description: `kitty chan tries fetching info from all dependent services connected to your 
+Guild (Discord Server) - \`${guildId}\`
 
 Certain features won't work unless kitty chan can access these services. 💡`,
       fields: [],
@@ -290,27 +288,27 @@ Certain features won't work unless kitty chan can access these services. 💡`,
     } as ServiceStats;
   }
 
-  /**LiveCord - make a gRPC call */
+  /**LiveCord - make a gRPC call
+   * LiveCord microservice is deprecated
+   */
   private async liveCordgRPC() {
     let getGuild: any;
     const start = performance.now();
 
-    try {
-      getGuild = await this.guildService.getGuildById(this.guildId);
-    } catch (error) {}
+    getGuild = false;
 
     const end = performance.now();
 
     if (!getGuild?.name) {
       return {
-        service: 'LiveCord gRPC',
+        service: 'LiveCord gRPC (Deprecated)',
         isAvailable: false,
         latency: null,
       } as ServiceStats;
     }
 
     return {
-      service: 'LiveCord gRPC',
+      service: 'LiveCord gRPC (Deprecated)',
       isAvailable: true,
       latency: Number((end - start).toFixed(2)),
     } as ServiceStats;
