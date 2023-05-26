@@ -157,11 +157,12 @@ export class EventsHandler implements EventsServiceHandlers {
     callback: sendUnaryData<any>,
   ) {
     callback(null);
-    const payload = call.request as IGuildMember;
+    const guildMember = call.request as IGuildMember;
 
-    this.welcomerService.handle(payload);
+    this.welcomerService.handle(guildMember);
 
-    //TODO - Handler guild member add
+    //Sync Guild Member
+    this.guildService.guildMemberCreate(guildMember);
   }
 
   /**Guild Member Remove */
@@ -170,8 +171,9 @@ export class EventsHandler implements EventsServiceHandlers {
     callback: sendUnaryData<any>,
   ) {
     callback(null);
-    const payload = call.request as IGuildMember;
+    const guildMember = call.request as IGuildMember;
 
-    //TODO - Handler guild member remove
+    //Sync Guild Member
+    this.guildService.guildMemberDelete(guildMember);
   }
 }

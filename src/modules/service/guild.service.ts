@@ -1,9 +1,10 @@
 import { inject, injectable } from 'inversify';
-import { IBasicGuild } from '../interface/shared.interface';
+import { IBasicGuild, IGuildMember } from '../interface/shared.interface';
 import Guild from '../../model/guild.model';
 import { TYPES } from '../../core/inversify.types';
 import { RolesService } from './roles/roles.service';
 import { RedisService } from '../../shared/redis.service';
+import userModel from '../../model/user.model';
 
 @injectable()
 export class GuildService {
@@ -23,7 +24,7 @@ export class GuildService {
         valorant_find_players: false,
       }),
     );
-    
+
     ///Register Guild
     const getServer = await Guild.findOne({ guildId });
     if (getServer) return;
@@ -32,7 +33,6 @@ export class GuildService {
       name: guildName,
       guildId,
     });
-
 
     ///Jaga's Discord ID
     const userId = '516438995824017420';
@@ -53,5 +53,33 @@ export class GuildService {
     const userId = '516438995824017420';
 
     //TODO - Notify Bot owner
+  }
+
+  async guildMemberCreate(guildMember: IGuildMember) {
+    const user = await userModel.findOne({ discordId: guildMember.userId });
+
+    if (user) {
+      await userModel.updateOne(
+        { _id: user._id },
+        {
+          $addToSet: { guilds: guildMember.guildId },
+        },
+      );
+    } else {
+      await userModel.insertMany({
+        name: guildMember.userName,
+        discordId: guildMember.userId,
+        guilds: [guildMember.guildId],
+      });
+    }
+  }
+
+  async guildMemberDelete(guildMember: IGuildMember) {
+    await userModel.updateOne(
+      { discordId: guildMember.userId },
+      {
+        $pull: { guilds: guildMember.guildId },
+      },
+    );
   }
 }
