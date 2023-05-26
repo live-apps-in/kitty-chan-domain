@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { IGuild, IGuildMessage } from '../interface/shared.interface';
-import Server from '../../model/server';
+import Guild from '../../model/guild.model';
 import Portal from '../../model/portal';
 import { GuildRepo } from '../repository/guild.repo';
 import {
@@ -37,12 +37,12 @@ export class PortalService {
   async validate_channel(guild: IGuildMessage) {
     const guildId = guild.guildId.toString();
     const channelId = guild.channelId.toString();
-    const server = await Server.findOne({ guildId });
+    const localGuild = await Guild.findOne({ guildId });
 
     ///Check if portal command
     const messageChunk = guild.messageContent.split(' ');
     if (messageChunk[1] === 'portal') return;
-    if (server?.portal?.channel !== channelId) return;
+    if (localGuild?.portal?.channel !== channelId) return;
 
     ///Check for active portal members
     const portal = await Portal.findOne({ 'guild.guildId': guildId });
@@ -115,10 +115,10 @@ export class PortalService {
   private async join(guild: IGuild, pass: string) {
     const guildId = guild.guildId.toString();
     const channelId = guild.channelId.toString();
-    const server = await Server.findOne({ guildId });
+    const localGuild = await Guild.findOne({ guildId });
 
     ///Check for valid Portal Channel
-    if (server?.portal?.channel !== channelId) {
+    if (localGuild?.portal?.channel !== channelId) {
       await this.reply(
         'You should be in the Portal channel to Join a Session!  ⭕',
         guild,
@@ -139,7 +139,7 @@ export class PortalService {
       {
         $push: {
           guild: {
-            serverName: guild.guildName,
+            guildName: guild.guildName,
             guildId,
             channelId,
           },
@@ -217,7 +217,7 @@ export class PortalService {
 
       if (e.guildId !== guildId) {
         guilds.push({
-          serverName: e.serverName,
+          guildName: e.guildName,
           guildId: e.guildId,
           channelId: e.channelId,
         });

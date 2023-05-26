@@ -5,7 +5,7 @@ import text_log from '../../model/text_log';
 import { TextLogRepository } from '../repository/textLogRepo';
 import { ViolationRepository } from '../repository/violation.repo';
 import kitty_chan from '../../model/kitty_chan';
-import Server from '../../model/server';
+import Guild from '../../model/guild.model';
 import io from '../../main';
 import MessageLog from '../../model/message_logs.model';
 @injectable()
@@ -31,7 +31,7 @@ export class LoggerService {
 
     ///Individual Guild
     if (!guild.isBot) {
-      await Server.updateOne(
+      await Guild.updateOne(
         { guildId: guild.guildId },
         {
           $inc: { messageCount: 1 },

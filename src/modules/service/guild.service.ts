@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { IBasicGuild } from '../interface/shared.interface';
-import Server from '../../model/server';
+import Guild from '../../model/guild.model';
 import { TYPES } from '../../core/inversify.types';
 import { RolesService } from './roles/roles.service';
 import { RedisService } from '../../shared/redis.service';
@@ -15,10 +15,10 @@ export class GuildService {
   async guildCreate(guild: IBasicGuild) {
     const { guildId, guildName } = guild;
     ///Register Guild
-    const getServer = await Server.findOne({ guildId });
+    const getServer = await Guild.findOne({ guildId });
     if (getServer) return;
 
-    await Server.insertMany({
+    await Guild.insertMany({
       name: guildName,
       guildId,
     });

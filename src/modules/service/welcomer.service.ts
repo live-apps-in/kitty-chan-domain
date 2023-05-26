@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 import { IGuildMember } from '../interface/shared.interface';
-import discord_templatesModel from '../../model/discord_templates.model';
+import DiscordTemplateModel from '../../model/discord_templates.model';
 import { liveClient } from '../app';
-import guildModel from '../../model/guild.model';
+import Guild from '../../model/guild.model';
 
 export enum DiscordTemplateTarget {
   WELCOME_MESSAGE = 'welcomeMessage',
@@ -11,7 +11,7 @@ export enum DiscordTemplateTarget {
 @injectable()
 export class WelcomerService {
   async handle(guild: IGuildMember) {
-    const guildConfig = await guildModel.findOne({ guildId: guild.guildId });
+    const guildConfig = await Guild.findOne({ guildId: guild.guildId });
     if (!guildConfig?.welcomer.channelId) return;
 
     const template = await this.getDefaultTemplate();
@@ -24,7 +24,7 @@ export class WelcomerService {
   }
 
   private async getDefaultTemplate() {
-    return discord_templatesModel.findOne({
+    return DiscordTemplateModel.findOne({
       type: 'plain',
       target: DiscordTemplateTarget.WELCOME_MESSAGE,
     });
