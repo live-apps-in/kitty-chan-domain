@@ -14,14 +14,6 @@ export class GuildService {
 
   async guildCreate(guild: IBasicGuild) {
     const { guildId, guildName } = guild;
-    ///Register Guild
-    const getServer = await Guild.findOne({ guildId });
-    if (getServer) return;
-
-    await Guild.insertMany({
-      name: guildName,
-      guildId,
-    });
 
     await this.redisService.set(
       `guild:${guildId}:flags`,
@@ -31,6 +23,16 @@ export class GuildService {
         valorant_find_players: false,
       }),
     );
+    
+    ///Register Guild
+    const getServer = await Guild.findOne({ guildId });
+    if (getServer) return;
+
+    await Guild.insertMany({
+      name: guildName,
+      guildId,
+    });
+
 
     ///Jaga's Discord ID
     const userId = '516438995824017420';
