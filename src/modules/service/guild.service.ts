@@ -5,6 +5,7 @@ import { TYPES } from '../../core/inversify.types';
 import { RolesService } from './roles/roles.service';
 import { RedisService } from '../../shared/redis.service';
 import userModel from '../../model/user.model';
+import { liveClient } from '../app';
 
 @injectable()
 export class GuildService {
@@ -37,7 +38,10 @@ export class GuildService {
     ///Jaga's Discord ID
     const userId = '516438995824017420';
 
-    //TODO - Notify Bot owner
+    await liveClient.user.sendMessage(
+      userId,
+      `Added to ${guild.guildName} - ${guild.guildId}`,
+    );
   }
 
   async guildDelete(guild: IBasicGuild) {
@@ -52,7 +56,10 @@ export class GuildService {
     ///Jaga's Discord ID
     const userId = '516438995824017420';
 
-    //TODO - Notify Bot owner
+    await liveClient.user.sendMessage(
+      userId,
+      `Removed from ${guild.guildName} - ${guild.guildId}`,
+    );
   }
 
   async guildMemberCreate(guildMember: IGuildMember) {
