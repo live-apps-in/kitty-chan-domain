@@ -20,7 +20,7 @@ interface ServiceStats {
 @injectable()
 export class ServiceStatus {
   private guildId = '1031566030507626607';
-  private kittyChanPingUrl = 'https://kittychan.jaga.live/ping';
+  private kittyChanPingUrl = 'https://kittychan.live/ping';
   private kitty_chan_id = process.env.KITTY_CHAN_ID;
   constructor(
     @inject(TYPES.GuildRepo) private readonly guildRepo: GuildRepo,
