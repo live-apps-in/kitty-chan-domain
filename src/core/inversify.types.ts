@@ -41,7 +41,7 @@ export const TYPES = {
   RedisService: Symbol.for('RedisService'),
   QueueService: Symbol.for('QueueService'),
   ResponseService: Symbol.for('ResponseService'),
-  LoggerService: Symbol.for('LoggerService'),
+  StatsLoggerService: Symbol.for('StatsLoggerService'),
   UtilityService: Symbol.for('UtilityService'),
   FeatureFlagService: Symbol.for('FeatureFlagService'),
   ServiceStatus: Symbol.for('ServiceStatus'),

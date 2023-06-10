@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { IGuild } from '../interface/shared.interface';
-import { LoggerService } from './logger.service';
+import { StatsLoggerService } from './stats_logger.service';
 import { VIOLATIONS } from '../enum/violations';
 import { bad_words, hinglish_words } from '../../jobs/onInit';
 import { liveClient } from '../app';
@@ -11,7 +11,8 @@ require('dotenv/config');
 @injectable()
 export class LanguageFilter {
   constructor(
-    @inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
+    @inject(TYPES.StatsLoggerService)
+    private readonly StatsLoggerService: StatsLoggerService,
   ) {}
 
   ///Non-English Detection
@@ -34,7 +35,10 @@ export class LanguageFilter {
       );
 
       ///Log Violation
-      await this.loggerService.violation_logger(guild, VIOLATIONS.non_english);
+      await this.StatsLoggerService.violation_logger(
+        guild,
+        VIOLATIONS.non_english,
+      );
     }
 
     return isNonEnglish;
@@ -59,7 +63,7 @@ export class LanguageFilter {
       );
 
       ///Log Violation
-      await this.loggerService.violation_logger(
+      await this.StatsLoggerService.violation_logger(
         guild,
         VIOLATIONS.strong_language,
       );

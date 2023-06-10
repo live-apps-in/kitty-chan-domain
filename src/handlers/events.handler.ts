@@ -11,7 +11,7 @@ import { CommandService } from '../modules/service/commands.service';
 import { GamesService } from '../modules/service/games/games.service';
 import { GuildService } from '../modules/service/guild.service';
 import { LanguageFilter } from '../modules/service/languageFilter.service';
-import { LoggerService } from '../modules/service/logger.service';
+import { StatsLoggerService } from '../modules/service/stats_logger.service';
 import { PortalService } from '../modules/service/portal.service';
 import { RolesService } from '../modules/service/roles/roles.service';
 import { FeatureFlagService } from '../modules/service/shared/featureFlag.service';
@@ -27,7 +27,8 @@ export class EventsHandler implements EventsServiceHandlers {
   [name: string]: any;
   constructor(
     @inject(TYPES.LanguageFilter) private readonly langFilter: LanguageFilter,
-    @inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
+    @inject(TYPES.StatsLoggerService)
+    private readonly StatsLoggerService: StatsLoggerService,
     @inject(TYPES.WakeService) private readonly wakeService: WakeService,
     @inject(TYPES.CommandService)
     private readonly commandService: CommandService,
@@ -56,7 +57,7 @@ export class EventsHandler implements EventsServiceHandlers {
     if (guildMessage.isBot) return;
 
     ///Log
-    this.loggerService.log_message_count(guildMessage);
+    this.StatsLoggerService.log_message_count(guildMessage);
 
     ///Service Stats
     const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
@@ -105,7 +106,7 @@ export class EventsHandler implements EventsServiceHandlers {
     this.gameService.call(guildMessage);
 
     ///Log Good Text Count
-    this.loggerService.text_count_logger(guildMessage);
+    this.StatsLoggerService.text_count_logger(guildMessage);
   }
 
   /**Guild MEssage Update */

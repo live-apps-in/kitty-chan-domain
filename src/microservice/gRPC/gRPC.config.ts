@@ -7,7 +7,7 @@ import { CommandService } from '../../modules/service/commands.service';
 import { GamesService } from '../../modules/service/games/games.service';
 import { GuildService } from '../../modules/service/guild.service';
 import { LanguageFilter } from '../../modules/service/languageFilter.service';
-import { LoggerService } from '../../modules/service/logger.service';
+import { StatsLoggerService } from '../../modules/service/stats_logger.service';
 import { PortalService } from '../../modules/service/portal.service';
 import { RolesService } from '../../modules/service/roles/roles.service';
 import { FeatureFlagService } from '../../modules/service/shared/featureFlag.service';
@@ -35,7 +35,9 @@ const rolesApiService = container.get<RolesAPIService>(TYPES.RolesAPIService);
 const languageFilterService = container.get<LanguageFilter>(
   TYPES.LanguageFilter,
 );
-const loggerService = container.get<LoggerService>(TYPES.LoggerService);
+const statsLoggerService = container.get<StatsLoggerService>(
+  TYPES.StatsLoggerService,
+);
 const wakeService = container.get<WakeService>(TYPES.WakeService);
 const commandService = container.get<CommandService>(TYPES.CommandService);
 const featureFlagService = container.get<FeatureFlagService>(
@@ -50,7 +52,7 @@ const welcomerService = container.get<WelcomerService>(TYPES.WelcomerService);
 
 const eventsGrpcController = new EventsHandler(
   languageFilterService,
-  loggerService,
+  statsLoggerService,
   wakeService,
   commandService,
   featureFlagService,

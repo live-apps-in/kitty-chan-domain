@@ -9,7 +9,7 @@ import Guild from '../../model/guild.model';
 import io from '../../main';
 import MessageLog from '../../model/message_logs.model';
 @injectable()
-export class LoggerService {
+export class StatsLoggerService {
   constructor(
     @inject(TYPES.ViolationRepository)
     private readonly violationRepo: ViolationRepository,

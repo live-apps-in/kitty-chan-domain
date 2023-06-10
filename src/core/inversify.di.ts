@@ -6,7 +6,7 @@ import { TYPES } from './inversify.types';
 import { App } from '../modules/app';
 import { SharedService } from '../modules/service/shared/shared.service';
 import { ViolationRepository } from '../modules/repository/violation.repo';
-import { LoggerService } from '../modules/service/logger.service';
+import { StatsLoggerService } from '../modules/service/stats_logger.service';
 import { TextLogRepository } from '../modules/repository/textLogRepo';
 import { CommandService } from '../modules/service/commands.service';
 import { AnalyticsService } from '../api/service/analytics.service';
@@ -85,7 +85,9 @@ container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);
 container.bind<RedisService>(TYPES.RedisService).to(RedisService);
 container.bind<QueueService>(TYPES.QueueService).to(QueueService);
-container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
+container
+  .bind<StatsLoggerService>(TYPES.StatsLoggerService)
+  .to(StatsLoggerService);
 container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService);
 container
   .bind<FeatureFlagService>(TYPES.FeatureFlagService)
