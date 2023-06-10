@@ -21,6 +21,7 @@ import { EventsServiceHandlers } from '../proto/kitty_chan/EventsService';
 import { NoResponse } from '../proto/kitty_chan/NoResponse';
 import { ServiceStatus } from '../modules/service/shared/service_status.service';
 import { WelcomerService } from '../modules/service/welcomer.service';
+import { LoggerService } from '../modules/service/logger.service';
 
 @injectable()
 export class EventsHandler implements EventsServiceHandlers {
@@ -41,6 +42,7 @@ export class EventsHandler implements EventsServiceHandlers {
     @inject(TYPES.ServiceStatus) private readonly serviceStatus: ServiceStatus,
     @inject(TYPES.WelcomerService)
     private readonly welcomerService: WelcomerService,
+    @inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
   ) {}
 
   /**Message Create Events */
@@ -117,6 +119,7 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
 
     const message = call.request as IMessageUpdate;
+    this.loggerService.messageUpdate(message);
   }
 
   /**Add Message Reaction Events */

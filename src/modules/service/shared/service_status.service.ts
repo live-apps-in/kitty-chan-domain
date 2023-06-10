@@ -292,10 +292,8 @@ Certain features won't work unless kitty chan can access these services. 💡`,
    * LiveCord microservice is deprecated
    */
   private async liveCordgRPC() {
-    let getGuild: any;
+    const getGuild: any = false;
     const start = performance.now();
-
-    getGuild = false;
 
     const end = performance.now();
 

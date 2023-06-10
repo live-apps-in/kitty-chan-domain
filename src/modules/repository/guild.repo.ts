@@ -9,13 +9,13 @@ export class GuildRepo {
   }
 
   async getByGuildId(guildId: string) {
-    const features = await Guild.findOne({ guildId });
-    return features;
+    const guild = await Guild.findOne({ guildId });
+    return guild;
   }
 
   async get() {
-    const features = await Guild.findOne({});
-    return features;
+    const guild = await Guild.findOne({});
+    return guild;
   }
 
   async update(_id: Types.ObjectId, payload: any) {

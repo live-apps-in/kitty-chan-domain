@@ -11,6 +11,7 @@ export const TYPES = {
   RolesService: Symbol.for('RolesService'),
   GuildService: Symbol.for('GuildService'),
   WelcomerService: Symbol.for('WelcomerService'),
+  LoggerService: Symbol.for('LoggerService'),
 
   ///VALORANT Service
   ValorantService: Symbol.for('ValorantService'),
@@ -45,4 +46,5 @@ export const TYPES = {
   UtilityService: Symbol.for('UtilityService'),
   FeatureFlagService: Symbol.for('FeatureFlagService'),
   ServiceStatus: Symbol.for('ServiceStatus'),
+  DiscordTemplateService: Symbol.for('DiscordTemplateService'),
 };

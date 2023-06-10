@@ -3,10 +3,10 @@ import { IGuildMember } from '../interface/shared.interface';
 import DiscordTemplateModel from '../../model/discord_templates.model';
 import { liveClient } from '../app';
 import Guild from '../../model/guild.model';
-
-export enum DiscordTemplateTarget {
-  WELCOME_MESSAGE = 'welcomeMessage',
-}
+import {
+  DiscordTemplateType,
+  DiscordTemplateTarget,
+} from '../enum/discord_template.enum';
 
 @injectable()
 export class WelcomerService {
@@ -25,7 +25,7 @@ export class WelcomerService {
 
   private async getDefaultTemplate() {
     return DiscordTemplateModel.findOne({
-      type: 'plain',
+      type: DiscordTemplateType.plain,
       target: DiscordTemplateTarget.WELCOME_MESSAGE,
     });
   }

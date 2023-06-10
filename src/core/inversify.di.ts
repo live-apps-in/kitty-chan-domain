@@ -35,12 +35,14 @@ import '../api/controller/dashboard.controller';
 import '../api/controller/alexa.controller';
 import '../api/controller/conversation/conversation.controller';
 import { WelcomerService } from '../modules/service/welcomer.service';
+import { LoggerService } from '../modules/service/logger.service';
+import { DiscordTemplateService } from '../modules/service/shared/discord_template.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
 });
 
-///App Service
+/**App services */
 container.bind<App>(TYPES.App).to(App);
 container.bind<LanguageFilter>(TYPES.LanguageFilter).to(LanguageFilter);
 container
@@ -55,17 +57,18 @@ container.bind<PortalService>(TYPES.PortalService).to(PortalService);
 container.bind<RolesService>(TYPES.RolesService).to(RolesService);
 container.bind<GuildService>(TYPES.GuildService).to(GuildService);
 container.bind<WelcomerService>(TYPES.WelcomerService).to(WelcomerService);
+container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
 
-///Game Service
+/**Game Services */
 container.bind<GamesService>(TYPES.GameService).to(GamesService);
 container.bind<RPSGameService>(TYPES.RPSGameService).to(RPSGameService);
 
-///Conversation Service
+/**Conversation Service */
 container
   .bind<ConversationService>(TYPES.ConversationService)
   .to(ConversationService);
 
-///API Service
+/**API Services */
 container.bind<AnalyticsService>(TYPES.AnalyticsService).to(AnalyticsService);
 container.bind<AlexaService>(TYPES.AlexaService).to(AlexaService);
 container
@@ -75,13 +78,13 @@ container
 ///LiveCord Service
 container.bind<RolesAPIService>(TYPES.RolesAPIService).to(RolesAPIService);
 
-///Repository
+/**Repository */
 container
   .bind<ConversationRepository>(TYPES.ConversationRepository)
   .to(ConversationRepository);
 container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);
 
-///Shared Service
+/**Shared Service */
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);
 container.bind<RedisService>(TYPES.RedisService).to(RedisService);
 container.bind<QueueService>(TYPES.QueueService).to(QueueService);
@@ -93,5 +96,8 @@ container
   .bind<FeatureFlagService>(TYPES.FeatureFlagService)
   .to(FeatureFlagService);
 container.bind<ServiceStatus>(TYPES.ServiceStatus).to(ServiceStatus);
+container
+  .bind<DiscordTemplateService>(TYPES.DiscordTemplateService)
+  .to(DiscordTemplateService);
 
 export default container;

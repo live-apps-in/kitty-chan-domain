@@ -6,6 +6,7 @@ export interface IGuild {
   features: any;
   portal: any;
   welcomer: any;
+  logger: any;
   messageCount: number;
 }
 
@@ -15,14 +16,13 @@ const Guild = new Schema({
   features: {
     type: Object,
     default: {
-      strongLanguage: false,
-      hindi: false,
-      valorant_find_players: false,
-      welcome_message: false,
+      welcomer: { channelId: null },
+      logger: { channelId: null },
     },
   },
   portal: Object,
   welcomer: Object,
+  logger: Object,
   messageCount: { type: Number, bigint: true, default: 0 },
 });
 
