@@ -27,7 +27,7 @@ This guide will help you set up the project on your local machine.
 
 2. Install Redis on your local host or if all other kitty chan Microservices are running inside a Docker network, follow these steps:
 
-   - Replace the `.env.tlp` file with `.env` inside the `./docker` path and fill in the required fields.
+   - Replace the `.env.tlp` file with `.env` inside the `./docker/redis` path and fill in the required fields.
    - Run the `redis.yml` file from the same directory. This is a one-time setup; once done, it can be used for all kitty chan microservices.
 
 > Note: While setting up gRPC config, use `0.0.0.0:port` instead of `localhost:port` to avoid connectivity issues when running inside a Docker environment.
