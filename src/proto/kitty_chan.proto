@@ -6,21 +6,13 @@ package kitty_chan;
 **/
 service EventsService{
   rpc messageCreate (IGuildMessage) returns (NoResponse);
+  rpc messageUpdate (IGuildMessageUpdate) returns (NoResponse);
   rpc messageReactionAdd (IMessageReaction) returns (NoResponse);
   rpc messageReactionRemove (IMessageReaction) returns (NoResponse);
   rpc guildCreate (IBasicGuild) returns (NoResponse);
   rpc guildDelete (IBasicGuild) returns (NoResponse);
   rpc guildMemberAdd (IGuildMember) returns (NoResponse);
   rpc guildMemberRemove (IGuildMember) returns (NoResponse);
-}
-
-
-service GuildService{
-  rpc getAllUserGuilds (GetAllUserGuildReq) returns (GetAllUserGuildRes);
-}
-
-service ReactionRoleService {
-  rpc reactionRolesAction (ReactionRoleActionReqDto) returns (ReactionRoleActionResDto);
 }
 
 /**Common**/
@@ -69,6 +61,21 @@ message IMessageAttachments{
   bool ephemeral = 10;
 }
 
+/*Guild Messgae Update*/
+message IGuildMessageUpdate{
+  string guildId = 1;
+  string channelId = 2;
+  string messageId = 3;
+  string userId = 4;
+  string username = 5;
+  string avatar = 6;
+  string oldMessage = 7;
+  string newMessage = 8;
+  string createdAt = 9;
+  string editedAt = 10;
+  bool isBot = 11;
+}
+
 message IBasicGuild{
   string guildId = 1;
   string guildName = 2;
@@ -96,110 +103,4 @@ message IEmoji{
   string id = 2;
   string name = 3;
   string createdAt = 4;
-}
-
-/**END
-  Kitty chan Events
-**/
-
-/** Guild Service **/
-message GetAllUserGuildReq{
-  string discordId = 1;
-}
-
-message GetAllUserGuildRes{
-  string name = 1;
-}
-
-/** Reaction Roles Service **/
-message ReactionRoleActionReqDto {
-  string name = 1;
-  string action = 2;
-  string guildId = 3;
-  string channelId = 4;
-  repeated RolesMapping rolesMapping = 5;
-  DiscordEmbed discordEmbedConfig = 6;
-  string reactionRoleMessageRef = 7;
-}
-
-message ReactionRoleActionResDto {
-  string reactionRoleMessageRef = 1;
-}
-
-/**Reaction Role Mapping **/
-message RolesMapping{
-  string name = 1;
-  string roleId = 2;
-  RolesMappingEmoji emoji = 3;
-
-}
-
-message RolesMappingEmoji{
-  string type = 1;
-  string id = 2;
-  string name = 3;
-  string standardEmoji = 4;
-}
-/*****/
-
-/**Discord Embed **/
-message DiscordEmbed {
-  string title = 1;
-  string type = 2; // always "rich" for webhook embeds
-  string description = 3;
-  string url = 4;
-  string timestamp = 5; // ISO8601 timestamp
-  int32 color = 6; // color code of the embed
-  DiscordEmbedFooter footer = 7;
-  DiscordEmbedImage image = 8;
-  DiscordEmbedThumbnail thumbnail = 9;
-  DiscordEmbedVideo video = 10;
-  DiscordEmbedProvider provider = 11;
-  DiscordEmbedAuthor author = 12;
-  repeated DiscordEmbedField fields = 13;
-}
-
-message DiscordEmbedFooter {
-  string text = 1; // footer text
-  string icon_url = 2; // url of footer icon (only supports http(s) and attachments)
-  string proxy_icon_url = 3; // a proxied url of footer icon
-}
-
-message DiscordEmbedThumbnail {
-  string url = 1; // source url of thumbnail (only supports http(s) and attachments)
-  string proxy_url = 2; // a proxied url of the thumbnail
-  int32 height = 3; // height of thumbnail
-  int32 width = 4; // width of thumbnail
-}
-
-message DiscordEmbedVideo {
-  string url = 1; // source url of video
-  string proxy_url = 2; // a proxied url of the video
-  int32 height = 3; // height of video
-  int32 width = 4; // width of video
-}
-
-message DiscordEmbedImage {
-  string url = 1; // source url of image (only supports http(s) and attachments)
-  string proxy_url = 2; // a proxied url of the image
-  int32 height = 3; // height of image
-  int32 width = 4; // width of image
-}
-
-message DiscordEmbedProvider {
-  string name = 1; // name of provider
-  string url = 2; // url of provider
-}
-
-message DiscordEmbedAuthor {
-  string name = 1; // name of author
-  string url = 2; // url of author (only supports http(s))
-  string icon_url = 3; // url of author icon (only supports http(s) and attachments)
-  string proxy_icon_url = 4; // a proxied url of author icon
-}
-
-message DiscordEmbedField {
-  string name = 1; // name of the field
-  string value = 2; // value of the field
-  bool inline = 3; // whether or not this field should display inline
 }

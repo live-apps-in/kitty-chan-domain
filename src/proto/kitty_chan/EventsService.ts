@@ -15,6 +15,10 @@ import type {
   IGuildMessage__Output as _kitty_chan_IGuildMessage__Output,
 } from '../kitty_chan/IGuildMessage';
 import type {
+  IGuildMessageUpdate as _kitty_chan_IGuildMessageUpdate,
+  IGuildMessageUpdate__Output as _kitty_chan_IGuildMessageUpdate__Output,
+} from '../kitty_chan/IGuildMessageUpdate';
+import type {
   IMessageReaction as _kitty_chan_IMessageReaction,
   IMessageReaction__Output as _kitty_chan_IMessageReaction__Output,
 } from '../kitty_chan/IMessageReaction';
@@ -310,6 +314,47 @@ export interface EventsServiceClient extends grpc.Client {
     argument: _kitty_chan_IMessageReaction,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
+
+  messageUpdate(
+    argument: _kitty_chan_IGuildMessageUpdate,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageUpdate(
+    argument: _kitty_chan_IGuildMessageUpdate,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageUpdate(
+    argument: _kitty_chan_IGuildMessageUpdate,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageUpdate(
+    argument: _kitty_chan_IGuildMessageUpdate,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageUpdate(
+    argument: _kitty_chan_IGuildMessageUpdate,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageUpdate(
+    argument: _kitty_chan_IGuildMessageUpdate,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageUpdate(
+    argument: _kitty_chan_IGuildMessageUpdate,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageUpdate(
+    argument: _kitty_chan_IGuildMessageUpdate,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
 }
 
 export interface EventsServiceHandlers
@@ -346,6 +391,11 @@ export interface EventsServiceHandlers
 
   messageReactionRemove: grpc.handleUnaryCall<
     _kitty_chan_IMessageReaction__Output,
+    _kitty_chan_NoResponse
+  >;
+
+  messageUpdate: grpc.handleUnaryCall<
+    _kitty_chan_IGuildMessageUpdate__Output,
     _kitty_chan_NoResponse
   >;
 }
@@ -391,6 +441,12 @@ export interface EventsServiceDefinition extends grpc.ServiceDefinition {
     _kitty_chan_IMessageReaction,
     _kitty_chan_NoResponse,
     _kitty_chan_IMessageReaction__Output,
+    _kitty_chan_NoResponse__Output
+  >;
+  messageUpdate: MethodDefinition<
+    _kitty_chan_IGuildMessageUpdate,
+    _kitty_chan_NoResponse,
+    _kitty_chan_IGuildMessageUpdate__Output,
     _kitty_chan_NoResponse__Output
   >;
 }

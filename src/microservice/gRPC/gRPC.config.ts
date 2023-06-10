@@ -77,14 +77,6 @@ function middleware(call: grpc.ServerUnaryCall<any, any>, callback: grpc.sendUna
  */
 const gRpcServer = new grpc.Server();
 gRpcServer.addService(
-  proto.kitty_chan.ReactionRoleService.service,
-  rolesGrpcController,
-);
-gRpcServer.addService(
-  proto.kitty_chan.GuildService.service,
-  guildGrpcController,
-);
-gRpcServer.addService(
   proto.kitty_chan.EventsService.service,
   eventsGrpcController,
 );

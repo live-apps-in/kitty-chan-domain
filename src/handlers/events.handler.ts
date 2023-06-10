@@ -5,6 +5,7 @@ import {
   IGuildMember,
   IGuildMessageWithFF,
   IMessageReaction,
+  IMessageUpdate,
 } from '../modules/interface/shared.interface';
 import { CommandService } from '../modules/service/commands.service';
 import { GamesService } from '../modules/service/games/games.service';
@@ -105,6 +106,16 @@ export class EventsHandler implements EventsServiceHandlers {
 
     ///Log Good Text Count
     this.loggerService.text_count_logger(guildMessage);
+  }
+
+  /**Guild MEssage Update */
+  async messageUpdate(
+    call: ServerUnaryCall<any, NoResponse>,
+    callback: sendUnaryData<any>,
+  ) {
+    callback(null);
+
+    const message = call.request as IMessageUpdate;
   }
 
   /**Add Message Reaction Events */
