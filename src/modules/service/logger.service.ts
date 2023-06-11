@@ -32,11 +32,12 @@ export class LoggerService {
 
     const buildTemplate = {
       ...template.embed,
-      author: {
-        name: message.username,
-        icon_url: `https://cdn.discordapp.com/avatars/${message.userId}/${message.avatar}.png`,
-      },
     };
+
+    //Convert milliseconds to seconds
+    const dateObject = new Date(Math.floor(message.editedAt / 1000) * 1000);
+    const unixTimestampInSec = dateObject.getTime() / 1000;
+    message.editedAt = unixTimestampInSec;
 
     const embeds: any = await this.templateService.fillEmbedTemplate(
       message,
@@ -56,3 +57,10 @@ export class LoggerService {
     });
   }
 }
+
+const timestamp = 1686483159981;
+const unixTimestamp = Math.floor(timestamp / 1000);
+const dateObject = new Date(unixTimestamp * 1000);
+const unixTimestampInSeconds = dateObject.getTime() / 1000;
+
+console.log(unixTimestampInSeconds);

@@ -8,7 +8,6 @@ import { Client as LiveClient } from '@live-apps/discord';
  */
 export const liveClient = new LiveClient({
   events: [],
-  sync: true,
   redisOptions: {
     host: process.env.REDIS_HOST,
     db: 0,
