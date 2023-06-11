@@ -9,4 +9,5 @@ export enum DiscordTemplateTarget {
 
   /**Logs */
   messageUpdate = 'messageUpdate',
+  messageDelete = 'messageDelete',
 }

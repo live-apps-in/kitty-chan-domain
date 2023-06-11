@@ -44,6 +44,19 @@ export class IMessageUpdate {
   public isBot?: boolean;
 }
 
+export class IMessageDelete {
+  public guildId?: string;
+  public channelId?: string;
+  public messageId?: string;
+  public userId?: string;
+  public username?: string;
+  public avatar?: string;
+  public message?: string;
+  public createdAt?: number;
+  public editedAt?: number;
+  public isBot?: boolean;
+}
+
 export class IMessageMentions {
   public hasMention?: boolean;
   public everyone?: boolean;

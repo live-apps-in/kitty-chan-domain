@@ -4,6 +4,7 @@ import {
   IBasicGuild,
   IGuildMember,
   IGuildMessageWithFF,
+  IMessageDelete,
   IMessageReaction,
   IMessageUpdate,
 } from '../modules/interface/shared.interface';
@@ -111,7 +112,7 @@ export class EventsHandler implements EventsServiceHandlers {
     this.StatsLoggerService.text_count_logger(guildMessage);
   }
 
-  /**Guild MEssage Update */
+  /**Guild Message Update */
   async messageUpdate(
     call: ServerUnaryCall<any, NoResponse>,
     callback: sendUnaryData<any>,
@@ -120,6 +121,17 @@ export class EventsHandler implements EventsServiceHandlers {
 
     const message = call.request as IMessageUpdate;
     this.loggerService.messageUpdate(message);
+  }
+
+  /**Guild Message Delete */
+  async messageDelete(
+    call: ServerUnaryCall<any, NoResponse>,
+    callback: sendUnaryData<any>,
+  ) {
+    callback(null);
+
+    const message = call.request as IMessageDelete;
+    this.loggerService.messageDelete(message);
   }
 
   /**Add Message Reaction Events */

@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { IMessageUpdate } from '../interface/shared.interface';
+import { IMessageDelete, IMessageUpdate } from '../interface/shared.interface';
 import Guild from '../../model/guild.model';
 import DiscordTemplateModel from '../../model/discord_templates.model';
 import {
@@ -17,6 +17,7 @@ export class LoggerService {
     private readonly templateService: DiscordTemplateService,
   ) {}
 
+  /**Guild Message Update Logger */
   async messageUpdate(message: IMessageUpdate) {
     const { features } = await Guild.findOne(
       { guildId: message.guildId },
@@ -27,7 +28,10 @@ export class LoggerService {
       return;
     }
 
-    const template = await this.getDefaultTemplate();
+    const template = await this.getDefaultTemplate(
+      DiscordTemplateTarget.messageUpdate,
+      DiscordTemplateType.embed,
+    );
     if (!template) return;
 
     const buildTemplate = {
@@ -50,17 +54,42 @@ export class LoggerService {
     );
   }
 
-  private getDefaultTemplate() {
+  /**Guild Message Delete Logger */
+  async messageDelete(message: IMessageDelete) {
+    const { features } = await Guild.findOne(
+      { guildId: message.guildId },
+      { features: 1 },
+    );
+
+    if (!features?.logger?.options?.messageDelete?.channelId) {
+      return;
+    }
+
+    const template = await this.getDefaultTemplate(
+      DiscordTemplateTarget.messageDelete,
+      DiscordTemplateType.embed,
+    );
+    if (!template) return;
+
+    const buildTemplate = {
+      ...template.embed,
+    };
+
+    const embeds: any = await this.templateService.fillEmbedTemplate(
+      message,
+      buildTemplate,
+    );
+
+    await liveClient.message.sendEmbed(
+      features.logger.options.messageUpdate.channelId,
+      [embeds],
+    );
+  }
+
+  private getDefaultTemplate(target: string, type: string) {
     return DiscordTemplateModel.findOne({
-      type: DiscordTemplateType.embed,
-      target: DiscordTemplateTarget.messageUpdate,
+      type,
+      target,
     });
   }
 }
-
-const timestamp = 1686483159981;
-const unixTimestamp = Math.floor(timestamp / 1000);
-const dateObject = new Date(unixTimestamp * 1000);
-const unixTimestampInSeconds = dateObject.getTime() / 1000;
-
-console.log(unixTimestampInSeconds);

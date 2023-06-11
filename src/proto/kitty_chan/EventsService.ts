@@ -15,6 +15,10 @@ import type {
   IGuildMessage__Output as _kitty_chan_IGuildMessage__Output,
 } from '../kitty_chan/IGuildMessage';
 import type {
+  IGuildMessageDelete as _kitty_chan_IGuildMessageDelete,
+  IGuildMessageDelete__Output as _kitty_chan_IGuildMessageDelete__Output,
+} from '../kitty_chan/IGuildMessageDelete';
+import type {
   IGuildMessageUpdate as _kitty_chan_IGuildMessageUpdate,
   IGuildMessageUpdate__Output as _kitty_chan_IGuildMessageUpdate__Output,
 } from '../kitty_chan/IGuildMessageUpdate';
@@ -233,6 +237,47 @@ export interface EventsServiceClient extends grpc.Client {
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
 
+  messageDelete(
+    argument: _kitty_chan_IGuildMessageDelete,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageDelete(
+    argument: _kitty_chan_IGuildMessageDelete,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageDelete(
+    argument: _kitty_chan_IGuildMessageDelete,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageDelete(
+    argument: _kitty_chan_IGuildMessageDelete,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageDelete(
+    argument: _kitty_chan_IGuildMessageDelete,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageDelete(
+    argument: _kitty_chan_IGuildMessageDelete,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageDelete(
+    argument: _kitty_chan_IGuildMessageDelete,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  messageDelete(
+    argument: _kitty_chan_IGuildMessageDelete,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+
   messageReactionAdd(
     argument: _kitty_chan_IMessageReaction,
     metadata: grpc.Metadata,
@@ -384,6 +429,11 @@ export interface EventsServiceHandlers
     _kitty_chan_NoResponse
   >;
 
+  messageDelete: grpc.handleUnaryCall<
+    _kitty_chan_IGuildMessageDelete__Output,
+    _kitty_chan_NoResponse
+  >;
+
   messageReactionAdd: grpc.handleUnaryCall<
     _kitty_chan_IMessageReaction__Output,
     _kitty_chan_NoResponse
@@ -429,6 +479,12 @@ export interface EventsServiceDefinition extends grpc.ServiceDefinition {
     _kitty_chan_IGuildMessage,
     _kitty_chan_NoResponse,
     _kitty_chan_IGuildMessage__Output,
+    _kitty_chan_NoResponse__Output
+  >;
+  messageDelete: MethodDefinition<
+    _kitty_chan_IGuildMessageDelete,
+    _kitty_chan_NoResponse,
+    _kitty_chan_IGuildMessageDelete__Output,
     _kitty_chan_NoResponse__Output
   >;
   messageReactionAdd: MethodDefinition<

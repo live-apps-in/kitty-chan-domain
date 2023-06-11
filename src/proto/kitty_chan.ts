@@ -23,6 +23,7 @@ export interface ProtoGrpcType {
     IEmoji: MessageTypeDefinition;
     IGuildMember: MessageTypeDefinition;
     IGuildMessage: MessageTypeDefinition;
+    IGuildMessageDelete: MessageTypeDefinition;
     IGuildMessageUpdate: MessageTypeDefinition;
     IMessageAttachments: MessageTypeDefinition;
     IMessageMentionRoles: MessageTypeDefinition;
