@@ -43,8 +43,15 @@ export class LoggerService {
     const unixTimestampInSec = dateObject.getTime() / 1000;
     message.editedAt = unixTimestampInSec;
 
+    const guild = await liveClient.guild.fetch(message.guildId);
+
+    const mutatedMessage = {
+      ...message,
+      guildName: guild.name,
+    };
+
     const embeds: any = await this.templateService.fillEmbedTemplate(
-      message,
+      mutatedMessage,
       buildTemplate,
     );
 
@@ -75,8 +82,15 @@ export class LoggerService {
       ...template.embed,
     };
 
+    const guild = await liveClient.guild.fetch(message.guildId);
+
+    const mutatedMessage = {
+      ...message,
+      guildName: guild.name,
+    };
+
     const embeds: any = await this.templateService.fillEmbedTemplate(
-      message,
+      mutatedMessage,
       buildTemplate,
     );
 
