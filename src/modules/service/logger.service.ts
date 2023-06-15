@@ -137,8 +137,8 @@ export class LoggerService {
       const payload = {
         ...member,
         guildName: guild.name,
-        oldUsername: memberCache.nick,
-        newUsername: member.nickname,
+        oldNickname: memberCache.nick || '',
+        newNickname: member.nickname,
         editedAt: Math.floor(Date.now() / 1000).toString(),
       };
 
