@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import {
   IBasicGuild,
   IGuildMember,
+  IGuildMemberUpdate,
   IGuildMessageWithFF,
   IMessageDelete,
   IMessageReaction,
@@ -202,5 +203,17 @@ export class EventsHandler implements EventsServiceHandlers {
 
     //Sync Guild Member
     this.guildService.guildMemberDelete(guildMember);
+  }
+
+  /**Guild Member Update */
+  async guildMemberUpdate(
+    call: ServerUnaryCall<any, NoResponse>,
+    callback: sendUnaryData<any>,
+  ) {
+    callback(null);
+    const guildMember = call.request as IGuildMemberUpdate;
+
+    //Logger Service
+    this.loggerService.memberUpdate(guildMember);
   }
 }

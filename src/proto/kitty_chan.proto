@@ -1,9 +1,6 @@
 syntax = "proto3";
 package kitty_chan;
 
-/**
-* Handle Events from kitty chan Events
-**/
 service EventsService{
   rpc messageCreate (IGuildMessage) returns (NoResponse);
   rpc messageUpdate (IGuildMessageUpdate) returns (NoResponse);
@@ -14,7 +11,9 @@ service EventsService{
   rpc guildDelete (IBasicGuild) returns (NoResponse);
   rpc guildMemberAdd (IGuildMember) returns (NoResponse);
   rpc guildMemberRemove (IGuildMember) returns (NoResponse);
+  rpc guildMemberUpdate (IGuildMemberUpdate) returns (NoResponse);
 }
+
 
 /**Common**/
 message NoResponse{}
@@ -52,11 +51,11 @@ message IMessageMentionRoles{
 message IMessageAttachments{
   string name = 1;
   string id = 2;
-  int64 size = 3;
+  int32 size = 3;
   string url = 4;
   string proxyURL = 5;
-  int64 height = 6;
-  int64 width = 7;
+  int32 height = 6;
+  int32 width = 7;
   string contentType = 8;
   string description = 9;
   bool ephemeral = 10;
@@ -101,6 +100,16 @@ message IGuildMember{
   string guildName = 2;
   string userId = 3;
   string userName = 4;
+}
+
+message IGuildMemberUpdate{
+  string guildId = 1;
+  string userId = 2;
+  string username = 3;
+  string nickname = 4;
+  string avatar = 5;
+  repeated string roles = 6;
+  bool isBot = 7;
 }
 
 message IMessageReaction{
