@@ -113,16 +113,50 @@ export class LoggerService {
     if (!features?.logger?.options?.memberNicknameUpdate?.channelId) {
       return;
     }
-
     const memberCache = await liveClient.member.fetch(
       member.guildId,
       member.userId,
     );
+    console.log(memberCache, member);
     const fetchUpdates = this.findMemberUpdateProps(memberCache, member);
 
     if (!fetchUpdates.hasUpdate) return;
 
     const guild = await liveClient.guild.fetch(member.guildId);
+
+    if (fetchUpdates.avatar) return;
+
+    if (fetchUpdates.username) {
+      const template = await this.getDefaultTemplate(
+        DiscordTemplateTarget.memberUsernameUpdate,
+        DiscordTemplateType.embed,
+      );
+
+      const buildTemplate = {
+        ...template.embed,
+      };
+
+      const payload = {
+        ...member,
+        guildName: guild.name,
+        oldUsername:
+          `${memberCache.user.username}#${memberCache.user.discriminator}` ||
+          'N/A',
+        newUsername: member.username,
+        editedAt: Math.floor(Date.now() / 1000).toString(),
+      };
+
+      const embeds: any = await this.templateService.fillEmbedTemplate(
+        payload,
+        buildTemplate,
+      );
+
+      await liveClient.message.sendEmbed(
+        features.logger.options.memberUsernameUpdate.channelId,
+        [embeds],
+      );
+      return;
+    }
 
     if (fetchUpdates.nickname) {
       const template = await this.getDefaultTemplate(
@@ -151,6 +185,8 @@ export class LoggerService {
         features.logger.options.memberNicknameUpdate.channelId,
         [embeds],
       );
+
+      return;
     }
   }
 

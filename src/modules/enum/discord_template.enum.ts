@@ -13,4 +13,5 @@ export enum DiscordTemplateTarget {
 
   /**Member */
   memberNicknameUpdate = 'memberNicknameUpdate',
+  memberUsernameUpdate = 'memberUsernameUpdate',
 }
