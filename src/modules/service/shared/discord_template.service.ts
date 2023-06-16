@@ -12,26 +12,57 @@ export class DiscordTemplateService {
         const placeholder = '${' + key + '}';
 
         //Title
-        filledTemplate.title = filledTemplate.title.replace(
-          placeholder,
-          payload[key],
-        );
+        if (filledTemplate.title) {
+          filledTemplate.title = filledTemplate.title.replace(
+            placeholder,
+            payload[key],
+          );
+        }
 
         //Description
-        filledTemplate.description = filledTemplate.description.replace(
-          placeholder,
-          payload[key],
-        );
+        if (filledTemplate.description) {
+          filledTemplate.description = filledTemplate.description.replace(
+            placeholder,
+            payload[key],
+          );
+        }
 
         //Author
-        filledTemplate.author.name = filledTemplate.author.name.replace(
-          placeholder,
-          payload[key],
-        );
-        filledTemplate.author.icon_url = filledTemplate.author.icon_url.replace(
-          placeholder,
-          payload[key],
-        );
+        if (filledTemplate.author) {
+          filledTemplate.author.name = filledTemplate?.author?.name?.replace(
+            placeholder,
+            payload[key],
+          );
+          filledTemplate.author.icon_url =
+            filledTemplate?.author?.icon_url?.replace(
+              placeholder,
+              payload[key],
+            );
+        }
+
+        //Image
+        if (filledTemplate) {
+          filledTemplate.image.url = filledTemplate?.image?.url?.replace(
+            placeholder,
+            payload[key],
+          );
+        }
+
+        //Footer
+        if (filledTemplate.footer) {
+          filledTemplate.footer.text = filledTemplate?.footer?.text?.replace(
+            placeholder,
+            payload[key],
+          );
+        }
+
+        //Timestamp
+        if (filledTemplate.timestamp) {
+          filledTemplate.timestamp = filledTemplate?.timestamp?.replace(
+            placeholder,
+            payload[key],
+          );
+        }
       }
     }
 

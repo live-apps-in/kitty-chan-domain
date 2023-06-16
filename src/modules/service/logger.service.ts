@@ -117,14 +117,40 @@ export class LoggerService {
       member.guildId,
       member.userId,
     );
-    console.log(memberCache, member);
-    const fetchUpdates = this.findMemberUpdateProps(memberCache, member);
 
+    const fetchUpdates = this.findMemberUpdateProps(memberCache, member);
     if (!fetchUpdates.hasUpdate) return;
 
     const guild = await liveClient.guild.fetch(member.guildId);
 
-    if (fetchUpdates.avatar) return;
+    if (fetchUpdates.avatar) {
+      const template = await this.getDefaultTemplate(
+        DiscordTemplateTarget.memberAvatarUpdate,
+        DiscordTemplateType.embed,
+      );
+
+      const buildTemplate = {
+        ...template.embed,
+      };
+
+      const payload = {
+        ...member,
+        guildName: guild.name,
+        editedAt: Math.floor(Date.now() / 1000).toString(),
+      };
+
+      const embeds: any = await this.templateService.fillEmbedTemplate(
+        payload,
+        buildTemplate,
+      );
+
+      await liveClient.message.sendEmbed(
+        features.logger.options.memberAvatarUpdate.channelId,
+        [embeds],
+      );
+
+      return;
+    }
 
     if (fetchUpdates.username) {
       const template = await this.getDefaultTemplate(
@@ -155,6 +181,7 @@ export class LoggerService {
         features.logger.options.memberUsernameUpdate.channelId,
         [embeds],
       );
+
       return;
     }
 
@@ -173,7 +200,6 @@ export class LoggerService {
         guildName: guild.name,
         oldNickname: memberCache.nick || '',
         newNickname: member.nickname,
-        editedAt: Math.floor(Date.now() / 1000).toString(),
       };
 
       const embeds: any = await this.templateService.fillEmbedTemplate(
@@ -242,7 +268,7 @@ export class LoggerService {
       changes.role.removed ||
       changes.username ||
       changes.nickname ||
-      changes.nickname
+      changes.avatar
     ) {
       changes.hasUpdate = true;
     }
