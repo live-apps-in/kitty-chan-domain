@@ -12,7 +12,7 @@ require('dotenv/config');
 export class LanguageFilter {
   constructor(
     @inject(TYPES.StatsLoggerService)
-    private readonly StatsLoggerService: StatsLoggerService,
+    private readonly statsLoggerService: StatsLoggerService,
   ) {}
 
   ///Non-English Detection
@@ -35,7 +35,7 @@ export class LanguageFilter {
       );
 
       ///Log Violation
-      await this.StatsLoggerService.violation_logger(
+      await this.statsLoggerService.violation_logger(
         guild,
         VIOLATIONS.non_english,
       );
@@ -63,7 +63,7 @@ export class LanguageFilter {
       );
 
       ///Log Violation
-      await this.StatsLoggerService.violation_logger(
+      await this.statsLoggerService.violation_logger(
         guild,
         VIOLATIONS.strong_language,
       );

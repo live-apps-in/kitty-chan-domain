@@ -1,6 +1,5 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import { RolesAPIService } from '../../api/live_cord/service/roles/roles.service';
 import { CommandService } from '../../modules/service/commands.service';
 import { GamesService } from '../../modules/service/games/games.service';
 import { GuildService } from '../../modules/service/guild.service';
@@ -30,7 +29,6 @@ const proto = grpc.loadPackageDefinition(
 /**
  * gRPC Controller
  */
-const rolesApiService = container.get<RolesAPIService>(TYPES.RolesAPIService);
 const languageFilterService = container.get<LanguageFilter>(
   TYPES.LanguageFilter,
 );
@@ -65,18 +63,8 @@ const eventsGrpcController = new EventsHandler(
   loggerService,
 );
 
-/**
- * gRPC Server Config
-function middleware(call: grpc.ServerUnaryCall<any, any>, callback: grpc.sendUnaryData<any>, next: () => void) {
-  const metadata = call.metadata.getMap();
-  // Access metadata headers here
-  console.log(metadata);
-
-  // Proceed with the request
-  next();
-}
-*/
 const gRpcServer = new grpc.Server();
+
 gRpcServer.addService(
   proto.kitty_chan.EventsService.service,
   eventsGrpcController,

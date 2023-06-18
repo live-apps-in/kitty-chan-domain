@@ -1,4 +1,4 @@
-import { Attachment, Collection, Message, MessageMentions } from 'discord.js';
+import { Message } from 'discord.js';
 
 export class IGuild {
   constructor(

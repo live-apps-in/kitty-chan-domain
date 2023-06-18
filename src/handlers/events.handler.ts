@@ -24,6 +24,7 @@ import { NoResponse } from '../proto/kitty_chan/NoResponse';
 import { ServiceStatus } from '../modules/service/shared/service_status.service';
 import { WelcomerService } from '../modules/service/welcomer.service';
 import { LoggerService } from '../modules/service/logger.service';
+import { liveClient } from '../modules/app';
 
 @injectable()
 export class EventsHandler implements EventsServiceHandlers {
@@ -31,7 +32,7 @@ export class EventsHandler implements EventsServiceHandlers {
   constructor(
     @inject(TYPES.LanguageFilter) private readonly langFilter: LanguageFilter,
     @inject(TYPES.StatsLoggerService)
-    private readonly StatsLoggerService: StatsLoggerService,
+    private readonly statsLoggerService: StatsLoggerService,
     @inject(TYPES.WakeService) private readonly wakeService: WakeService,
     @inject(TYPES.CommandService)
     private readonly commandService: CommandService,
@@ -61,7 +62,7 @@ export class EventsHandler implements EventsServiceHandlers {
     if (guildMessage.isBot) return;
 
     ///Log
-    this.StatsLoggerService.log_message_count(guildMessage);
+    this.statsLoggerService.log_message_count(guildMessage);
 
     ///Service Stats
     const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
@@ -110,7 +111,7 @@ export class EventsHandler implements EventsServiceHandlers {
     this.gameService.call(guildMessage);
 
     ///Log Good Text Count
-    this.StatsLoggerService.text_count_logger(guildMessage);
+    this.statsLoggerService.text_count_logger(guildMessage);
   }
 
   /**Guild Message Update */
@@ -215,5 +216,10 @@ export class EventsHandler implements EventsServiceHandlers {
 
     //Logger Service
     this.loggerService.memberUpdate(guildMember);
+
+    //Update Member cache
+    await liveClient.member.fetch(guildMember.guildId, guildMember.userId, {
+      ignoreCache: true,
+    });
   }
 }

@@ -113,10 +113,15 @@ export class LoggerService {
     if (!features?.logger?.options?.memberNicknameUpdate?.channelId) {
       return;
     }
+
     const memberCache = await liveClient.member.fetch(
       member.guildId,
       member.userId,
+      { onlyCache: true },
     );
+    if (!memberCache) {
+      return false;
+    }
 
     const fetchUpdates = this.findMemberUpdateProps(memberCache, member);
     if (!fetchUpdates.hasUpdate) return;
@@ -229,7 +234,7 @@ export class LoggerService {
       hasUpdate: false,
     };
 
-    const { avatar, nickname, username, isBot } = newMember;
+    const { avatar, nickname, username } = newMember;
 
     // Compare roles
     if (newMember.roles && Array.isArray(oldMember.roles)) {
