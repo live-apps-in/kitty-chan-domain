@@ -119,6 +119,7 @@ export class LoggerService {
       member.userId,
       { onlyCache: true },
     );
+
     if (!memberCache) {
       return false;
     }
@@ -128,6 +129,7 @@ export class LoggerService {
 
     const guild = await liveClient.guild.fetch(member.guildId);
 
+    /**Avatar */
     if (fetchUpdates.avatar) {
       const template = await this.getDefaultTemplate(
         DiscordTemplateTarget.memberAvatarUpdate,
@@ -157,6 +159,7 @@ export class LoggerService {
       return;
     }
 
+    /**Username */
     if (fetchUpdates.username) {
       const template = await this.getDefaultTemplate(
         DiscordTemplateTarget.memberUsernameUpdate,
@@ -190,6 +193,7 @@ export class LoggerService {
       return;
     }
 
+    /**Nickname */
     if (fetchUpdates.nickname) {
       const template = await this.getDefaultTemplate(
         DiscordTemplateTarget.memberNicknameUpdate,
@@ -204,7 +208,8 @@ export class LoggerService {
         ...member,
         guildName: guild.name,
         oldNickname: memberCache.nick || '',
-        newNickname: member.nickname,
+        newNickname: member.nickname || memberCache.user.display_name,
+        editedAt: Math.floor(Date.now() / 1000).toString(),
       };
 
       const embeds: any = await this.templateService.fillEmbedTemplate(

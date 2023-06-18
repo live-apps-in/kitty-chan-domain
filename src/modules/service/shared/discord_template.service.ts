@@ -41,7 +41,7 @@ export class DiscordTemplateService {
         }
 
         //Image
-        if (filledTemplate) {
+        if (filledTemplate?.image) {
           filledTemplate.image.url = filledTemplate?.image?.url?.replace(
             placeholder,
             payload[key],
