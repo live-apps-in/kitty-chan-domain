@@ -15,4 +15,6 @@ export enum DiscordTemplateTarget {
   memberNicknameUpdate = 'memberNicknameUpdate',
   memberUsernameUpdate = 'memberUsernameUpdate',
   memberAvatarUpdate = 'memberAvatarUpdate',
+  memberAddRole = 'memberAddRole',
+  memberRemoveRole = 'memberRemoveRole',
 }

@@ -224,6 +224,48 @@ export class LoggerService {
 
       return;
     }
+
+    /**Roles */
+    const { role } = fetchUpdates;
+
+    if (role.added || role.removed) {
+      if (fetchUpdates.role.added) {
+        var template = await this.getDefaultTemplate(
+          DiscordTemplateTarget.memberAddRole,
+          DiscordTemplateType.embed,
+        );
+      } else {
+        var template = await this.getDefaultTemplate(
+          DiscordTemplateTarget.memberRemoveRole,
+          DiscordTemplateType.embed,
+        );
+      }
+
+      if (!template) return;
+
+      const buildTemplate = {
+        ...template.embed,
+      };
+
+      const payload = {
+        ...member,
+        guildName: guild.name,
+        roleId: role.added ? role.added : role.removed,
+        editedAt: Math.floor(Date.now() / 1000).toString(),
+      };
+
+      const embeds: any = await this.templateService.fillEmbedTemplate(
+        payload,
+        buildTemplate,
+      );
+
+      await liveClient.message.sendEmbed(
+        features.logger.options.memberAddRole.channelId,
+        [embeds],
+      );
+
+      return;
+    }
   }
 
   /**Guild Member update props check */
@@ -239,7 +281,10 @@ export class LoggerService {
       hasUpdate: false,
     };
 
-    const { avatar, nickname, username } = newMember;
+    const { avatar, nickname, username, roles } = newMember;
+
+    //Workaround - Proto3 ignores field if array is empty
+    newMember.roles = roles || [];
 
     // Compare roles
     if (newMember.roles && Array.isArray(oldMember.roles)) {
@@ -264,7 +309,7 @@ export class LoggerService {
     }
 
     // Compare nickname
-    if (nickname !== oldMember?.nick) {
+    if (nickname || (oldMember?.nickname && nickname !== oldMember.nick)) {
       changes.nickname = true;
     }
 
