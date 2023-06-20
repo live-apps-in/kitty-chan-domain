@@ -225,6 +225,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
     const start = performance.now();
     const getGuild = await liveClient.guild.fetch(this.guildId, {
       ignoreCache: true,
+      expiry: 3600,
     });
     const end = performance.now();
 
@@ -246,7 +247,9 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   /**LiveApps Discord - Fetch Cache */
   private async liveAppsDiscordCache() {
     const start = performance.now();
-    const getGuild = await liveClient.guild.fetch(this.guildId);
+    const getGuild = await liveClient.guild.fetch(this.guildId, {
+      expiry: 3600,
+    });
     const end = performance.now();
 
     if (!getGuild) {

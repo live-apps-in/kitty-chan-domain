@@ -47,7 +47,9 @@ export class LoggerService {
     const unixTimestampInSec = dateObject.getTime() / 1000;
     message.editedAt = unixTimestampInSec;
 
-    const guild = await liveClient.guild.fetch(message.guildId);
+    const guild = await liveClient.guild.fetch(message.guildId, {
+      expiry: 3600,
+    });
 
     const mutatedMessage = {
       ...message,
@@ -86,7 +88,9 @@ export class LoggerService {
       ...template.embed,
     };
 
-    const guild = await liveClient.guild.fetch(message.guildId);
+    const guild = await liveClient.guild.fetch(message.guildId, {
+      expiry: 3600,
+    });
 
     const mutatedMessage = {
       ...message,
@@ -127,7 +131,9 @@ export class LoggerService {
     const fetchUpdates = this.findMemberUpdateProps(memberCache, member);
     if (!fetchUpdates.hasUpdate) return;
 
-    const guild = await liveClient.guild.fetch(member.guildId);
+    const guild = await liveClient.guild.fetch(member.guildId, {
+      expiry: 3600,
+    });
 
     /**Avatar */
     if (fetchUpdates.avatar) {
