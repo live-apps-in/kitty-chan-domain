@@ -4,8 +4,6 @@ services:
     build: .
     image: kittychan-domain
     container_name: kittychan-domain
-    ports:
-      - "5000:5000"
     networks:
     - kittychan-network
     restart: always
