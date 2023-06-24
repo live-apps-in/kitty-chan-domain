@@ -61,9 +61,9 @@ const app = server.build();
 
 //Use http server for Web Sockets
 const httpServer = createServer(app);
-httpServer.listen(process.env.PORT || 5000, () => {
-  console.log('App Started');
-});
+// httpServer.listen(process.env.PORT || 5001, () => {
+//   console.log('App Started');
+// });
 
 const io = new Server(httpServer, {
   cors: {
