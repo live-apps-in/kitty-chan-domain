@@ -19,8 +19,7 @@ interface ServiceStats {
 /**Retrieve Service Availability and Latency */
 @injectable()
 export class ServiceStatus {
-  private guildId = '1031566030507626607';
-  private kittyChanPingUrl = 'https://kittychan.live/ping';
+  private kittyChanPingUrl = 'https://api.kittychan.live/';
   private kitty_chan_id = process.env.KITTY_CHAN_ID;
   constructor(
     @inject(TYPES.GuildRepo) private readonly guildRepo: GuildRepo,
@@ -30,17 +29,17 @@ export class ServiceStatus {
   ) {}
 
   /**Fetch all service latency */
-  async check() {
+  async check(guildId: string) {
     const serviceStats: ServiceStats[] = [];
 
-    const mongo = await this.mongo();
+    const mongo = await this.mongo(guildId);
     const redis = await this.redis();
-    const ff = await this.featureFlag();
+    const ff = await this.featureFlag(guildId);
     const queue = await this.queue();
     const rest = await this.rest();
     const liveCordgRPC = await this.liveCordgRPC();
-    const liveAppsDiscordAPI = await this.liveAppsDiscordAPI();
-    const liveAppsDiscordCache = await this.liveAppsDiscordCache();
+    const liveAppsDiscordAPI = await this.liveAppsDiscordAPI(guildId);
+    const liveAppsDiscordCache = await this.liveAppsDiscordCache(guildId);
 
     serviceStats.push(mongo);
     serviceStats.push(redis);
@@ -79,7 +78,7 @@ export class ServiceStatus {
    * Used by Commands
    */
   async discord_command(guildId: string, channelId: string) {
-    const serviceStats = await this.check();
+    const serviceStats = await this.check(guildId);
 
     const embeds: DiscordEmbeds = {
       title: 'kitty chan Service Stats 🛠',
@@ -135,9 +134,9 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   }
 
   /**MongoDB - Check by fetching home guild */
-  private async mongo() {
+  private async mongo(guildId: string) {
     const start = performance.now();
-    const getGuild = await this.guildRepo.getByGuildId(this.guildId);
+    const getGuild = await this.guildRepo.getByGuildId(guildId);
     const end = performance.now();
 
     if (!getGuild) {
@@ -177,11 +176,9 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   }
 
   /**FeatureFlag - Check by fetching home guild Feature Flag*/
-  private async featureFlag() {
+  private async featureFlag(guildId: string) {
     const start = performance.now();
-    const getGuildFF = await this.redisService.get(
-      `guild:${this.guildId}:flags`,
-    );
+    const getGuildFF = await this.redisService.get(`guild:${guildId}:flags`);
     const end = performance.now();
 
     if (!getGuildFF) {
@@ -221,9 +218,9 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   }
 
   /**LiveApps Discord - API call */
-  private async liveAppsDiscordAPI() {
+  private async liveAppsDiscordAPI(guildId: string) {
     const start = performance.now();
-    const getGuild = await liveClient.guild.fetch(this.guildId, {
+    const getGuild = await liveClient.guild.fetch(guildId, {
       ignoreCache: true,
       expiry: 3600,
     });
@@ -245,9 +242,9 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   }
 
   /**LiveApps Discord - Fetch Cache */
-  private async liveAppsDiscordCache() {
+  private async liveAppsDiscordCache(guildId: string) {
     const start = performance.now();
-    const getGuild = await liveClient.guild.fetch(this.guildId, {
+    const getGuild = await liveClient.guild.fetch(guildId, {
       expiry: 3600,
     });
     const end = performance.now();
@@ -267,7 +264,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
     } as ServiceStats;
   }
 
-  /**REST - Ping API */
+  /**REST - kitty chan API */
   private async rest() {
     const start = performance.now();
     const rest = await this.sharedService.axiosInstance({
