@@ -61,7 +61,7 @@ const app = server.build();
 
 //Use http server for Web Sockets
 const httpServer = createServer(app);
-httpServer.listen(process.env.PORT || 5011, () => {
+httpServer.listen(process.env.PORT || 5000, () => {
   console.log('App Started');
 });
 
