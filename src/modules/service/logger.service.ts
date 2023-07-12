@@ -13,26 +13,31 @@ import {
 import { liveClient } from '../app';
 import { TYPES } from '../../core/inversify.types';
 import { DiscordTemplateService } from './shared/discord_template.service';
+import Features from '../../model/features.model';
+import { TemplateRepo } from '../repository/template.repo';
 
 @injectable()
 export class LoggerService {
   constructor(
     @inject(TYPES.DiscordTemplateService)
     private readonly templateService: DiscordTemplateService,
+    @inject(TYPES.TemplateRepo) private readonly templateRepo: TemplateRepo,
   ) {}
 
   /**Guild Message Update Logger */
   async messageUpdate(message: IMessageUpdate) {
-    const { features } = await Guild.findOne(
-      { guildId: message.guildId },
-      { features: 1 },
-    );
+    const features = await Features.findOne({ guildId: message.guildId });
 
-    if (!features?.logger?.options?.messageUpdate?.channelId) {
+    const featureStatus = features?.logger?.messageUpdate.isActive;
+    const featureChannelId = features?.logger?.messageUpdate.channelId;
+    const featureTemplateId = features?.logger?.messageUpdate.templateId;
+
+    if (!featureStatus || !featureChannelId) {
       return;
     }
 
-    const template = await this.getDefaultTemplate(
+    const template = await this.getTemplateOrGetDefault(
+      featureTemplateId,
       DiscordTemplateTarget.messageUpdate,
       DiscordTemplateType.embed,
     );
@@ -61,10 +66,7 @@ export class LoggerService {
       buildTemplate,
     );
 
-    await liveClient.message.sendEmbed(
-      features.logger.options.messageUpdate.channelId,
-      [embeds],
-    );
+    await liveClient.message.sendEmbed(featureChannelId, [embeds]);
   }
 
   /**Guild Message Delete Logger */
@@ -335,6 +337,24 @@ export class LoggerService {
     }
 
     return changes;
+  }
+
+  /**Get Template or get default */
+  private async getTemplateOrGetDefault(
+    templateId = '',
+    target: string,
+    type: string,
+  ) {
+    let template = await this.templateRepo.findById(templateId);
+
+    if (!template) {
+      template = await DiscordTemplateModel.findOne({
+        type,
+        target,
+      });
+    }
+
+    return template;
   }
 
   /**Get Default Logger Template */

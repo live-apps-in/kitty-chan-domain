@@ -37,6 +37,7 @@ import '../api/controller/conversation/conversation.controller';
 import { WelcomerService } from '../modules/service/welcomer.service';
 import { LoggerService } from '../modules/service/logger.service';
 import { DiscordTemplateService } from '../modules/service/shared/discord_template.service';
+import { TemplateRepo } from '../modules/repository/template.repo';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -83,6 +84,7 @@ container
   .bind<ConversationRepository>(TYPES.ConversationRepository)
   .to(ConversationRepository);
 container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);
+container.bind<TemplateRepo>(TYPES.TemplateRepo).to(TemplateRepo);
 
 /**Shared Service */
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);

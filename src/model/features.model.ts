@@ -2,6 +2,8 @@ import { model, Schema } from 'mongoose';
 
 export interface IFeature {
   guildId: string;
+  logger: any;
+  greet: any;
 }
 
 const Feature = new Schema({
