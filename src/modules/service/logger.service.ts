@@ -341,7 +341,7 @@ export class LoggerService {
 
   /**Get Template or get default */
   private async getTemplateOrGetDefault(
-    templateId = '',
+    templateId = null,
     target: string,
     type: string,
   ) {
