@@ -28,9 +28,9 @@ export class LoggerService {
   async messageUpdate(message: IMessageUpdate) {
     const features = await Features.findOne({ guildId: message.guildId });
 
-    const featureStatus = features?.logger?.messageUpdate.isActive;
-    const featureChannelId = features?.logger?.messageUpdate.channelId;
-    const featureTemplateId = features?.logger?.messageUpdate.templateId;
+    const featureStatus = features?.logger?.messageUpdate?.isActive;
+    const featureChannelId = features?.logger?.messageUpdate?.channelId;
+    const featureTemplateId = features?.logger?.messageUpdate?.templateId;
 
     if (!featureStatus || !featureChannelId) {
       return;
@@ -73,9 +73,9 @@ export class LoggerService {
   async messageDelete(message: IMessageDelete) {
     const features = await Features.findOne({ guildId: message.guildId });
 
-    const featureStatus = features?.logger?.messageDelete.isActive;
-    const featureChannelId = features?.logger?.messageDelete.channelId;
-    const featureTemplateId = features?.logger?.messageDelete.templateId;
+    const featureStatus = features?.logger?.messageDelete?.isActive;
+    const featureChannelId = features?.logger?.messageDelete?.channelId;
+    const featureTemplateId = features?.logger?.messageDelete?.templateId;
 
     if (!featureStatus || !featureChannelId) {
       return;
