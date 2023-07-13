@@ -71,16 +71,18 @@ export class LoggerService {
 
   /**Guild Message Delete Logger */
   async messageDelete(message: IMessageDelete) {
-    const { features } = await Guild.findOne(
-      { guildId: message.guildId },
-      { features: 1 },
-    );
+    const features = await Features.findOne({ guildId: message.guildId });
 
-    if (!features?.logger?.options?.messageDelete?.channelId) {
+    const featureStatus = features?.logger?.messageDelete.isActive;
+    const featureChannelId = features?.logger?.messageDelete.channelId;
+    const featureTemplateId = features?.logger?.messageDelete.templateId;
+
+    if (!featureStatus || !featureChannelId) {
       return;
     }
 
-    const template = await this.getDefaultTemplate(
+    const template = await this.getTemplateOrGetDefault(
+      featureTemplateId,
       DiscordTemplateTarget.messageDelete,
       DiscordTemplateType.embed,
     );
@@ -104,21 +106,12 @@ export class LoggerService {
       buildTemplate,
     );
 
-    await liveClient.message.sendEmbed(
-      features.logger.options.messageDelete.channelId,
-      [embeds],
-    );
+    await liveClient.message.sendEmbed(featureChannelId, [embeds]);
   }
+
   /**Guild Member Update Logger */
   async memberUpdate(member: IGuildMemberUpdate) {
-    const { features } = await Guild.findOne(
-      { guildId: member.guildId },
-      { features: 1 },
-    );
-
-    if (!features?.logger?.options?.memberNicknameUpdate?.channelId) {
-      return;
-    }
+    const features = await Features.findOne({ guildId: member.guildId });
 
     const memberCache = await liveClient.member.fetch(
       member.guildId,
@@ -139,7 +132,16 @@ export class LoggerService {
 
     /**Avatar */
     if (fetchUpdates.avatar) {
-      const template = await this.getDefaultTemplate(
+      const featStatus = features?.logger?.memberAvatarUpdate?.isActive;
+      const featChannelId = features?.logger?.memberAvatarUpdate?.channelId;
+      const featTemplateId = features?.logger?.memberAvatarUpdate?.templateId;
+
+      if (!featStatus || !featChannelId) {
+        return;
+      }
+
+      const template = await this.getTemplateOrGetDefault(
+        featTemplateId,
         DiscordTemplateTarget.memberAvatarUpdate,
         DiscordTemplateType.embed,
       );
@@ -159,17 +161,23 @@ export class LoggerService {
         buildTemplate,
       );
 
-      await liveClient.message.sendEmbed(
-        features.logger.options.memberAvatarUpdate.channelId,
-        [embeds],
-      );
+      await liveClient.message.sendEmbed(featChannelId, [embeds]);
 
       return;
     }
 
     /**Username */
     if (fetchUpdates.username) {
-      const template = await this.getDefaultTemplate(
+      const featStatus = features?.logger?.memberUsernameUpdate?.isActive;
+      const featChannelId = features?.logger?.memberUsernameUpdate?.channelId;
+      const featTemplateId = features?.logger?.memberUsernameUpdate?.templateId;
+
+      if (!featStatus || !featChannelId) {
+        return;
+      }
+
+      const template = await this.getTemplateOrGetDefault(
+        featTemplateId,
         DiscordTemplateTarget.memberUsernameUpdate,
         DiscordTemplateType.embed,
       );
@@ -193,17 +201,23 @@ export class LoggerService {
         buildTemplate,
       );
 
-      await liveClient.message.sendEmbed(
-        features.logger.options.memberUsernameUpdate.channelId,
-        [embeds],
-      );
+      await liveClient.message.sendEmbed(featChannelId, [embeds]);
 
       return;
     }
 
     /**Nickname */
     if (fetchUpdates.nickname) {
-      const template = await this.getDefaultTemplate(
+      const featStatus = features?.logger?.memberNicknameUpdate?.isActive;
+      const featChannelId = features?.logger?.memberNicknameUpdate?.channelId;
+      const featTemplateId = features?.logger?.memberNicknameUpdate?.templateId;
+
+      if (!featStatus || !featChannelId) {
+        return;
+      }
+
+      const template = await this.getTemplateOrGetDefault(
+        featTemplateId,
         DiscordTemplateTarget.memberNicknameUpdate,
         DiscordTemplateType.embed,
       );
@@ -225,28 +239,47 @@ export class LoggerService {
         buildTemplate,
       );
 
-      await liveClient.message.sendEmbed(
-        features.logger.options.memberNicknameUpdate.channelId,
-        [embeds],
-      );
+      await liveClient.message.sendEmbed(featChannelId, [embeds]);
 
       return;
     }
 
     /**Roles */
     const { role } = fetchUpdates;
+    let roleFeatureChannelId: string;
 
     if (role.added || role.removed) {
       if (fetchUpdates.role.added) {
-        var template = await this.getDefaultTemplate(
+        const featStatus = features?.logger?.memberAddRole?.isActive;
+        const featChannelId = features?.logger?.memberAddRole?.channelId;
+        const featTemplateId = features?.logger?.memberAddRole?.templateId;
+        if (!featStatus || !featChannelId) {
+          return;
+        }
+
+        var template = await this.getTemplateOrGetDefault(
+          featTemplateId,
           DiscordTemplateTarget.memberAddRole,
           DiscordTemplateType.embed,
         );
+
+        roleFeatureChannelId = featChannelId;
       } else {
-        var template = await this.getDefaultTemplate(
+        const featStatus = features?.logger?.memberRemoveRole?.isActive;
+        const featChannelId = features?.logger?.memberRemoveRole?.channelId;
+        const featTemplateId = features?.logger?.memberRemoveRole?.templateId;
+
+        if (!featStatus || !featChannelId) {
+          return;
+        }
+
+        var template = await this.getTemplateOrGetDefault(
+          featTemplateId,
           DiscordTemplateTarget.memberRemoveRole,
           DiscordTemplateType.embed,
         );
+
+        roleFeatureChannelId = featChannelId;
       }
 
       if (!template) return;
@@ -267,10 +300,7 @@ export class LoggerService {
         buildTemplate,
       );
 
-      await liveClient.message.sendEmbed(
-        features.logger.options.memberAddRole.channelId,
-        [embeds],
-      );
+      await liveClient.message.sendEmbed(roleFeatureChannelId, [embeds]);
 
       return;
     }
@@ -317,7 +347,7 @@ export class LoggerService {
     }
 
     // Compare nickname
-    if (nickname || (oldMember?.nickname && nickname !== oldMember.nick)) {
+    if ((oldMember.nick && !nickname) || nickname !== oldMember?.nick) {
       changes.nickname = true;
     }
 
@@ -355,13 +385,5 @@ export class LoggerService {
     }
 
     return template;
-  }
-
-  /**Get Default Logger Template */
-  private getDefaultTemplate(target: string, type: string) {
-    return DiscordTemplateModel.findOne({
-      type,
-      target,
-    });
   }
 }
