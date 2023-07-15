@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 
-import { LanguageFilter } from '../modules/service/languageFilter.service';
 import { TYPES } from './inversify.types';
 import { App } from '../modules/app';
 import { SharedService } from '../modules/service/shared/shared.service';
@@ -38,6 +37,7 @@ import { WelcomerService } from '../modules/service/welcomer.service';
 import { LoggerService } from '../modules/service/logger.service';
 import { DiscordTemplateService } from '../modules/service/shared/discord_template.service';
 import { TemplateRepo } from '../modules/repository/template.repo';
+import { LanguageFilter } from '../modules/language/languageFilter.service';
 
 const container = new Container({
   defaultScope: 'Singleton',

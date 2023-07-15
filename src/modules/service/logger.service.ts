@@ -4,7 +4,6 @@ import {
   IMessageDelete,
   IMessageUpdate,
 } from '../interface/shared.interface';
-import Guild from '../../model/guild.model';
 import DiscordTemplateModel from '../../model/discord_templates.model';
 import {
   DiscordTemplateType,

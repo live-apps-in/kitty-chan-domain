@@ -12,7 +12,6 @@ import {
 import { CommandService } from '../modules/service/commands.service';
 import { GamesService } from '../modules/service/games/games.service';
 import { GuildService } from '../modules/service/guild.service';
-import { LanguageFilter } from '../modules/service/languageFilter.service';
 import { StatsLoggerService } from '../modules/service/stats_logger.service';
 import { PortalService } from '../modules/service/portal.service';
 import { RolesService } from '../modules/service/roles/roles.service';
@@ -25,6 +24,7 @@ import { ServiceStatus } from '../modules/service/shared/service_status.service'
 import { WelcomerService } from '../modules/service/welcomer.service';
 import { LoggerService } from '../modules/service/logger.service';
 import { liveClient } from '../modules/app';
+import { LanguageFilter } from '../modules/language/languageFilter.service';
 
 @injectable()
 export class EventsHandler implements EventsServiceHandlers {
@@ -84,21 +84,9 @@ export class EventsHandler implements EventsServiceHandlers {
     const isGame = await this.gameService.validateGame(guildMessage);
     if (isGame) return;
 
-    ///Non-English Detection (Only Detects Hindi)
-    if (guildMessage?.featureFlag?.hindi) {
-      const isNonEnglish = await this.langFilter.non_english_detection(
-        guildMessage,
-      );
-      if (isNonEnglish) return callback(null);
-    }
-
-    if (guildMessage?.featureFlag?.strongLanguage) {
-      ///Strong Language Detection
-      const isStrongLang = await this.langFilter.strong_language_detection(
-        guildMessage,
-      );
-      if (isStrongLang) return;
-    }
+    ///Language Services
+    const languageRes = await this.langFilter.languageFactory(guildMessage);
+    if (languageRes.strongLanguage) return;
 
     ///Commands
     const isCommand = await this.commandService.validateCommand(guildMessage);

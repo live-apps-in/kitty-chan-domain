@@ -3,7 +3,6 @@ import * as protoLoader from '@grpc/proto-loader';
 import { CommandService } from '../../modules/service/commands.service';
 import { GamesService } from '../../modules/service/games/games.service';
 import { GuildService } from '../../modules/service/guild.service';
-import { LanguageFilter } from '../../modules/service/languageFilter.service';
 import { StatsLoggerService } from '../../modules/service/stats_logger.service';
 import { PortalService } from '../../modules/service/portal.service';
 import { RolesService } from '../../modules/service/roles/roles.service';
@@ -16,6 +15,7 @@ import { ServiceStatus } from '../../modules/service/shared/service_status.servi
 import { WelcomerService } from '../../modules/service/welcomer.service';
 import { LoggerService } from '../../modules/service/logger.service';
 import container from '../../core/inversify.di';
+import { LanguageFilter } from '../../modules/language/languageFilter.service';
 
 /**
  * Load Proto

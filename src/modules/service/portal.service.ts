@@ -4,10 +4,6 @@ import { IGuild, IGuildMessage } from '../interface/shared.interface';
 import Guild from '../../model/guild.model';
 import Portal from '../../model/portal';
 import { GuildRepo } from '../repository/guild.repo';
-import {
-  portal_active_description,
-  portal_inactive_description,
-} from '../content/descriptions';
 import { SharedService } from './shared/shared.service';
 import { liveClient } from '../app';
 
@@ -25,7 +21,7 @@ export class PortalService {
     }
 
     if (messageChunk[2] === 'join') {
-      await this.join(guild, messageChunk[3]);
+      await this.join(guild);
     }
 
     if (messageChunk[2] === 'leave') {
@@ -112,7 +108,7 @@ export class PortalService {
   }
 
   ///Join an existing Portal Connection
-  private async join(guild: IGuild, pass: string) {
+  private async join(guild: IGuild) {
     const guildId = guild.guildId.toString();
     const channelId = guild.channelId.toString();
     const localGuild = await Guild.findOne({ guildId });
@@ -147,11 +143,6 @@ export class PortalService {
       },
     );
     await this.reply('Successfully Joined the Portal! ✔', guild);
-
-    ///Update Channel Topic
-    await liveClient.channel.edit(guild.channelId, {
-      topic: portal_active_description,
-    });
 
     ///Notify Other Portal Members
     const getSessionGuild = await this.getSessionMembers(guild);
@@ -194,11 +185,6 @@ export class PortalService {
         },
       },
     );
-
-    ///Update Channel Topic
-    await liveClient.channel.edit(guild.channelId, {
-      topic: portal_inactive_description,
-    });
 
     await this.reply('Portal Session Ended ❌', guild);
     return;
