@@ -1,12 +1,24 @@
 import { injectable } from 'inversify';
-import { ReactionRolesActionDto } from '../../../api/live_cord/_dto/roles.dto';
 import { DiscordEmbeds } from '../../../types/discord.types';
 import ReactionRoles from '../../../model/reaction_roles.model';
 import { HttpException } from '../../../core/exception';
 import ReactionRole from '../../../model/reaction_roles.model';
-import { IMessageReaction } from '../../interface/shared.interface';
+import { IMessageReaction } from '../../../common/interface/shared.interface';
 import { compareRolesMapping } from '../../../utils/roles_mapping';
 import { liveClient } from '../../app';
+
+/**
+ * Reaction Roles Action
+ */
+export class ReactionRolesActionDto {
+  name: string;
+  guildId: string;
+  channelId: string;
+  action: string;
+  rolesMapping: any[];
+  reactionRoleMessageRef: string;
+  discordEmbedConfig?: DiscordEmbeds;
+}
 
 @injectable()
 export class RolesService {

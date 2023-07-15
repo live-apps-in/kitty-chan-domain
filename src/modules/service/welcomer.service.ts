@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { IGuildMember } from '../interface/shared.interface';
+import { IGuildMember } from '../../common/interface/shared.interface';
 import DiscordTemplateModel from '../../model/discord_templates.model';
 import { liveClient } from '../app';
 import Guild from '../../model/guild.model';

@@ -1,5 +1,8 @@
 import { inject, injectable } from 'inversify';
-import { IBasicGuild, IGuildMember } from '../interface/shared.interface';
+import {
+  IBasicGuild,
+  IGuildMember,
+} from '../../common/interface/shared.interface';
 import Guild from '../../model/guild.model';
 import { TYPES } from '../../core/inversify.types';
 import { RolesService } from './roles/roles.service';

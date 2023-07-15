@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import { CommandService } from '../../modules/service/commands.service';
+import { CommandService } from '../../modules/commands/commands.service';
 import { GamesService } from '../../modules/service/games/games.service';
 import { GuildService } from '../../modules/service/guild.service';
 import { StatsLoggerService } from '../../modules/service/stats_logger.service';

@@ -3,7 +3,7 @@ import {
   IGuildMemberUpdate,
   IMessageDelete,
   IMessageUpdate,
-} from '../interface/shared.interface';
+} from '../../common/interface/shared.interface';
 import DiscordTemplateModel from '../../model/discord_templates.model';
 import {
   DiscordTemplateType,
@@ -13,7 +13,7 @@ import { liveClient } from '../app';
 import { TYPES } from '../../core/inversify.types';
 import { DiscordTemplateService } from './shared/discord_template.service';
 import Features from '../../model/features.model';
-import { TemplateRepo } from '../repository/template.repo';
+import { TemplateRepo } from '../../repository/template.repo';
 
 @injectable()
 export class LoggerService {

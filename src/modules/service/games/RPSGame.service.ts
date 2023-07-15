@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
-import { RPS_GAME_Content } from '../../content/games/rpsGame.content';
-import { IGuild } from '../../interface/shared.interface';
+import { RPS_GAME_Content } from '../../games/content/rpsGame.content';
+import { IGuild } from '../../../common/interface/shared.interface';
 import GameSession from '../../../model/game_session';
 import { randomNumber } from '../../../utils/calc';
 import { liveClient } from '../../app';

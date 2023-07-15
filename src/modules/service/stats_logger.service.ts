@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import { IGuild } from '../interface/shared.interface';
+import { IGuild } from '../../common/interface/shared.interface';
 import text_log from '../../model/text_log';
-import { TextLogRepository } from '../repository/textLogRepo';
-import { ViolationRepository } from '../repository/violation.repo';
+import { TextLogRepository } from '../../repository/textLogRepo';
+import { ViolationRepository } from '../../repository/violation.repo';
 import kitty_chan from '../../model/kitty_chan';
 import Guild from '../../model/guild.model';
 import io from '../../main';

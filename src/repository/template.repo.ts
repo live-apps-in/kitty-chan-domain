@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import DiscordTemplate from '../../model/discord_templates.model';
+import DiscordTemplate from '../model/discord_templates.model';
 
 @injectable()
 export class TemplateRepo {

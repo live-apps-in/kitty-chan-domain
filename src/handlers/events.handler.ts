@@ -8,8 +8,8 @@ import {
   IMessageDelete,
   IMessageReaction,
   IMessageUpdate,
-} from '../modules/interface/shared.interface';
-import { CommandService } from '../modules/service/commands.service';
+} from '../common/interface/shared.interface';
+import { CommandService } from '../modules/commands/commands.service';
 import { GamesService } from '../modules/service/games/games.service';
 import { GuildService } from '../modules/service/guild.service';
 import { StatsLoggerService } from '../modules/service/stats_logger.service';

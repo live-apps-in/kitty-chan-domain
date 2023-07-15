@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../core/inversify.types';
-import { GuildRepo } from '../../repository/guild.repo';
+import { GuildRepo } from '../../../repository/guild.repo';
 import { performance } from 'perf_hooks';
 import { RedisService } from '../../../shared/redis.service';
 import { liveClient } from '../../app';
@@ -8,7 +8,7 @@ import { DiscordEmbeds } from '@live-apps/discord';
 import { DiscordEmbedField } from '../../../types/discord.types';
 import { QueueService } from '../../../shared/queue.service';
 import { SharedService } from './shared.service';
-import { IGuildMessageWithFF } from '../../interface/shared.interface';
+import { IGuildMessageWithFF } from '../../../common/interface/shared.interface';
 
 interface ServiceStats {
   service: string;

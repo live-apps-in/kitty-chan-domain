@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
-import ConversationPhrase from '../../model/conversation_phrase.model';
-import ConversationResponse from '../../model/conversation_res.model';
+import ConversationPhrase from '../model/conversation_phrase.model';
+import ConversationResponse from '../model/conversation_res.model';
 
 @injectable()
 export class ConversationRepository {

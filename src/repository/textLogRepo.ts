@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import TextLog from '../../model/text_log';
+import TextLog from '../model/text_log';
 
 @injectable()
 export class TextLogRepository {

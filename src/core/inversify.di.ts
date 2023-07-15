@@ -4,23 +4,22 @@ import { Container } from 'inversify';
 import { TYPES } from './inversify.types';
 import { App } from '../modules/app';
 import { SharedService } from '../modules/service/shared/shared.service';
-import { ViolationRepository } from '../modules/repository/violation.repo';
+import { ViolationRepository } from '../repository/violation.repo';
 import { StatsLoggerService } from '../modules/service/stats_logger.service';
-import { TextLogRepository } from '../modules/repository/textLogRepo';
-import { CommandService } from '../modules/service/commands.service';
+import { TextLogRepository } from '../repository/textLogRepo';
+import { CommandService } from '../modules/commands/commands.service';
 import { AnalyticsService } from '../api/service/analytics.service';
 import { WakeService } from '../modules/service/wake.service';
 import { AlexaService } from '../api/service/alexa.service';
 import { UtilityService } from '../modules/service/shared/utils.service';
 import { ConversationService } from '../modules/service/conversation/conversation.service';
 import { ConversationAPIService } from '../api/service/conversation/conversation_api.service';
-import { ConversationRepository } from '../modules/repository/conversation.repo';
-import { GuildRepo } from '../modules/repository/guild.repo';
+import { ConversationRepository } from '../repository/conversation.repo';
+import { GuildRepo } from '../repository/guild.repo';
 import { FeatureFlagService } from '../modules/service/shared/featureFlag.service';
 import { PortalService } from '../modules/service/portal.service';
 import { GamesService } from '../modules/service/games/games.service';
 import { RPSGameService } from '../modules/service/games/RPSGame.service';
-import { RolesAPIService } from '../api/live_cord/service/roles/roles.service';
 import { RolesService } from '../modules/service/roles/roles.service';
 import { RedisService } from '../shared/redis.service';
 import { QueueService } from '../shared/queue.service';
@@ -36,7 +35,7 @@ import '../api/controller/conversation/conversation.controller';
 import { WelcomerService } from '../modules/service/welcomer.service';
 import { LoggerService } from '../modules/service/logger.service';
 import { DiscordTemplateService } from '../modules/service/shared/discord_template.service';
-import { TemplateRepo } from '../modules/repository/template.repo';
+import { TemplateRepo } from '../repository/template.repo';
 import { LanguageFilter } from '../modules/language/languageFilter.service';
 
 const container = new Container({
@@ -75,9 +74,6 @@ container.bind<AlexaService>(TYPES.AlexaService).to(AlexaService);
 container
   .bind<ConversationAPIService>(TYPES.ConversationAPIService)
   .to(ConversationAPIService);
-
-///LiveCord Service
-container.bind<RolesAPIService>(TYPES.RolesAPIService).to(RolesAPIService);
 
 /**Repository */
 container

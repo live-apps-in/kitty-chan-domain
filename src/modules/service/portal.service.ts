@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import { IGuild, IGuildMessage } from '../interface/shared.interface';
+import { IGuild, IGuildMessage } from '../../common/interface/shared.interface';
 import Guild from '../../model/guild.model';
 import Portal from '../../model/portal';
-import { GuildRepo } from '../repository/guild.repo';
+import { GuildRepo } from '../../repository/guild.repo';
 import { SharedService } from './shared/shared.service';
 import { liveClient } from '../app';
 
