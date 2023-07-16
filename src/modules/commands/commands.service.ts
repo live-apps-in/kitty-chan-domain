@@ -2,10 +2,10 @@ import { inject, injectable } from 'inversify';
 import { IGuild } from '../../common/interface/shared.interface';
 import 'dotenv/config';
 import { TYPES } from '../../core/inversify.types';
-import { UtilityService } from '../service/shared/utils.service';
-import { flip_coin_wake_word } from '../data/wake_words/general';
-import { ConversationService } from '../service/conversation/conversation.service';
-import { PortalService } from '../service/portal.service';
+import { UtilityService } from '../../common/services/utils.service';
+import { flip_coin_wake_word } from './data/wake_words/general';
+import { ConversationService } from '../conversation/conversation.service';
+import { PortalService } from '../portal/portal.service';
 import { liveClient } from '../app';
 
 @injectable()

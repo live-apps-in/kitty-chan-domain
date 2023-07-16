@@ -10,19 +10,18 @@ import {
   IMessageUpdate,
 } from '../common/interface/shared.interface';
 import { CommandService } from '../modules/commands/commands.service';
-import { GamesService } from '../modules/service/games/games.service';
-import { GuildService } from '../modules/service/guild.service';
-import { StatsLoggerService } from '../modules/service/stats_logger.service';
-import { PortalService } from '../modules/service/portal.service';
-import { RolesService } from '../modules/service/roles/roles.service';
-import { FeatureFlagService } from '../modules/service/shared/featureFlag.service';
-import { WakeService } from '../modules/service/wake.service';
+import { GamesService } from '../modules/games/games.service';
+import { GuildService } from '../modules/guild/guild.service';
+import { StatsLoggerService } from '../modules/stats/stats_logger.service';
+import { PortalService } from '../modules/portal/portal.service';
+import { RolesService } from '../modules/roles/roles.service';
+import { FeatureFlagService } from '../common/services/featureFlag.service';
 import { TYPES } from '../core/inversify.types';
 import { EventsServiceHandlers } from '../proto/kitty_chan/EventsService';
 import { NoResponse } from '../proto/kitty_chan/NoResponse';
-import { ServiceStatus } from '../modules/service/shared/service_status.service';
-import { WelcomerService } from '../modules/service/welcomer.service';
-import { LoggerService } from '../modules/service/logger.service';
+import { ServiceStatus } from '../common/services/service_status.service';
+import { WelcomerService } from '../modules/greet/welcomer.service';
+import { LoggerService } from '../modules/logger/logger.service';
 import { liveClient } from '../modules/app';
 import { LanguageFilter } from '../modules/language/languageFilter.service';
 
@@ -33,7 +32,6 @@ export class EventsHandler implements EventsServiceHandlers {
     @inject(TYPES.LanguageFilter) private readonly langFilter: LanguageFilter,
     @inject(TYPES.StatsLoggerService)
     private readonly statsLoggerService: StatsLoggerService,
-    @inject(TYPES.WakeService) private readonly wakeService: WakeService,
     @inject(TYPES.CommandService)
     private readonly commandService: CommandService,
     @inject(TYPES.FeatureFlagService)
@@ -85,15 +83,11 @@ export class EventsHandler implements EventsServiceHandlers {
     if (isGame) return;
 
     ///Language Services
-    const languageRes = await this.langFilter.languageFactory(guildMessage);
-    if (languageRes.strongLanguage) return;
+    this.langFilter.languageFactory(guildMessage);
 
     ///Commands
     const isCommand = await this.commandService.validateCommand(guildMessage);
     if (isCommand) return;
-
-    ///Wake Words
-    this.wakeService.validate(guildMessage);
 
     ///Games
     this.gameService.call(guildMessage);

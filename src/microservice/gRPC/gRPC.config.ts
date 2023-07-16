@@ -1,19 +1,18 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import { CommandService } from '../../modules/commands/commands.service';
-import { GamesService } from '../../modules/service/games/games.service';
-import { GuildService } from '../../modules/service/guild.service';
-import { StatsLoggerService } from '../../modules/service/stats_logger.service';
-import { PortalService } from '../../modules/service/portal.service';
-import { RolesService } from '../../modules/service/roles/roles.service';
-import { FeatureFlagService } from '../../modules/service/shared/featureFlag.service';
-import { WakeService } from '../../modules/service/wake.service';
+import { GamesService } from '../../modules/games/games.service';
+import { GuildService } from '../../modules/guild/guild.service';
+import { StatsLoggerService } from '../../modules/stats/stats_logger.service';
+import { PortalService } from '../../modules/portal/portal.service';
+import { RolesService } from '../../modules/roles/roles.service';
+import { FeatureFlagService } from '../../common/services/featureFlag.service';
 import { TYPES } from '../../core/inversify.types';
 import { EventsHandler } from '../../handlers/events.handler';
 import { ProtoGrpcType } from '../../proto/kitty_chan';
-import { ServiceStatus } from '../../modules/service/shared/service_status.service';
-import { WelcomerService } from '../../modules/service/welcomer.service';
-import { LoggerService } from '../../modules/service/logger.service';
+import { ServiceStatus } from '../../common/services/service_status.service';
+import { WelcomerService } from '../../modules/greet/welcomer.service';
+import { LoggerService } from '../../modules/logger/logger.service';
 import container from '../../core/inversify.di';
 import { LanguageFilter } from '../../modules/language/languageFilter.service';
 
@@ -35,7 +34,6 @@ const languageFilterService = container.get<LanguageFilter>(
 const statsLoggerService = container.get<StatsLoggerService>(
   TYPES.StatsLoggerService,
 );
-const wakeService = container.get<WakeService>(TYPES.WakeService);
 const commandService = container.get<CommandService>(TYPES.CommandService);
 const featureFlagService = container.get<FeatureFlagService>(
   TYPES.FeatureFlagService,
@@ -51,7 +49,6 @@ const loggerService = container.get<LoggerService>(TYPES.LoggerService);
 const eventsGrpcController = new EventsHandler(
   languageFilterService,
   statsLoggerService,
-  wakeService,
   commandService,
   featureFlagService,
   portalService,

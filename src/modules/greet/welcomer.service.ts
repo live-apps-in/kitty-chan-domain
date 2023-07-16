@@ -6,7 +6,7 @@ import Guild from '../../model/guild.model';
 import {
   DiscordTemplateType,
   DiscordTemplateTarget,
-} from '../enum/discord_template.enum';
+} from '../../common/enum/discord_template.enum';
 
 @injectable()
 export class WelcomerService {

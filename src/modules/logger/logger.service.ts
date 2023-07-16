@@ -8,10 +8,10 @@ import DiscordTemplateModel from '../../model/discord_templates.model';
 import {
   DiscordTemplateType,
   DiscordTemplateTarget,
-} from '../enum/discord_template.enum';
+} from '../../common/enum/discord_template.enum';
 import { liveClient } from '../app';
 import { TYPES } from '../../core/inversify.types';
-import { DiscordTemplateService } from './shared/discord_template.service';
+import { DiscordTemplateService } from '../../common/services/discord_template.service';
 import Features from '../../model/features.model';
 import { TemplateRepo } from '../../repository/template.repo';
 

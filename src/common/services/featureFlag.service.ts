@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { Types } from 'mongoose';
-import { TYPES } from '../../../core/inversify.types';
-import { RedisService } from '../../../shared/redis.service';
-import { IGuild } from '../../../common/interface/shared.interface';
-import { GuildRepo } from '../../../repository/guild.repo';
+import { TYPES } from '../../core/inversify.types';
+import { RedisService } from './redis.service';
+import { IGuild } from '../interface/shared.interface';
+import { GuildRepo } from '../../repository/guild.repo';
 
 @injectable()
 export class FeatureFlagService {

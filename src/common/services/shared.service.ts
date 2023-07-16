@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { GuildMember, Message } from 'discord.js';
 import { injectable } from 'inversify';
 import {
@@ -6,36 +5,10 @@ import {
   IGuildMember,
   IGuildMessage,
   IMessageReaction,
-} from '../../../common/interface/shared.interface';
-
-interface axiosConfig {
-  url: string;
-  method: string;
-  body?: any;
-}
+} from '../interface/shared.interface';
 
 @injectable()
 export class SharedService {
-  /////Global Axios Config
-  async axiosInstance(axiosConfig: axiosConfig): Promise<any> {
-    const { method } = axiosConfig;
-    const data = {
-      ...axiosConfig.body,
-    };
-
-    if (['put', 'post', 'patch'].includes(method)) axiosConfig.body = data;
-
-    let resData: any;
-    await axios(axiosConfig)
-      .then((res) => {
-        resData = res.data;
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-    return resData;
-  }
-
   ////Extract users and channel info
   extractGuildInfo(content: Message) {
     const guild = new IGuild(

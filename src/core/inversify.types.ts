@@ -6,7 +6,6 @@ export const TYPES = {
   ViolationRepository: Symbol.for('ViolationRepository'),
   TextLogRepository: Symbol.for('TextLogRepository'),
   CommandService: Symbol.for('CommandsService'),
-  WakeService: Symbol.for('WakeService'),
   PortalService: Symbol.for('PortalService'),
   RolesService: Symbol.for('RolesService'),
   GuildService: Symbol.for('GuildService'),
@@ -40,6 +39,7 @@ export const TYPES = {
 
   ///Shared Service
   SharedService: Symbol.for('SharedService'),
+  AxiosService: Symbol.for('AxiosService'),
   RedisService: Symbol.for('RedisService'),
   QueueService: Symbol.for('QueueService'),
   ResponseService: Symbol.for('ResponseService'),

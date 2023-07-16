@@ -4,7 +4,7 @@ import { IGuild, IGuildMessage } from '../../common/interface/shared.interface';
 import Guild from '../../model/guild.model';
 import Portal from '../../model/portal';
 import { GuildRepo } from '../../repository/guild.repo';
-import { SharedService } from './shared/shared.service';
+import { SharedService } from '../../common/services/shared.service';
 import { liveClient } from '../app';
 
 @injectable()

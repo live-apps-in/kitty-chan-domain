@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
-import { ConversationRepository } from '../../../repository/conversation.repo';
-import { TYPES } from '../../../core/inversify.types';
-import { randomNumber } from '../../../utils/calc';
-import { IGuild } from '../../../common/interface/shared.interface';
-import { UtilityService } from '../shared/utils.service';
-import { liveClient } from '../../app';
+import { ConversationRepository } from '../../repository/conversation.repo';
+import { TYPES } from '../../core/inversify.types';
+import { randomNumber } from '../../utils/calc';
+import { IGuild } from '../../common/interface/shared.interface';
+import { UtilityService } from '../../common/services/utils.service';
+import { liveClient } from '../app';
 
 @injectable()
 export class ConversationService {

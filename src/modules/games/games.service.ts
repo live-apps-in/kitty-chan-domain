@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../../core/inversify.types';
-import GameSession from '../../../model/game_session';
-import { RPS_WAKE_ACTIONS } from '../../games/data/rpsGame';
+import { TYPES } from '../../core/inversify.types';
+import GameSession from '../../model/game_session';
+import { RPS_WAKE_ACTIONS } from './data/rpsGame';
 
-import { IGuild } from '../../../common/interface/shared.interface';
+import { IGuild } from '../../common/interface/shared.interface';
 import { RPSGameService } from './RPSGame.service';
 
 @injectable()

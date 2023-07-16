@@ -1,9 +1,9 @@
 import { injectable } from 'inversify';
-import { RPS_GAME_Content } from '../../games/content/rpsGame.content';
-import { IGuild } from '../../../common/interface/shared.interface';
-import GameSession from '../../../model/game_session';
-import { randomNumber } from '../../../utils/calc';
-import { liveClient } from '../../app';
+import { randomNumber } from '../../utils/calc';
+import { liveClient } from '../app';
+import { RPS_GAME_Content } from './content/rpsGame.content';
+import { IGuild } from '../../common/interface/shared.interface';
+import GameSession from '../../model/game_session';
 
 @injectable()
 export class RPSGameService {
@@ -46,8 +46,9 @@ export class RPSGameService {
       },
     });
 
+    console.log(thread);
     await liveClient.message.reply(
-      guild.channelId,
+      thread.id,
       guild.messageId,
       RPS_GAME_Content.start,
     );

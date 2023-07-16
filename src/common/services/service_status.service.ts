@@ -1,14 +1,14 @@
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../../core/inversify.types';
-import { GuildRepo } from '../../../repository/guild.repo';
+import { TYPES } from '../../core/inversify.types';
+import { GuildRepo } from '../../repository/guild.repo';
 import { performance } from 'perf_hooks';
-import { RedisService } from '../../../shared/redis.service';
-import { liveClient } from '../../app';
+import { RedisService } from './redis.service';
+import { liveClient } from '../../modules/app';
 import { DiscordEmbeds } from '@live-apps/discord';
-import { DiscordEmbedField } from '../../../types/discord.types';
-import { QueueService } from '../../../shared/queue.service';
-import { SharedService } from './shared.service';
-import { IGuildMessageWithFF } from '../../../common/interface/shared.interface';
+import { DiscordEmbedField } from '../../types/discord.types';
+import { QueueService } from './queue.service';
+import { IGuildMessageWithFF } from '../interface/shared.interface';
+import { AxiosService } from './axios.service';
 
 interface ServiceStats {
   service: string;
@@ -25,7 +25,7 @@ export class ServiceStatus {
     @inject(TYPES.GuildRepo) private readonly guildRepo: GuildRepo,
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
     @inject(TYPES.QueueService) private readonly queueService: QueueService,
-    @inject(TYPES.SharedService) private readonly sharedService: SharedService,
+    @inject(TYPES.AxiosService) private readonly axiosService: AxiosService,
   ) {}
 
   /**Fetch all service latency */
@@ -267,7 +267,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   /**REST - kitty chan API */
   private async rest() {
     const start = performance.now();
-    const rest = await this.sharedService.axiosInstance({
+    const rest = await this.axiosService.axiosInstance({
       method: 'get',
       url: this.kittyChanPingUrl,
     });

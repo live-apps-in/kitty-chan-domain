@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
-import { RedisService } from '../../shared/redis.service';
+import { RedisService } from '../../common/services/redis.service';
 import { IGuild } from '../../common/interface/shared.interface';
 import { bad_words } from '../../jobs/onInit';
 import { liveClient } from '../app';

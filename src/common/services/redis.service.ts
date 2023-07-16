@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import client from '../database/redis';
+import client from '../../database/redis';
 
 @injectable()
 export class RedisService {
