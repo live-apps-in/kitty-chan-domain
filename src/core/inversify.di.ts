@@ -37,6 +37,7 @@ import { TemplateRepo } from '../repository/template.repo';
 import { LanguageFilter } from '../modules/language/languageFilter.service';
 import { AxiosService } from '../common/services/axios.service';
 import { RPSGameService } from '../modules/games/RPSGame.service';
+import { DataStructure } from '../common/services/dataStructure.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -97,5 +98,6 @@ container.bind<ServiceStatus>(TYPES.ServiceStatus).to(ServiceStatus);
 container
   .bind<DiscordTemplateService>(TYPES.DiscordTemplateService)
   .to(DiscordTemplateService);
+container.bind<DataStructure>(TYPES.DataStructureService).to(DataStructure);
 
 export default container;

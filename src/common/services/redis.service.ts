@@ -7,6 +7,10 @@ export class RedisService {
     client.set(key, value);
   }
 
+  async setWithExpiry(key: string, value: string, expiresAt = 86400) {
+    client.set(key, value, 'EX', expiresAt);
+  }
+
   async get(key: string) {
     return client.get(key);
   }

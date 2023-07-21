@@ -48,4 +48,5 @@ export const TYPES = {
   FeatureFlagService: Symbol.for('FeatureFlagService'),
   ServiceStatus: Symbol.for('ServiceStatus'),
   DiscordTemplateService: Symbol.for('DiscordTemplateService'),
+  DataStructureService: Symbol.for('DataStructureService'),
 };
