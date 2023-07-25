@@ -49,4 +49,5 @@ export const TYPES = {
   ServiceStatus: Symbol.for('ServiceStatus'),
   DiscordTemplateService: Symbol.for('DiscordTemplateService'),
   DataStructureService: Symbol.for('DataStructureService'),
+  DiscordActionService: Symbol.for('DiscordActionService'),
 };

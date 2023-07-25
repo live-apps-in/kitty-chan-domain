@@ -1,5 +1,5 @@
 import { FeatureDefault } from '../../../common/dto/FeaturesDefault.dto';
-import { LanguageFilterAction } from '../enum/language_filter.enum';
+import { LanguageAction } from '../enum/language_filter.enum';
 
 export class LanguageFilterDto extends FeatureDefault {
   public languageFilterConfig: LanguageFilterConfigDto[];
@@ -14,7 +14,7 @@ export class LanguageFilterConfigDto {
 }
 
 class LanguageFilterTriggerAction {
-  public action: LanguageFilterAction;
+  public action: LanguageAction;
 
   public reactEmoji: string;
 

@@ -2,14 +2,18 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { RedisService } from '../../common/services/redis.service';
 import { IGuild } from '../../common/interface/shared.interface';
-import { bad_words } from '../../jobs/onInit';
+import { strong_language_en } from '../../jobs/onInit';
 import { liveClient } from '../app';
 import { EmojiCode } from '../../common/constants/emoji';
 import featuresModel from '../../model/features.model';
 import { LanguageFilterConfigDto } from './dto/languageFilter.dto';
 import DataLibsModel from '../../model/data_libs.model';
 import { DataStructure } from '../../common/services/dataStructure.service';
-import { LanguageFilterAction } from './enum/language_filter.enum';
+import { LanguageAction } from './enum/language_filter.enum';
+import { StrongLanguage } from './dto/strongLanguage.dto';
+import { StrongLanguageCodes } from './enum/strong_language.enum';
+import { DiscordActionService } from '../../common/services/discord_action.service';
+import { DiscordActions } from '../../common/enum/discord_action.enum';
 
 @injectable()
 export class LanguageFilter {
@@ -17,16 +21,18 @@ export class LanguageFilter {
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
     @inject(TYPES.DataStructureService)
     private readonly dataStructure: DataStructure,
+    @inject(TYPES.DiscordActionService)
+    private readonly discordActionService: DiscordActionService,
   ) {}
 
   async languageFactory(guild: IGuild): Promise<void> {
     /**Strong Language [EN] */
     const getStrongLanguageFF = await this.redisService.get(
-      `guild-${guild.guildId}:feature:strongLanguageEn`,
+      `guild-${guild.guildId}:feature:strongLanguage`,
     );
 
     if (getStrongLanguageFF) {
-      await this.strongLanguageEn(guild);
+      await this.strongLanguage(guild);
     }
 
     /**Language Filter */
@@ -42,23 +48,32 @@ export class LanguageFilter {
   /**System Default Service
    * If Feature is enabled checks for English Bad words
    */
-  private async strongLanguageEn(guild: IGuild) {
-    let { messageContent } = guild;
-    messageContent = messageContent.toLowerCase().trim();
+  private async strongLanguage(guild: IGuild) {
+    const strongLanguageConfig: StrongLanguage =
+      await this.getStrongLanguageConfig(guild);
+    if (!strongLanguageConfig?.isActive) return;
 
-    const messageChunk: string[] = messageContent.split(' ');
-    let isStrongLanguage = false;
+    const {
+      actionConfig,
+      languages,
+    }: { actionConfig: any; languages: StrongLanguageCodes[] } =
+      strongLanguageConfig;
 
-    messageChunk.map((e) => {
-      if (bad_words.includes(e)) isStrongLanguage = true;
-    });
+    const { messageContent } = guild;
 
-    if (isStrongLanguage) {
-      await liveClient.message.react(
-        guild.channelId,
-        guild.messageId,
-        EmojiCode.warn,
+    if (languages.includes(StrongLanguageCodes.EN)) {
+      const { detected } = this.dataStructure.matchPhrase(
+        messageContent,
+        strong_language_en,
       );
+
+      if (detected) {
+        await this.discordActionService.actionFactory(
+          actionConfig.action,
+          guild,
+          actionConfig,
+        );
+      }
     }
   }
 
@@ -77,27 +92,14 @@ export class LanguageFilter {
       );
 
       if (detected) {
-        const actionConfig = e.actionConfig;
+        const actionConfig = e.actionConfig as any;
 
-        switch (actionConfig.action) {
-          case LanguageFilterAction.REACT:
-            await liveClient.message.react(
-              guild.channelId,
-              guild.messageId,
-              actionConfig.reactEmoji,
-            );
-            break;
-
-          case LanguageFilterAction.REPLY:
-            await liveClient.message.reply(
-              guild.channelId,
-              guild.messageId,
-              actionConfig.replyMessage,
-            );
-            break;
-
-          default:
-            break;
+        if (detected) {
+          await this.discordActionService.actionFactory(
+            actionConfig.action,
+            guild,
+            actionConfig,
+          );
         }
       }
     }
@@ -131,6 +133,35 @@ export class LanguageFilter {
     }
 
     return languageFilterConfig;
+  }
+
+  /**Strong Language Config */
+  private async getStrongLanguageConfig(
+    guild: IGuild,
+  ): Promise<StrongLanguage> {
+    let strongLanguageConfig: StrongLanguage;
+    const cacheKey = `guild-${guild.guildId}:feature:strongLanguageConfig`;
+
+    const cachedConfig = await this.redisService.get(cacheKey);
+
+    if (!cachedConfig) {
+      const strongLanguageFeature = await featuresModel.findOne(
+        { guildId: guild.guildId },
+        { language: 1 },
+      );
+
+      strongLanguageConfig = strongLanguageFeature?.language?.strongLanguage;
+
+      await this.redisService.setWithExpiry(
+        cacheKey,
+        JSON.stringify(strongLanguageConfig),
+        300,
+      );
+    } else {
+      strongLanguageConfig = JSON.parse(cachedConfig);
+    }
+
+    return strongLanguageConfig;
   }
 
   /**Language Filter - Data Lib */

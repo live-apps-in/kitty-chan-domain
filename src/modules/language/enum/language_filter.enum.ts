@@ -1,4 +1,4 @@
-export enum LanguageFilterAction {
+export enum LanguageAction {
   REACT = 'react',
   REPLY = 'reply',
 }
