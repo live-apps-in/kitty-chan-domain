@@ -8,7 +8,7 @@ export class LanguageFilterDto extends FeatureDefault {
 export class LanguageFilterConfigDto {
   public isActive: boolean;
 
-  public dataLibId: string;
+  public languageLibId: string;
 
   public actionConfig: LanguageFilterTriggerAction;
 }

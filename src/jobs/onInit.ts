@@ -1,20 +1,20 @@
-import DataLibs from '../model/data_libs.model';
+import LanguageLibs from '../model/language_libs.model';
 
 /* Data Libs */
 export let strong_language_en = [];
 export let hinglish_words = [];
 export class OnInit {
   async bootstrap() {
-    await this.loadDataLibs();
+    await this.loadSystemLanguageLibs();
   }
 
   /**
    * Load Content Library
    */
-  private async loadDataLibs() {
-    const data_libs = await DataLibs.find({});
+  private async loadSystemLanguageLibs() {
+    const languageLibs = await LanguageLibs.find({ system: true });
 
-    data_libs.map((e) => {
+    languageLibs.map((e) => {
       if (e.name === 'strong_language_en') strong_language_en = e.data;
       if (e.name === 'hindi') hinglish_words = e.data;
     });

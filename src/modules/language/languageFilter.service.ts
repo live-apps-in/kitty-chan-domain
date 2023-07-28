@@ -3,17 +3,13 @@ import { TYPES } from '../../core/inversify.types';
 import { RedisService } from '../../common/services/redis.service';
 import { IGuild } from '../../common/interface/shared.interface';
 import { strong_language_en } from '../../jobs/onInit';
-import { liveClient } from '../app';
-import { EmojiCode } from '../../common/constants/emoji';
 import featuresModel from '../../model/features.model';
 import { LanguageFilterConfigDto } from './dto/languageFilter.dto';
-import DataLibsModel from '../../model/data_libs.model';
+import LanguageLibsModel from '../../model/language_libs.model';
 import { DataStructure } from '../../common/services/dataStructure.service';
-import { LanguageAction } from './enum/language_filter.enum';
 import { StrongLanguage } from './dto/strongLanguage.dto';
 import { StrongLanguageCodes } from './enum/strong_language.enum';
 import { DiscordActionService } from '../../common/services/discord_action.service';
-import { DiscordActions } from '../../common/enum/discord_action.enum';
 
 @injectable()
 export class LanguageFilter {
@@ -51,6 +47,7 @@ export class LanguageFilter {
   private async strongLanguage(guild: IGuild) {
     const strongLanguageConfig: StrongLanguage =
       await this.getStrongLanguageConfig(guild);
+
     if (!strongLanguageConfig?.isActive) return;
 
     const {
@@ -84,11 +81,11 @@ export class LanguageFilter {
     const languageFilterConfig = await this.getLanguageFilterConfig(guild);
 
     for (const e of languageFilterConfig) {
-      const dataLib = await this.getDataLib(guild, e.dataLibId);
+      const languageLib = await this.getLanguageLib(guild, e.languageLibId);
 
       const { detected } = this.dataStructure.matchPhrase(
         guild.messageContent,
-        dataLib,
+        languageLib,
       );
 
       if (detected) {
@@ -165,28 +162,30 @@ export class LanguageFilter {
   }
 
   /**Language Filter - Data Lib */
-  private async getDataLib(
+  private async getLanguageLib(
     guild: IGuild,
-    dataLibId: string,
+    languageLibId: string,
   ): Promise<string[]> {
-    let dataLib: string[] = [];
-    const cacheKey = `guild-${guild.guildId}:dataLib-${dataLibId}`;
+    let languageLib: string[] = [];
+    const cacheKey = `guild-${guild.guildId}:languageLib-${languageLibId}`;
 
-    const cachedDataLib = await this.redisService.get(cacheKey);
+    const cachedLanguageLib = await this.redisService.get(cacheKey);
 
-    if (!cachedDataLib) {
-      const getDataLib = await DataLibsModel.findOne({ _id: dataLibId });
-      dataLib = getDataLib?.data || [];
+    if (!cachedLanguageLib) {
+      const getLanguageLib = await LanguageLibsModel.findOne({
+        _id: languageLibId,
+      });
+      languageLib = getLanguageLib?.data || [];
 
       await this.redisService.setWithExpiry(
         cacheKey,
-        JSON.stringify(dataLib),
+        JSON.stringify(languageLib),
         300,
       );
     } else {
-      dataLib = JSON.parse(cachedDataLib);
+      languageLib = JSON.parse(cachedLanguageLib);
     }
 
-    return dataLib;
+    return languageLib;
   }
 }
