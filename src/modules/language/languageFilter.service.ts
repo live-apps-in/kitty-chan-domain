@@ -7,7 +7,7 @@ import featuresModel from '../../model/features.model';
 import { LanguageFilterConfigDto } from './dto/languageFilter.dto';
 import LanguageLibsModel from '../../model/language_libs.model';
 import { DataStructure } from '../../common/services/dataStructure.service';
-import { StrongLanguage } from './dto/strongLanguage.dto';
+import { StrongLanguage, StrongLanguageConfig } from './dto/strongLanguage.dto';
 import { StrongLanguageCodes } from './enum/strong_language.enum';
 import { DiscordActionService } from '../../common/services/discord_action.service';
 
@@ -52,26 +52,31 @@ export class LanguageFilter {
 
     const {
       actionConfig,
-      languages,
-    }: { actionConfig: any; languages: StrongLanguageCodes[] } =
+      languageConfig,
+    }: { actionConfig: any; languageConfig: StrongLanguageConfig[] } =
       strongLanguageConfig;
 
     const { messageContent } = guild;
 
-    if (languages.includes(StrongLanguageCodes.EN)) {
-      const { detected } = this.dataStructure.matchPhrase(
-        messageContent,
-        strong_language_en,
-      );
+    languageConfig.map(async (e) => {
+      if (e.language === StrongLanguageCodes.EN) {
+        const languageLib = await this.getLanguageLib(guild, e.whitelistLib);
 
-      if (detected) {
-        await this.discordActionService.actionFactory(
-          actionConfig.action,
-          guild,
-          actionConfig,
+        const { detected } = this.dataStructure.matchPhrase(
+          messageContent,
+          strong_language_en,
+          languageLib,
         );
+
+        if (detected) {
+          await this.discordActionService.actionFactory(
+            actionConfig.action,
+            guild,
+            actionConfig,
+          );
+        }
       }
-    }
+    });
   }
 
   /**Language Filter
@@ -183,7 +188,7 @@ export class LanguageFilter {
         300,
       );
     } else {
-      languageLib = JSON.parse(cachedLanguageLib);
+      languageLib = JSON.parse(cachedLanguageLib) || [];
     }
 
     return languageLib;

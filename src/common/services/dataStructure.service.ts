@@ -7,11 +7,12 @@ export class DataStructure {
   matchPhrase(
     message: string,
     lib: string[],
+    whitelist: string[] = [],
   ): { detected: boolean; texts: string[] } {
     this.trie = new Trie(); // Reset the trie before inserting new phrases
     this.insertPhrases(lib);
 
-    const detectedTexts: string[] = this.trie.searchWords(message);
+    const detectedTexts: string[] = this.trie.searchWords(message, whitelist);
     const detected = detectedTexts.length > 0;
 
     return {
@@ -45,7 +46,7 @@ class Trie {
     node.isEndOfWord = true;
   }
 
-  searchWords(text: string): string[] {
+  searchWords(text: string, whitelist: string[]): string[] {
     const result: string[] = [];
     let node = this.root;
     let currentWord = '';
@@ -56,7 +57,10 @@ class Trie {
       } else {
         node = node.children[char];
         currentWord += char;
-        if (node.isEndOfWord) {
+        if (
+          node.isEndOfWord &&
+          (!whitelist.length || !whitelist.includes(currentWord))
+        ) {
           result.push(currentWord);
         }
       }

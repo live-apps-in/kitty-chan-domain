@@ -10,8 +10,13 @@ class StrongLanguageTriggerAction {
   public replyMessage: string;
 }
 
+export class StrongLanguageConfig {
+  language: StrongLanguageCodes;
+
+  whitelistLib: string;
+}
 export class StrongLanguage extends FeatureDefault {
-  languages: StrongLanguageCodes[];
+  languageConfig: StrongLanguageConfig[];
 
   public actionConfig: StrongLanguageTriggerAction;
 }
