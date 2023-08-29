@@ -8,7 +8,6 @@ services:
       - "5011:5000"
     networks:
     - kittychan-network
-    restart: always
 
 networks:
   kittychan-network:
