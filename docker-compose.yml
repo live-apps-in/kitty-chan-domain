@@ -5,7 +5,7 @@ services:
     image: kittychan-domain
     container_name: kittychan-domain
     ports:
-      - "5011:5000"
+      - "5030:5030"
     networks:
     - kittychan-network
 
