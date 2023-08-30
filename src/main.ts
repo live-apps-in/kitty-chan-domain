@@ -19,7 +19,7 @@ server.setConfig((app) => {
   app.use(express.json());
   app.use(cors());
 
-  // Register `hbs.engine` with the Express app.
+  /* Register `hbs.engine` with the Express app */
   app.engine(
     '.hbs',
     hbs.engine({
@@ -30,11 +30,11 @@ server.setConfig((app) => {
   );
   app.set('view engine', '.hbs');
 
-  /**Server React App */
+  /* Serve React App */
   app.use(express.static(path.join(__dirname, '../client/build')));
 });
 
-////Global Error Config
+/* Global Error Config */
 server.setErrorConfig((app) => {
   app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof HttpException) {
@@ -51,7 +51,6 @@ server.setErrorConfig((app) => {
 });
 
 async function bootstrap() {
-  //Start App
   const _app = container.get<App>(TYPES.App);
   _app.start();
 }
@@ -59,7 +58,7 @@ async function bootstrap() {
 bootstrap();
 const app = server.build();
 
-//Use http server for Web Sockets
+/* Use http server for Web Sockets */
 const httpServer = createServer(app);
 httpServer.listen(process.env.PORT || 5000, () => {
   console.log('App Started');
@@ -75,7 +74,7 @@ io.on('connection', (socket) => {
   console.log('Connected to Socket');
 });
 
-/////* PUBLIC PAGES *//////
+/* PUBLIC PAGES */
 app.get('/privacy-policy', (req, res) => {
   res.render('privacy-policy.hbs');
 });

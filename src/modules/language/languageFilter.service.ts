@@ -22,7 +22,7 @@ export class LanguageFilter {
   ) {}
 
   async languageFactory(guild: IGuild): Promise<void> {
-    /**Strong Language [EN] */
+    /**Strong Language */
     const getStrongLanguageFF = await this.redisService.get(
       `guild-${guild.guildId}:feature:strongLanguage`,
     );
