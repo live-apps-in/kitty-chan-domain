@@ -28,6 +28,8 @@ export class PortalService {
     const messageChunk = guild.messageContent.split(' ');
     if (messageChunk[1] === 'portal') return;
 
+    ///Todo - fix bug
+    return;
     //Check for active portal members
     const portal = await PortalRoom.findOne({
       'guilds.guildId': guild.guildId,
