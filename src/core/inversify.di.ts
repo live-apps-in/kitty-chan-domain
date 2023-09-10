@@ -39,6 +39,7 @@ import { AxiosService } from '../common/services/axios.service';
 import { RPSGameService } from '../modules/games/RPSGame.service';
 import { DataStructure } from '../common/services/dataStructure.service';
 import { DiscordActionService } from '../common/services/discord_action.service';
+import { FeaturesRepo } from '../modules/features/repo/features.repo';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -82,6 +83,7 @@ container
   .to(ConversationRepository);
 container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);
 container.bind<TemplateRepo>(TYPES.TemplateRepo).to(TemplateRepo);
+container.bind<FeaturesRepo>(TYPES.FeaturesRepo).to(FeaturesRepo);
 
 /**Shared Service */
 container.bind<SharedService>(TYPES.SharedService).to(SharedService);

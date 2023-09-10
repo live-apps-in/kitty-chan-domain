@@ -3,7 +3,7 @@ import { TYPES } from '../../core/inversify.types';
 import { RedisService } from '../../common/services/redis.service';
 import { IGuild } from '../../common/interface/shared.interface';
 import { strong_language_en } from '../../jobs/onInit';
-import featuresModel from '../../model/features.model';
+import featuresModel from '../features/model/features.model';
 import { LanguageFilterConfigDto } from './dto/languageFilter.dto';
 import LanguageLibsModel from '../../model/language_libs.model';
 import { DataStructure } from '../../common/services/dataStructure.service';

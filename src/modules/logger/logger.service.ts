@@ -12,7 +12,7 @@ import {
 import { liveClient } from '../app';
 import { TYPES } from '../../core/inversify.types';
 import { DiscordTemplateService } from '../../common/services/discord_template.service';
-import Features from '../../model/features.model';
+import Features from '../features/model/features.model';
 import { TemplateRepo } from '../../repository/template.repo';
 
 @injectable()

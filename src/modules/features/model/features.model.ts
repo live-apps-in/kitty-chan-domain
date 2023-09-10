@@ -5,6 +5,7 @@ export interface IFeature {
   logger: any;
   greet: any;
   language: any;
+  portal: any;
 }
 
 const Feature = new Schema({
@@ -12,6 +13,7 @@ const Feature = new Schema({
   logger: Object,
   greet: Object,
   language: Object,
+  portal: Object,
 });
 
 export default model<IFeature>('feature', Feature);

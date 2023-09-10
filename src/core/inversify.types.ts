@@ -36,6 +36,7 @@ export const TYPES = {
   ConversationRepository: Symbol.for('ConversationRepository'),
   GuildRepo: Symbol.for('GuildRepo'),
   TemplateRepo: Symbol.for('TemplateRepo'),
+  FeaturesRepo: Symbol.for('FeaturesRepo'),
 
   ///Shared Service
   SharedService: Symbol.for('SharedService'),
