@@ -4,7 +4,6 @@ import { Container } from 'inversify';
 import { TYPES } from './inversify.types';
 import { App } from '../modules/app';
 import { SharedService } from '../common/services/shared.service';
-import { ViolationRepository } from '../repository/violation.repo';
 import { StatsLoggerService } from '../modules/stats/stats_logger.service';
 import { TextLogRepository } from '../repository/textLogRepo';
 import { CommandService } from '../modules/commands/commands.service';
@@ -48,9 +47,6 @@ const container = new Container({
 /**App services */
 container.bind<App>(TYPES.App).to(App);
 container.bind<LanguageFilter>(TYPES.LanguageFilter).to(LanguageFilter);
-container
-  .bind<ViolationRepository>(TYPES.ViolationRepository)
-  .to(ViolationRepository);
 container
   .bind<TextLogRepository>(TYPES.TextLogRepository)
   .to(TextLogRepository);

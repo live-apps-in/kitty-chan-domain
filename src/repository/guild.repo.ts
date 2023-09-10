@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
-import Guild from '../model/guild.model';
+import Guild from '../modules/guild/model/guild.model';
 
 @injectable()
 export class GuildRepo {
