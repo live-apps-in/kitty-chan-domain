@@ -6,6 +6,7 @@ import Portal from '../../model/portal';
 import { GuildRepo } from '../../repository/guild.repo';
 import { SharedService } from '../../common/services/shared.service';
 import { liveClient } from '../app';
+import { PortalMsg } from '../../common/messages/portal/portal';
 
 @injectable()
 export class PortalService {
@@ -47,19 +48,13 @@ export class PortalService {
     ///Check if message contains mentions
     const { hasMention } = guild.mentions;
     if (hasMention) {
-      await this.reply(
-        'You cannot use mentions in Portal ⚠. This message will not be delivered to other Portals but can be seen by members within this server.',
-        guild,
-      );
+      await this.reply(PortalMsg.MENTION_WARN, guild);
       return;
     }
 
     ///Check if message contains attachments
     if (guild.attachments && guild.attachments.length !== 0) {
-      await this.reply(
-        "We don't allow attachments currently ⚠. We'll add support for media soon ;)",
-        guild,
-      );
+      await this.reply(PortalMsg.ATTACHMENT_WARN, guild);
       return;
     }
 
@@ -67,10 +62,7 @@ export class PortalService {
     const { isLink, isTrustable, domain } =
       await this.sharedService.filterWebLinks(guild);
     if (isLink && !isTrustable) {
-      await this.reply(
-        "We don't allow this URL ⚠. Avoid sending website links in this Portal.",
-        guild,
-      );
+      await this.reply(PortalMsg.URL_WARN, guild);
       return;
     }
 
