@@ -7,12 +7,14 @@ import { liveClient } from '../app';
 import { PortalMsg } from '../../common/messages/portal/portal';
 import { FeaturesRepo } from '../features/repo/features.repo';
 import { FeaturesEnum } from '../features/enum/features.enum';
+import { RedisService } from '../../common/services/redis.service';
 
 @injectable()
 export class PortalService {
   constructor(
     @inject(TYPES.SharedService) private readonly sharedService: SharedService,
     @inject(TYPES.FeaturesRepo) private readonly featuresRepo: FeaturesRepo,
+    @inject(TYPES.RedisService) private readonly redisService: RedisService,
   ) {}
 
   //VALIDATION
@@ -28,13 +30,23 @@ export class PortalService {
     const messageChunk = guild.messageContent.split(' ');
     if (messageChunk[1] === 'portal') return;
 
-    ///Todo - fix bug
-    return;
-    //Check for active portal members
+    //Fetch Portal config cache
+    const portalConfig = JSON.parse(await this.redisService.get(
+      `guild-${guild.guildId}:feature:portal`,
+    ))
+
+    if (!portalConfig?.isActive || portalConfig?.channelId !== guild.channelId) {
+      return;
+    }
+
+    /**Check for active portal members
+     * Todo - move to Redis
+    */
     const portal = await PortalRoom.findOne({
       'guilds.guildId': guild.guildId,
     });
     if (portal?.guilds?.length <= 1) return;
+
 
     ///Check if message contains mentions
     const { hasMention } = guild.mentions;
