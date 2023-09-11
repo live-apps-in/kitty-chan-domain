@@ -36,7 +36,7 @@ server.setConfig((app) => {
 
 /* Global Error Config */
 server.setErrorConfig((app) => {
-  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response) => {
     if (err instanceof HttpException) {
       res.status(err.statusCode).json({ error: err.message });
     } else if (err instanceof ValidationException) {
@@ -45,7 +45,6 @@ server.setErrorConfig((app) => {
         .json({ error: 'Validation Exception', errorInfo: err.error });
     } else {
       console.log(err);
-      // res.status(500).json({ error: 'Internal Server Exception' });
     }
   });
 });
@@ -70,7 +69,7 @@ const io = new Server(httpServer, {
   },
 });
 
-io.on('connection', (socket) => {
+io.on('connection', () => {
   console.log('Connected to Socket');
 });
 

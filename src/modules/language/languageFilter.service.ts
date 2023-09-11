@@ -5,7 +5,7 @@ import { IGuild } from '../../common/interface/shared.interface';
 import { strong_language_en } from '../../jobs/onInit';
 import featuresModel from '../features/model/features.model';
 import { LanguageFilterConfigDto } from './dto/languageFilter.dto';
-import LanguageLibsModel from '../../model/language_libs.model';
+import LanguageLibsModel from './model/language_libs.model';
 import { DataStructure } from '../../common/services/dataStructure.service';
 import { StrongLanguage, StrongLanguageConfig } from './dto/strongLanguage.dto';
 import { StrongLanguageCodes } from './enum/strong_language.enum';

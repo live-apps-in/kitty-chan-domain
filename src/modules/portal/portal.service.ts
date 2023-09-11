@@ -31,22 +31,24 @@ export class PortalService {
     if (messageChunk[1] === 'portal') return;
 
     //Fetch Portal config cache
-    const portalConfig = JSON.parse(await this.redisService.get(
-      `guild-${guild.guildId}:feature:portal`,
-    ))
+    const portalConfig = JSON.parse(
+      await this.redisService.get(`guild-${guild.guildId}:feature:portal`),
+    );
 
-    if (!portalConfig?.isActive || portalConfig?.channelId !== guild.channelId) {
+    if (
+      !portalConfig?.isActive ||
+      portalConfig?.channelId !== guild.channelId
+    ) {
       return;
     }
 
     /**Check for active portal members
      * Todo - move to Redis
-    */
+     */
     const portal = await PortalRoom.findOne({
       'guilds.guildId': guild.guildId,
     });
     if (portal?.guilds?.length <= 1) return;
-
 
     ///Check if message contains mentions
     const { hasMention } = guild.mentions;

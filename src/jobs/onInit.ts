@@ -1,4 +1,4 @@
-import LanguageLibs from '../model/language_libs.model';
+import LanguageLibs from '../modules/language/model/language_libs.model';
 
 /* Data Libs */
 export let strong_language_en = [];

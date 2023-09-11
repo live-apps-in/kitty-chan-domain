@@ -3,7 +3,7 @@ import { randomNumber } from '../../utils/calc';
 import { liveClient } from '../app';
 import { RPS_GAME_Content } from './content/rpsGame.content';
 import { IGuild } from '../../common/interface/shared.interface';
-import GameSession from '../../model/game_session';
+import GameSession from './model/game_session';
 
 @injectable()
 export class RPSGameService {
