@@ -33,6 +33,7 @@ jobs:
             --build-arg DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }} \
             --build-arg DISCORD_API=${{ vars.DISCORD_API }} \
             --build-arg GRPC_URL=${{ vars.GRPC_URL }} \
+            --build-arg REDIS_HOST=${{ vars.REDIS_HOST }} \
             -t jagalive/kittychan-domain:${{ github.sha }} .
           docker tag jagalive/kittychan-domain:${{ github.sha }} jagalive/kittychan-domain:latest
         working-directory: ./
