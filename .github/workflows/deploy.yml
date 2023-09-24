@@ -35,6 +35,7 @@ jobs:
             --build-arg GRPC_URL=${{ vars.GRPC_URL }} \
             --build-arg REDIS_HOST=${{ vars.REDIS_HOST }} \
             --build-arg REDIS_PASS=${{ vars.REDIS_PASS }} \
+            --build-arg MONGO_URI=${{ secrets.MONGO_URI }} \
             -t jagalive/kittychan-domain:${{ github.sha }} .
           docker tag jagalive/kittychan-domain:${{ github.sha }} jagalive/kittychan-domain:latest
         working-directory: ./
