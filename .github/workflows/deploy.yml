@@ -1,0 +1,47 @@
+name: kitty chan Domain Build Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg KITTY_CHAN_TOKEN=${{ secrets.KITTY_CHAN_TOKEN }} \
+            --build-arg KITTY_CHAN_ID=${{ vars.KITTY_CHAN_ID }} \
+            --build-arg DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }} \
+            --build-arg DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }} \
+            --build-arg DISCORD_API=${{ vars.DISCORD_API }} \
+            --build-arg GRPC_URL=${{ vars.GRPC_URL }} \
+            --build-arg REDIS_HOST=${{ vars.REDIS_HOST }} \
+            --build-arg REDIS_PASS=${{ vars.REDIS_PASS }} \
+            --build-arg MONGO_URI=${{ secrets.MONGO_URI }} \
+            --build-arg REDIS_PASS=${{ vars.REDIS_PASS }} \
+            -t jagalive/kittychan-events:${{ github.sha }} .
+          docker tag jagalive/kittychan-events:${{ github.sha }} jagalive/kittychan-events:latest
+        working-directory: ./
+
+      - name: Push Docker image
+        run: |
+          docker push jagalive/kittychan-events:${{ github.sha }}
+          docker push jagalive/kittychan-events:latest

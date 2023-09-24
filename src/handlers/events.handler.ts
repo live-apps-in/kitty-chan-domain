@@ -63,8 +63,8 @@ export class EventsHandler implements EventsServiceHandlers {
     this.statsLoggerService.log_message_count(guildMessage);
 
     ///Service Stats
-    const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
-    if (serviceStats) return;
+    // const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
+    // if (serviceStats) return;
 
     ///Fetch feature flags
     const featureFlag = await this.featureFlagService.getFeatureFlag(

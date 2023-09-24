@@ -198,6 +198,12 @@ Certain features won't work unless kitty chan can access these services. 💡`,
 
   /**RabbitMQ - pub/sub ping queue */
   private async queue() {
+    //RabbitMQ currently down
+    return {
+      service: 'RabbitMQ',
+      isAvailable: false,
+      latency: null,
+    } as ServiceStats;
     const start = performance.now();
     const pubSub = await this.queueService.ping('kitty_chan_domain_queue');
     const end = performance.now();
@@ -292,23 +298,10 @@ Certain features won't work unless kitty chan can access these services. 💡`,
    * LiveCord microservice is deprecated
    */
   private async liveCordgRPC() {
-    const getGuild: any = false;
-    const start = performance.now();
-
-    const end = performance.now();
-
-    if (!getGuild?.name) {
-      return {
-        service: 'LiveCord gRPC (Deprecated)',
-        isAvailable: false,
-        latency: null,
-      } as ServiceStats;
-    }
-
     return {
       service: 'LiveCord gRPC (Deprecated)',
-      isAvailable: true,
-      latency: Number((end - start).toFixed(2)),
+      isAvailable: false,
+      latency: null,
     } as ServiceStats;
   }
 }
