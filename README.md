@@ -32,4 +32,4 @@ This guide will help you set up the project on your local machine.
 
 > Note: While setting up gRPC config, use `0.0.0.0:port` instead of `localhost:port` to avoid connectivity issues when running inside a Docker environment.
 
-That's it! kitty chan will be up and running!.
+That's it! kitty chan Domain will be up and running!.
