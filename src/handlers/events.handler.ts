@@ -70,10 +70,8 @@ export class EventsHandler implements EventsServiceHandlers {
     const featureFlag = await this.featureFlagService.getFeatureFlag(
       guildMessage,
     );
-    console.log('DEBUG - Before FF')
     if (!featureFlag) return;
     
-    console.log('DEBUG - After FF')
     guildMessage.featureFlag = { ...featureFlag };
 
     ///Check Portal Intent
@@ -83,10 +81,10 @@ export class EventsHandler implements EventsServiceHandlers {
     ///Check Game Intent
     const isGame = await this.gameService.validateGame(guildMessage);
     if (isGame) return;
-console.log('DEBUG - After Game')
+
     ///Language Services
     this.langFilter.languageFactory(guildMessage);
-
+console.log('DEBUG - after language')
     ///Commands
     const isCommand = await this.commandService.validateCommand(guildMessage);
     if (isCommand) return;
