@@ -77,14 +77,14 @@ export class EventsHandler implements EventsServiceHandlers {
     ///Check Portal Intent
     const isPortal = await this.portalService.validate_channel(guildMessage);
     if (isPortal) return;
-      console.log('DEBUG - After Portal')
+
     ///Check Game Intent
     const isGame = await this.gameService.validateGame(guildMessage);
     if (isGame) return;
 
     ///Language Services
     this.langFilter.languageFactory(guildMessage);
-console.log('DEBUG - after language')
+
     ///Commands
     const isCommand = await this.commandService.validateCommand(guildMessage);
     if (isCommand) return;
