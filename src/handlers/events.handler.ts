@@ -51,7 +51,6 @@ export class EventsHandler implements EventsServiceHandlers {
     call: ServerUnaryCall<any, NoResponse>,
     callback: sendUnaryData<any>,
   ) {
-    console.log('DEBUG - Message Create')
     ///Acknowledge gRPC call
     callback(null);
 
@@ -71,18 +70,20 @@ export class EventsHandler implements EventsServiceHandlers {
     const featureFlag = await this.featureFlagService.getFeatureFlag(
       guildMessage,
     );
+    console.log('DEBUG - Before FF')
     if (!featureFlag) return;
-
+    
+    console.log('DEBUG - After FF')
     guildMessage.featureFlag = { ...featureFlag };
 
     ///Check Portal Intent
     const isPortal = await this.portalService.validate_channel(guildMessage);
     if (isPortal) return;
-
+      console.log('DEBUG - After Portal')
     ///Check Game Intent
     const isGame = await this.gameService.validateGame(guildMessage);
     if (isGame) return;
-
+console.log('DEBUG - After Game')
     ///Language Services
     this.langFilter.languageFactory(guildMessage);
 
