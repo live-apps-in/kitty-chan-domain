@@ -51,6 +51,7 @@ export class EventsHandler implements EventsServiceHandlers {
     call: ServerUnaryCall<any, NoResponse>,
     callback: sendUnaryData<any>,
   ) {
+    console.log('DEBUG - Message Create')
     ///Acknowledge gRPC call
     callback(null);
 
