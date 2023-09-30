@@ -8,6 +8,7 @@ service EventsService{
   rpc messageReactionAdd (IMessageReaction) returns (NoResponse);
   rpc messageReactionRemove (IMessageReaction) returns (NoResponse);
   rpc guildCreate (IBasicGuild) returns (NoResponse);
+  rpc guildUpdate (IBasicGuild) returns (NoResponse);
   rpc guildDelete (IBasicGuild) returns (NoResponse);
   rpc guildMemberAdd (IGuildMember) returns (NoResponse);
   rpc guildMemberRemove (IGuildMember) returns (NoResponse);
@@ -93,6 +94,9 @@ message IGuildMessageDelete{
 message IBasicGuild{
   string guildId = 1;
   string guildName = 2;
+  string guildOwner = 3;
+  string guildMembersCount = 4;
+  string guildIcon = 5;
 }
 
 message IGuildMember{

@@ -241,6 +241,47 @@ export interface EventsServiceClient extends grpc.Client {
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
 
+  guildUpdate(
+    argument: _kitty_chan_IBasicGuild,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  guildUpdate(
+    argument: _kitty_chan_IBasicGuild,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  guildUpdate(
+    argument: _kitty_chan_IBasicGuild,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  guildUpdate(
+    argument: _kitty_chan_IBasicGuild,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  guildUpdate(
+    argument: _kitty_chan_IBasicGuild,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  guildUpdate(
+    argument: _kitty_chan_IBasicGuild,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  guildUpdate(
+    argument: _kitty_chan_IBasicGuild,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  guildUpdate(
+    argument: _kitty_chan_IBasicGuild,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+
   messageCreate(
     argument: _kitty_chan_IGuildMessage,
     metadata: grpc.Metadata,
@@ -474,6 +515,11 @@ export interface EventsServiceHandlers
     _kitty_chan_NoResponse
   >;
 
+  guildUpdate: grpc.handleUnaryCall<
+    _kitty_chan_IBasicGuild__Output,
+    _kitty_chan_NoResponse
+  >;
+
   messageCreate: grpc.handleUnaryCall<
     _kitty_chan_IGuildMessage__Output,
     _kitty_chan_NoResponse
@@ -529,6 +575,12 @@ export interface EventsServiceDefinition extends grpc.ServiceDefinition {
     _kitty_chan_IGuildMemberUpdate,
     _kitty_chan_NoResponse,
     _kitty_chan_IGuildMemberUpdate__Output,
+    _kitty_chan_NoResponse__Output
+  >;
+  guildUpdate: MethodDefinition<
+    _kitty_chan_IBasicGuild,
+    _kitty_chan_NoResponse,
+    _kitty_chan_IBasicGuild__Output,
     _kitty_chan_NoResponse__Output
   >;
   messageCreate: MethodDefinition<

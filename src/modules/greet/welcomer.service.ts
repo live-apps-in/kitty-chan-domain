@@ -11,7 +11,9 @@ import {
 @injectable()
 export class WelcomerService {
   async handle(guild: IGuildMember) {
-    const guildConfig = await Guild.findOne({ guildId: guild.guildId });
+    const guildConfig = (await Guild.findOne({
+      guildId: guild.guildId,
+    })) as any;
     if (!guildConfig?.welcomer?.channelId) return;
 
     const template = await this.getDefaultTemplate();

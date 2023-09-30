@@ -3,27 +3,19 @@ import { model, Schema } from 'mongoose';
 export interface IGuild {
   name: string;
   guildId: string;
-  features: any;
-  portal: any;
-  welcomer: any;
-  logger: any;
-  messageCount: number;
+  ownerId: string;
+  staffs: any[];
+  icon: string;
+  tags: string[];
 }
 
 const Guild = new Schema({
   name: String,
   guildId: String,
-  features: {
-    type: Object,
-    default: {
-      welcomer: { channelId: null },
-      logger: { channelId: null },
-    },
-  },
-  portal: Object,
-  welcomer: Object,
-  logger: Object,
-  messageCount: { type: Number, bigint: true, default: 0 },
+  ownerId: String,
+  staffs: Array<any>,
+  icon: String,
+  tags: Array<string>,
 });
 
 export default model<IGuild>('guilds', Guild);

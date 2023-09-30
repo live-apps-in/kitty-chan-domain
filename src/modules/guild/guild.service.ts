@@ -9,6 +9,7 @@ import { RolesService } from '../roles/roles.service';
 import { RedisService } from '../../common/services/redis.service';
 import userModel from './model/user.model';
 import { liveClient } from '../app';
+import Features from '../features/model/features.model';
 
 @injectable()
 export class GuildService {
@@ -20,21 +21,18 @@ export class GuildService {
   async guildCreate(guild: IBasicGuild) {
     const { guildId, guildName } = guild;
 
-    await this.redisService.set(
-      `guild:${guildId}:flags`,
-      JSON.stringify({
-        strongLanguage: false,
-        hindi: false,
-        valorant_find_players: false,
-      }),
-    );
-
-    ///Register Guild
+    /**Find or create guild */
     const getServer = await Guild.findOne({ guildId });
     if (getServer) return;
 
     await Guild.insertMany({
       name: guildName,
+      guildId,
+      ownerId: guild.guildOwner,
+    });
+
+    /**Create Features for Guild */
+    await Features.insertMany({
       guildId,
     });
 
@@ -44,6 +42,27 @@ export class GuildService {
     await liveClient.user.sendMessage(
       userId,
       `Added to ${guild.guildName} - ${guild.guildId}`,
+    );
+  }
+
+  async guildUpdate(guild: IBasicGuild) {
+    const { guildId } = guild;
+
+    const getDiscordGuild = await liveClient.guild.fetch(guildId, {
+      ignoreCache: true,
+    });
+    if (!getDiscordGuild) {
+      return;
+    }
+
+    await Guild.updateOne(
+      { guildId },
+      {
+        $set: {
+          name: getDiscordGuild.name,
+          icon: getDiscordGuild.icon,
+        },
+      },
     );
   }
 

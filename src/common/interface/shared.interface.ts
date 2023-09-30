@@ -91,6 +91,9 @@ export class IGuildMessageWithFF extends IGuildMessage {
 export class IBasicGuild {
   guildId?: string;
   guildName?: string;
+  guildOwner?: string;
+  guildMembersCount?: number;
+  guildIcon?: string;
 }
 
 export class IGuildMember {

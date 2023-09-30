@@ -151,6 +151,17 @@ export class EventsHandler implements EventsServiceHandlers {
     this.guildService.guildCreate(payload);
   }
 
+  /**Guild Update Events */
+  async guildUpdate(
+    call: ServerUnaryCall<any, NoResponse>,
+    callback: sendUnaryData<any>,
+  ) {
+    callback(null);
+
+    const payload = call.request as IBasicGuild;
+    this.guildService.guildUpdate(payload);
+  }
+
   /**Guild Create Events */
   async guildDelete(
     call: ServerUnaryCall<any, NoResponse>,
