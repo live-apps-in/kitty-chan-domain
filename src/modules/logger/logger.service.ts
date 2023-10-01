@@ -25,59 +25,36 @@ export class LoggerService {
 
   /**Guild Message Update Logger */
   async messageUpdate(message: IMessageUpdate) {
-    const features = await Features.findOne({ guildId: message.guildId });
-
-    const featureStatus = features?.logger?.messageUpdate?.isActive;
-    const featureChannelId = features?.logger?.messageUpdate?.channelId;
-    const featureTemplateId = features?.logger?.messageUpdate?.templateId;
-
-    if (!featureStatus || !featureChannelId) {
-      return;
-    }
-
-    const template = await this.getTemplateOrGetDefault(
-      featureTemplateId,
+    const validateFF = await this.validateLoggerFF(
+      message.guildId,
       DiscordTemplateTarget.messageUpdate,
-      DiscordTemplateType.embed,
     );
-    if (!template) {
+    if (!validateFF) {
       return;
     }
 
-    const guild = await liveClient.guild.fetch(message.guildId);
+    const getLoggerConfig = await this.buildTemplate(
+      validateFF.templateId,
+      DiscordTemplateTarget.messageUpdate,
+      message,
+    );
 
-    const mutatedMessage = {
-      ...message,
-      guildName: guild.name,
-    };
+    if (!getLoggerConfig) {
+      return;
+    }
 
-    /**Handle Plain message */
-    if (template.type === DiscordTemplateType.plain) {
-      const plainContent = await this.templateService.fillPlainTemplate(
-        mutatedMessage,
-        template.content,
+    if (getLoggerConfig.type === DiscordTemplateType.plain) {
+      await liveClient.message.send(
+        validateFF.channelId,
+        getLoggerConfig.plainContent,
       );
-      await liveClient.message.send(featureChannelId, plainContent);
 
       return;
+    } else if (getLoggerConfig.embed) {
+      await liveClient.message.sendEmbed(validateFF.channelId, [
+        getLoggerConfig.embed,
+      ]);
     }
-
-    /**Handle Embed message */
-    const buildTemplate = {
-      ...template.embed,
-    };
-
-    //Convert milliseconds to seconds
-    const dateObject = new Date(Math.floor(message.editedAt / 1000) * 1000);
-    const unixTimestampInSec = dateObject.getTime() / 1000;
-    message.editedAt = unixTimestampInSec;
-
-    const embeds: any = await this.templateService.fillEmbedTemplate(
-      mutatedMessage,
-      buildTemplate,
-    );
-
-    await liveClient.message.sendEmbed(featureChannelId, [embeds]);
   }
 
   /**Guild Message Delete Logger */
@@ -95,7 +72,6 @@ export class LoggerService {
     const template = await this.getTemplateOrGetDefault(
       featureTemplateId,
       DiscordTemplateTarget.messageDelete,
-      DiscordTemplateType.embed,
     );
     if (!template) return;
 
@@ -154,7 +130,6 @@ export class LoggerService {
       const template = await this.getTemplateOrGetDefault(
         featTemplateId,
         DiscordTemplateTarget.memberAvatarUpdate,
-        DiscordTemplateType.embed,
       );
 
       const buildTemplate = {
@@ -190,7 +165,6 @@ export class LoggerService {
       const template = await this.getTemplateOrGetDefault(
         featTemplateId,
         DiscordTemplateTarget.memberUsernameUpdate,
-        DiscordTemplateType.embed,
       );
 
       const buildTemplate = {
@@ -230,7 +204,6 @@ export class LoggerService {
       const template = await this.getTemplateOrGetDefault(
         featTemplateId,
         DiscordTemplateTarget.memberNicknameUpdate,
-        DiscordTemplateType.embed,
       );
 
       const buildTemplate = {
@@ -271,7 +244,6 @@ export class LoggerService {
         var template = await this.getTemplateOrGetDefault(
           featTemplateId,
           DiscordTemplateTarget.memberAddRole,
-          DiscordTemplateType.embed,
         );
 
         roleFeatureChannelId = featChannelId;
@@ -287,7 +259,6 @@ export class LoggerService {
         var template = await this.getTemplateOrGetDefault(
           featTemplateId,
           DiscordTemplateTarget.memberRemoveRole,
-          DiscordTemplateType.embed,
         );
 
         roleFeatureChannelId = featChannelId;
@@ -380,17 +351,86 @@ export class LoggerService {
     return changes;
   }
 
-  /**Get Template or get default */
-  private async getTemplateOrGetDefault(
-    templateId = null,
-    target: string,
-    type: string,
+  private async validateLoggerFF(
+    guildId: string,
+    target: DiscordTemplateTarget,
   ) {
+    const features = await Features.findOne({ guildId });
+
+    const status = features?.logger?.[target]?.isActive;
+    const channelId = features?.logger?.[target]?.channelId;
+
+    if (!status || !channelId) {
+      return;
+    }
+
+    return {
+      status,
+      channelId,
+      templateId: features?.logger?.[target]?.templateId,
+    };
+  }
+
+  private async buildTemplate(
+    templateId: string,
+    templateTarget: DiscordTemplateTarget,
+    message: IMessageUpdate,
+  ) {
+    let res: { type: DiscordTemplateType; plainContent?: string; embed?: any };
+
+    const template = await this.getTemplateOrGetDefault(
+      templateId,
+      templateTarget,
+    );
+
+    if (!template) {
+      return;
+    }
+
+    const guild = await liveClient.guild.fetch(message.guildId);
+
+    const mutatedMessage = {
+      ...message,
+      guildName: guild.name,
+    };
+
+    if (template.type === DiscordTemplateType.plain) {
+      const plainContent = await this.templateService.fillPlainTemplate(
+        mutatedMessage,
+        template.content,
+      );
+
+      res = {
+        type: DiscordTemplateType.plain,
+        plainContent,
+      };
+    } else if (template.type === DiscordTemplateType.embed) {
+      //Convert milliseconds to seconds
+      const dateObject = new Date(Math.floor(message.editedAt / 1000) * 1000);
+      const unixTimestampInSec = dateObject.getTime() / 1000;
+      message.editedAt = unixTimestampInSec;
+
+      const embed: any = await this.templateService.fillEmbedTemplate(
+        mutatedMessage,
+        { ...template.embed },
+      );
+
+      res = {
+        type: DiscordTemplateType.embed,
+        embed,
+      };
+    }
+
+    return res;
+  }
+
+  /**Get Template or get default */
+  private async getTemplateOrGetDefault(templateId = null, target: string) {
     let template = await this.templateRepo.findById(templateId);
 
     if (!template) {
       template = await DiscordTemplateModel.findOne({
-        type,
+        type: DiscordTemplateType.embed,
         target,
       });
     }
