@@ -19,11 +19,23 @@ export class GuildService {
   ) {}
 
   async guildCreate(guild: IBasicGuild) {
-    const { guildId, guildName } = guild;
+    const { guildId, guildName, guildIcon } = guild;
 
     /**Find or create guild */
     const getServer = await Guild.findOne({ guildId });
-    if (getServer) return;
+    if (getServer) {
+      await Guild.updateOne(
+        { _id: getServer._id },
+        {
+          $set: {
+            name: guildName,
+            icon: guildIcon,
+          },
+        },
+      );
+
+      return;
+    }
 
     await Guild.insertMany({
       name: guildName,

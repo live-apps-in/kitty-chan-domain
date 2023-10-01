@@ -4,7 +4,7 @@ import {
   IBasicGuild,
   IGuildMember,
   IGuildMemberUpdate,
-  IGuildMessageWithFF,
+  IGuildMessage,
   IMessageDelete,
   IMessageReaction,
   IMessageUpdate,
@@ -54,7 +54,7 @@ export class EventsHandler implements EventsServiceHandlers {
     ///Acknowledge gRPC call
     callback(null);
 
-    const guildMessage = call.request as IGuildMessageWithFF;
+    const guildMessage = call.request as IGuildMessage;
 
     //Validate if Bot message
     if (guildMessage.isBot) return;
@@ -65,14 +65,6 @@ export class EventsHandler implements EventsServiceHandlers {
     ///Service Stats
     // const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
     // if (serviceStats) return;
-
-    ///Fetch feature flags
-    const featureFlag = await this.featureFlagService.getFeatureFlag(
-      guildMessage,
-    );
-    if (!featureFlag) return;
-    
-    guildMessage.featureFlag = { ...featureFlag };
 
     ///Check Portal Intent
     const isPortal = await this.portalService.validate_channel(guildMessage);

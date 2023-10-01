@@ -7,7 +7,10 @@ import { liveClient } from '../../modules/app';
 import { DiscordEmbeds } from '@live-apps/discord';
 import { DiscordEmbedField } from '../../types/discord.types';
 import { QueueService } from './queue.service';
-import { IGuildMessageWithFF } from '../interface/shared.interface';
+import {
+  IGuildMessage,
+  IGuildMessageWithFF,
+} from '../interface/shared.interface';
 import { AxiosService } from './axios.service';
 
 interface ServiceStats {
@@ -54,11 +57,7 @@ export class ServiceStatus {
   }
 
   /** */
-  async validateCommand({
-    guildId,
-    channelId,
-    messageContent,
-  }: IGuildMessageWithFF) {
+  async validateCommand({ guildId, channelId, messageContent }: IGuildMessage) {
     const message = messageContent.trim().toLowerCase();
     const messageChunk = message.split(' ');
 
