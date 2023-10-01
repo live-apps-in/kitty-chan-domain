@@ -60,7 +60,7 @@ export class EventsHandler implements EventsServiceHandlers {
     //Validate if Bot message
     if (guildMessage.isBot) return;
 
-    ///Log
+    //Log
     this.statsLoggerService.log_message_count(guildMessage);
 
     ///Service Stats
