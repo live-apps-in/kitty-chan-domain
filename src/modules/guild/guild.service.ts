@@ -44,9 +44,13 @@ export class GuildService {
     });
 
     /**Create Features for Guild */
-    await Features.insertMany({
-      guildId,
-    });
+    const getFeatures = await Features.findOne({ guildId });
+
+    if (!getFeatures) {
+      await Features.insertMany({
+        guildId,
+      });
+    }
 
     ///Jaga's Discord ID
     const userId = '516438995824017420';
