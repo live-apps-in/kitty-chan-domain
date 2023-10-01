@@ -37,6 +37,7 @@ export class IMessageUpdate {
   public userId?: string;
   public username?: string;
   public avatar?: string;
+  public message?: string;
   public oldMessage?: string;
   public newMessage?: string;
   public createdAt?: number;

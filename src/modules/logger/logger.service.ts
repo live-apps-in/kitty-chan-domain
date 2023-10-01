@@ -24,18 +24,18 @@ export class LoggerService {
   ) {}
 
   /**Guild Message Update Logger */
-  async messageUpdate(message: IMessageUpdate) {
-    const validateFF = await this.validateLoggerFF(
-      message.guildId,
-      DiscordTemplateTarget.messageUpdate,
-    );
+  async messageUpdateDelete(
+    message: IMessageUpdate,
+    target: DiscordTemplateTarget,
+  ) {
+    const validateFF = await this.validateLoggerFF(message.guildId, target);
     if (!validateFF) {
       return;
     }
 
     const getLoggerConfig = await this.buildTemplate(
       validateFF.templateId,
-      DiscordTemplateTarget.messageUpdate,
+      target,
       message,
     );
 
@@ -55,45 +55,6 @@ export class LoggerService {
         getLoggerConfig.embed,
       ]);
     }
-  }
-
-  /**Guild Message Delete Logger */
-  async messageDelete(message: IMessageDelete) {
-    const features = await Features.findOne({ guildId: message.guildId });
-
-    const featureStatus = features?.logger?.messageDelete?.isActive;
-    const featureChannelId = features?.logger?.messageDelete?.channelId;
-    const featureTemplateId = features?.logger?.messageDelete?.templateId;
-
-    if (!featureStatus || !featureChannelId) {
-      return;
-    }
-
-    const template = await this.getTemplateOrGetDefault(
-      featureTemplateId,
-      DiscordTemplateTarget.messageDelete,
-    );
-    if (!template) return;
-
-    const buildTemplate = {
-      ...template.embed,
-    };
-
-    const guild = await liveClient.guild.fetch(message.guildId, {
-      expiry: 3600,
-    });
-
-    const mutatedMessage = {
-      ...message,
-      guildName: guild.name,
-    };
-
-    const embeds: any = await this.templateService.fillEmbedTemplate(
-      mutatedMessage,
-      buildTemplate,
-    );
-
-    await liveClient.message.sendEmbed(featureChannelId, [embeds]);
   }
 
   /**Guild Member Update Logger */
