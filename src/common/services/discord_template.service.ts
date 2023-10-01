@@ -3,6 +3,19 @@ import { DiscordEmbeds } from '@live-apps/discord';
 
 @injectable()
 export class DiscordTemplateService {
+  async fillPlainTemplate(payload: any, plainContent: string) {
+    for (const key in payload) {
+      if (payload.hasOwnProperty(key)) {
+        //Dynamic value mapping using this key
+        const placeholder = '${' + key + '}';
+
+        plainContent = plainContent.replace(placeholder, payload[key]);
+      }
+    }
+
+    return plainContent;
+  }
+
   async fillEmbedTemplate(payload: any, template: DiscordEmbeds) {
     const filledTemplate = { ...template };
 

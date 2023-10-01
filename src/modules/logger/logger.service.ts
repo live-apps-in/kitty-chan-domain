@@ -40,8 +40,29 @@ export class LoggerService {
       DiscordTemplateTarget.messageUpdate,
       DiscordTemplateType.embed,
     );
-    if (!template) return;
+    if (!template) {
+      return;
+    }
 
+    const guild = await liveClient.guild.fetch(message.guildId);
+
+    const mutatedMessage = {
+      ...message,
+      guildName: guild.name,
+    };
+
+    /**Handle Plain message */
+    if (template.type === DiscordTemplateType.plain) {
+      const plainContent = await this.templateService.fillPlainTemplate(
+        mutatedMessage,
+        template.content,
+      );
+      await liveClient.message.send(featureChannelId, plainContent);
+
+      return;
+    }
+
+    /**Handle Embed message */
     const buildTemplate = {
       ...template.embed,
     };
@@ -50,15 +71,6 @@ export class LoggerService {
     const dateObject = new Date(Math.floor(message.editedAt / 1000) * 1000);
     const unixTimestampInSec = dateObject.getTime() / 1000;
     message.editedAt = unixTimestampInSec;
-
-    const guild = await liveClient.guild.fetch(message.guildId, {
-      expiry: 3600,
-    });
-
-    const mutatedMessage = {
-      ...message,
-      guildName: guild.name,
-    };
 
     const embeds: any = await this.templateService.fillEmbedTemplate(
       mutatedMessage,
