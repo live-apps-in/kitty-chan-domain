@@ -7,10 +7,7 @@ import { liveClient } from '../../modules/app';
 import { DiscordEmbeds } from '@live-apps/discord';
 import { DiscordEmbedField } from '../../types/discord.types';
 import { QueueService } from './queue.service';
-import {
-  IGuildMessage,
-  IGuildMessageWithFF,
-} from '../interface/shared.interface';
+import { IGuildMessage } from '../interface/shared.interface';
 import { AxiosService } from './axios.service';
 
 interface ServiceStats {
