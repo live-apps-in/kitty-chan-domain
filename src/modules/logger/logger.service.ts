@@ -1,5 +1,8 @@
 import { inject, injectable } from 'inversify';
-import { IGuildMemberUpdate, IMessageUpdate } from '../../common/interface/shared.interface';
+import { 
+  IGuildMemberUpdate,
+  IMessageUpdate
+} from '../../common/interface/shared.interface';
 import DiscordTemplateModel from '../template/model/discord_templates.model';
 import {
   DiscordTemplateType,
