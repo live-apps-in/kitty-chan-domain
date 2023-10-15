@@ -5,7 +5,6 @@ import { TYPES } from './inversify.types';
 import { App } from '../modules/app';
 import { SharedService } from '../common/services/shared.service';
 import { StatsLoggerService } from '../modules/stats/stats_logger.service';
-import { TextLogRepository } from '../repository/textLogRepo';
 import { CommandService } from '../modules/commands/commands.service';
 import { UtilityService } from '../common/services/utils.service';
 import { ConversationService } from '../modules/conversation/conversation.service';
@@ -13,7 +12,6 @@ import { ConversationRepository } from '../repository/conversation.repo';
 import { GuildRepo } from '../repository/guild.repo';
 import { FeatureFlagService } from '../common/services/featureFlag.service';
 import { PortalService } from '../modules/portal/portal.service';
-import { GamesService } from '../modules/games/games.service';
 import { RolesService } from '../modules/roles/roles.service';
 import { RedisService } from '../common/services/redis.service';
 import { QueueService } from '../common/services/queue.service';
@@ -25,7 +23,6 @@ import { DiscordTemplateService } from '../common/services/discord_template.serv
 import { TemplateRepo } from '../repository/template.repo';
 import { LanguageFilter } from '../modules/language/languageFilter.service';
 import { AxiosService } from '../common/services/axios.service';
-import { RPSGameService } from '../modules/games/RPSGame.service';
 import { DataStructure } from '../common/services/dataStructure.service';
 import { DiscordActionService } from '../common/services/discord_action.service';
 import { FeaturesRepo } from '../modules/features/repo/features.repo';
@@ -37,19 +34,12 @@ const container = new Container({
 /**App services */
 container.bind<App>(TYPES.App).to(App);
 container.bind<LanguageFilter>(TYPES.LanguageFilter).to(LanguageFilter);
-container
-  .bind<TextLogRepository>(TYPES.TextLogRepository)
-  .to(TextLogRepository);
 container.bind<CommandService>(TYPES.CommandService).to(CommandService);
 container.bind<PortalService>(TYPES.PortalService).to(PortalService);
 container.bind<RolesService>(TYPES.RolesService).to(RolesService);
 container.bind<GuildService>(TYPES.GuildService).to(GuildService);
 container.bind<WelcomerService>(TYPES.WelcomerService).to(WelcomerService);
 container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
-
-/**Game Services */
-container.bind<GamesService>(TYPES.GameService).to(GamesService);
-container.bind<RPSGameService>(TYPES.RPSGameService).to(RPSGameService);
 
 /**Conversation Service */
 container

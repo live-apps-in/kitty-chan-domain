@@ -10,7 +10,6 @@ import {
   IMessageUpdate,
 } from '../common/interface/shared.interface';
 import { CommandService } from '../modules/commands/commands.service';
-import { GamesService } from '../modules/games/games.service';
 import { GuildService } from '../modules/guild/guild.service';
 import { StatsLoggerService } from '../modules/stats/stats_logger.service';
 import { PortalService } from '../modules/portal/portal.service';
@@ -38,7 +37,6 @@ export class EventsHandler implements EventsServiceHandlers {
     @inject(TYPES.FeatureFlagService)
     private readonly featureFlagService: FeatureFlagService,
     @inject(TYPES.PortalService) private readonly portalService: PortalService,
-    @inject(TYPES.GameService) private readonly gameService: GamesService,
     @inject(TYPES.RolesService) private readonly rolesService: RolesService,
     @inject(TYPES.GuildService) private readonly guildService: GuildService,
     @inject(TYPES.ServiceStatus) private readonly serviceStatus: ServiceStatus,
@@ -84,9 +82,6 @@ export class EventsHandler implements EventsServiceHandlers {
 
     ///Games
     this.gameService.call(guildMessage);
-
-    ///Log Good Text Count
-    this.statsLoggerService.text_count_logger(guildMessage);
   }
 
   /**Guild Message Update */

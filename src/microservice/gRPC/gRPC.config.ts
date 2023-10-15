@@ -1,7 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import { CommandService } from '../../modules/commands/commands.service';
-import { GamesService } from '../../modules/games/games.service';
 import { GuildService } from '../../modules/guild/guild.service';
 import { StatsLoggerService } from '../../modules/stats/stats_logger.service';
 import { PortalService } from '../../modules/portal/portal.service';
@@ -39,7 +38,6 @@ const featureFlagService = container.get<FeatureFlagService>(
   TYPES.FeatureFlagService,
 );
 const portalService = container.get<PortalService>(TYPES.PortalService);
-const gameService = container.get<GamesService>(TYPES.GameService);
 const rolesService = container.get<RolesService>(TYPES.RolesService);
 const guildService = container.get<GuildService>(TYPES.GuildService);
 const serviceStatus = container.get<ServiceStatus>(TYPES.ServiceStatus);
@@ -52,7 +50,6 @@ const eventsGrpcController = new EventsHandler(
   commandService,
   featureFlagService,
   portalService,
-  gameService,
   rolesService,
   guildService,
   serviceStatus,
