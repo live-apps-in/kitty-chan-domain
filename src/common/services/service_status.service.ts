@@ -20,7 +20,8 @@ interface ServiceStats {
 @injectable()
 export class ServiceStatus {
   private kittyChanPingUrl = 'https://api.kittychan.live/';
-  private kitty_chan_id = process.env.KITTY_CHAN_ID;
+  private DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+
   constructor(
     @inject(TYPES.GuildRepo) private readonly guildRepo: GuildRepo,
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
@@ -59,7 +60,7 @@ export class ServiceStatus {
     const messageChunk = message.split(' ');
 
     ///Check if kitty chan tagged
-    if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return false;
+    if (messageChunk[0] !== `<@${this.DISCORD_CLIENT_ID}>`) return false;
 
     /**Service Availability */
     if (messageChunk[1] === 'ping') {

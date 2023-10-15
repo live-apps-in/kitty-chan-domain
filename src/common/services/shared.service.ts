@@ -38,7 +38,7 @@ export class SharedService {
 
   ////Extract Info from raw events
   extractGuildFromRaw(event) {
-    const isBot = process.env.KITTY_CHAN_ID === event.d.user_id;
+    const isBot = process.env.DISCORD_CLIENT_ID === event.d.user_id;
     const guild = {
       guildId: event.d.guild_id,
       channelId: event.d.channel_id,

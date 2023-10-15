@@ -10,7 +10,7 @@ import { liveClient } from '../app';
 
 @injectable()
 export class CommandService {
-  kitty_chan_id = process.env.KITTY_CHAN_ID;
+  private CLIENT_ID = process.env.DISCORD_CLIENT_ID;
   constructor(
     @inject(TYPES.UtilityService)
     private readonly utilityService: UtilityService,
@@ -28,8 +28,7 @@ export class CommandService {
       return element !== '';
     });
 
-    ///Check if kitty tagged
-    if (messageChunk[0] !== `<@${this.kitty_chan_id}>`) return false;
+    if (messageChunk[0] !== `<@${this.CLIENT_ID}>`) return false;
 
     ///Flip a coin
     if (messageChunk[1] === 'flip') {
@@ -48,7 +47,7 @@ export class CommandService {
      */
     if (messageChunk[1] === 'help') {
       const content = `Hey there! I'm kitty chan. I'm currently at very early stage of development.
-You will be invited when a stable version is released :)`;
+  You will be invited when a stable version is released :)`;
 
       await liveClient.message.reply(guild.channelId, guild.messageId, content);
       return true;
