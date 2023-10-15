@@ -19,7 +19,7 @@ interface ServiceStats {
 /**Retrieve Service Availability and Latency */
 @injectable()
 export class ServiceStatus {
-  private kittyChanPingUrl = 'https://api.kittychan.live/';
+  private kittyChanAPI = 'https://api.kittychan.live/';
   private DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 
   constructor(
@@ -272,7 +272,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
     const start = performance.now();
     const rest = await this.axiosService.axiosInstance({
       method: 'get',
-      url: this.kittyChanPingUrl,
+      url: this.kittyChanAPI,
     });
     const end = performance.now();
 

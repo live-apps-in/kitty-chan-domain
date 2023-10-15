@@ -62,8 +62,8 @@ export class EventsHandler implements EventsServiceHandlers {
     this.statsLoggerService.log_message_count(guildMessage);
 
     ///Service Stats
-    // const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
-    // if (serviceStats) return;
+    const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
+    if (serviceStats) return;
 
     ///Check Portal Intent
     const isPortal = await this.portalService.validate_channel(guildMessage);
