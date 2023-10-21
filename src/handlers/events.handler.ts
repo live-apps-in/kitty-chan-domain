@@ -23,7 +23,7 @@ import { WelcomerService } from '../modules/greet/welcomer.service';
 import { LoggerService } from '../modules/logger/logger.service';
 import { liveClient } from '../modules/app';
 import { LanguageFilter } from '../modules/language/languageFilter.service';
-import { DiscordTemplateTarget } from '../common/enum/discord_template.enum';
+import { DiscordEventsType } from '../common/enum/discord_events.enum';
 
 @injectable()
 export class EventsHandler implements EventsServiceHandlers {
@@ -87,7 +87,7 @@ export class EventsHandler implements EventsServiceHandlers {
     const message = call.request as IMessageUpdate;
     this.loggerService.messageUpdateDelete(
       message,
-      DiscordTemplateTarget.messageUpdate,
+      DiscordEventsType.messageUpdate,
     );
   }
 
@@ -101,7 +101,7 @@ export class EventsHandler implements EventsServiceHandlers {
     const message = call.request as IMessageDelete;
     this.loggerService.messageUpdateDelete(
       message,
-      DiscordTemplateTarget.messageDelete,
+      DiscordEventsType.messageDelete,
     );
   }
 

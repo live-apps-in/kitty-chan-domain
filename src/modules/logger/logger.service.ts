@@ -3,16 +3,13 @@ import {
   IGuildMemberUpdate,
   IMessageUpdate,
 } from '../../common/interface/shared.interface';
-import DiscordTemplateModel from '../template/model/discord_templates.model';
-import {
-  DiscordTemplateType,
-  DiscordTemplateTarget,
-} from '../../common/enum/discord_template.enum';
+import { DiscordTemplateType } from '../../common/enum/discord_template.enum';
 import { liveClient } from '../app';
 import { TYPES } from '../../core/inversify.types';
 import { DiscordTemplateService } from '../../common/services/discord_template.service';
 import Features from '../features/model/features.model';
 import { TemplateRepo } from '../../repository/template.repo';
+import { DiscordEventsType } from '../../common/enum/discord_events.enum';
 
 @injectable()
 export class LoggerService {
@@ -25,7 +22,7 @@ export class LoggerService {
   /**Guild Message Update Logger */
   async messageUpdateDelete(
     message: IMessageUpdate,
-    target: DiscordTemplateTarget,
+    target: DiscordEventsType,
   ) {
     const validateFF = await this.validateLoggerFF(message.guildId, target);
     if (!validateFF) {
@@ -34,7 +31,6 @@ export class LoggerService {
 
     const getLoggerConfig = await this.buildTemplate(
       validateFF.templateId,
-      target,
       message,
     );
 
@@ -73,9 +69,7 @@ export class LoggerService {
     const fetchUpdates = this.findMemberUpdateProps(memberCache, member);
     if (!fetchUpdates.hasUpdate) return;
 
-    const guild = await liveClient.guild.fetch(member.guildId, {
-      expiry: 3600,
-    });
+    const guild = await liveClient.guild.fetch(member.guildId);
 
     /**Avatar */
     if (fetchUpdates.avatar) {
@@ -87,10 +81,7 @@ export class LoggerService {
         return;
       }
 
-      const template = await this.getTemplateOrGetDefault(
-        featTemplateId,
-        DiscordTemplateTarget.memberAvatarUpdate,
-      );
+      const template = await this.getTemplate(featTemplateId);
 
       const buildTemplate = {
         ...template.embed,
@@ -122,10 +113,7 @@ export class LoggerService {
         return;
       }
 
-      const template = await this.getTemplateOrGetDefault(
-        featTemplateId,
-        DiscordTemplateTarget.memberUsernameUpdate,
-      );
+      const template = await this.getTemplate(featTemplateId);
 
       const buildTemplate = {
         ...template.embed,
@@ -161,10 +149,7 @@ export class LoggerService {
         return;
       }
 
-      const template = await this.getTemplateOrGetDefault(
-        featTemplateId,
-        DiscordTemplateTarget.memberNicknameUpdate,
-      );
+      const template = await this.getTemplate(featTemplateId);
 
       const buildTemplate = {
         ...template.embed,
@@ -190,59 +175,56 @@ export class LoggerService {
 
     /**Roles */
     const { role } = fetchUpdates;
-    let roleFeatureChannelId: string;
+    let getLoggerConfig;
+    let validateFF;
 
     if (role.added || role.removed) {
       if (fetchUpdates.role.added) {
-        const featStatus = features?.logger?.memberAddRole?.isActive;
-        const featChannelId = features?.logger?.memberAddRole?.channelId;
-        const featTemplateId = features?.logger?.memberAddRole?.templateId;
-        if (!featStatus || !featChannelId) {
+        validateFF = await this.validateLoggerFF(
+          member.guildId,
+          DiscordEventsType.memberAddRole,
+        );
+
+        if (!validateFF) {
           return;
         }
 
-        var template = await this.getTemplateOrGetDefault(
-          featTemplateId,
-          DiscordTemplateTarget.memberAddRole,
+        getLoggerConfig = await this.buildTemplate(
+          validateFF.templateId,
+          member,
+        );
+      } else if (fetchUpdates.role.removed) {
+        validateFF = await this.validateLoggerFF(
+          member.guildId,
+          DiscordEventsType.memberRemoveRole,
         );
 
-        roleFeatureChannelId = featChannelId;
-      } else {
-        const featStatus = features?.logger?.memberRemoveRole?.isActive;
-        const featChannelId = features?.logger?.memberRemoveRole?.channelId;
-        const featTemplateId = features?.logger?.memberRemoveRole?.templateId;
-
-        if (!featStatus || !featChannelId) {
+        if (!validateFF) {
           return;
         }
 
-        var template = await this.getTemplateOrGetDefault(
-          featTemplateId,
-          DiscordTemplateTarget.memberRemoveRole,
+        getLoggerConfig = await this.buildTemplate(
+          validateFF.templateId,
+          member,
         );
-
-        roleFeatureChannelId = featChannelId;
       }
 
-      if (!template) return;
+      if (!getLoggerConfig) {
+        return;
+      }
 
-      const buildTemplate = {
-        ...template.embed,
-      };
+      if (getLoggerConfig.type === DiscordTemplateType.plain) {
+        await liveClient.message.send(
+          validateFF.channelId,
+          getLoggerConfig.plainContent,
+        );
 
-      const payload = {
-        ...member,
-        guildName: guild.name,
-        roleId: role.added ? role.added : role.removed,
-        editedAt: Math.floor(Date.now() / 1000).toString(),
-      };
-
-      const embeds: any = await this.templateService.fillEmbedTemplate(
-        payload,
-        buildTemplate,
-      );
-
-      await liveClient.message.sendEmbed(roleFeatureChannelId, [embeds]);
+        return;
+      } else {
+        await liveClient.message.sendEmbed(validateFF.channelId, [
+          getLoggerConfig.embed,
+        ]);
+      }
 
       return;
     }
@@ -289,7 +271,7 @@ export class LoggerService {
     }
 
     // Compare nickname
-    if ((oldMember.nick && !nickname) || nickname !== oldMember?.nick) {
+    if ((oldMember?.nick || nickname) && nickname !== oldMember.nick) {
       changes.nickname = true;
     }
 
@@ -298,23 +280,14 @@ export class LoggerService {
       changes.avatar = true;
     }
 
-    if (
-      changes.role.added ||
-      changes.role.removed ||
-      changes.username ||
-      changes.nickname ||
-      changes.avatar
-    ) {
+    if (Object.values(changes).some((value) => value !== undefined)) {
       changes.hasUpdate = true;
     }
 
     return changes;
   }
 
-  private async validateLoggerFF(
-    guildId: string,
-    target: DiscordTemplateTarget,
-  ) {
+  private async validateLoggerFF(guildId: string, target: DiscordEventsType) {
     const features = await Features.findOne({ guildId });
 
     const status = features?.logger?.[target]?.isActive;
@@ -331,26 +304,19 @@ export class LoggerService {
     };
   }
 
-  private async buildTemplate(
-    templateId: string,
-    templateTarget: DiscordTemplateTarget,
-    message: IMessageUpdate,
-  ) {
+  private async buildTemplate(templateId: string, content: any) {
     let res: { type: DiscordTemplateType; plainContent?: string; embed?: any };
 
-    const template = await this.getTemplateOrGetDefault(
-      templateId,
-      templateTarget,
-    );
+    const template = await this.getTemplate(templateId);
 
     if (!template) {
       return;
     }
 
-    const guild = await liveClient.guild.fetch(message.guildId);
+    const guild = await liveClient.guild.fetch(content.guildId);
 
     const mutatedMessage = {
-      ...message,
+      ...content,
       guildName: guild.name,
     };
 
@@ -366,9 +332,9 @@ export class LoggerService {
       };
     } else if (template.type === DiscordTemplateType.embed) {
       //Convert milliseconds to seconds
-      const dateObject = new Date(Math.floor(message.editedAt / 1000) * 1000);
+      const dateObject = new Date(Math.floor(content.editedAt / 1000) * 1000);
       const unixTimestampInSec = dateObject.getTime() / 1000;
-      message.editedAt = unixTimestampInSec;
+      content.editedAt = unixTimestampInSec;
 
       const embed: any = await this.templateService.fillEmbedTemplate(
         mutatedMessage,
@@ -384,17 +350,8 @@ export class LoggerService {
     return res;
   }
 
-  /**Get Template or get default */
-  private async getTemplateOrGetDefault(templateId = null, target: string) {
-    let template = await this.templateRepo.findById(templateId);
-
-    if (!template) {
-      template = await DiscordTemplateModel.findOne({
-        type: DiscordTemplateType.embed,
-        target,
-      });
-    }
-
-    return template;
+  /**Get Template */
+  private async getTemplate(templateId: string = null) {
+    return this.templateRepo.findById(templateId);
   }
 }
