@@ -243,5 +243,7 @@ export class EventsHandler implements EventsServiceHandlers {
   ) {
     callback(null);
     const guildPresence = call.request as IGuildPresence;
+
+    this.guildService.guildPresenceUpdate(guildPresence);
   }
 }

@@ -5,6 +5,8 @@ export interface User {
   discordId: string;
   discord: any;
   guilds: string[];
+  activityStatus: string;
+  activities: any[];
 }
 
 const User: Schema = new Schema({
@@ -12,6 +14,8 @@ const User: Schema = new Schema({
   discordId: String,
   Discord: Object,
   guilds: [String],
+  activityStatus: String,
+  activities: Array<any>,
 });
 
 export default model<User>('users', User);

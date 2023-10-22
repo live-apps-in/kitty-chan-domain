@@ -2,12 +2,13 @@ import { inject, injectable } from 'inversify';
 import {
   IBasicGuild,
   IGuildMember,
+  IGuildPresence,
 } from '../../common/interface/shared.interface';
 import Guild from './model/guild.model';
 import { TYPES } from '../../core/inversify.types';
 import { RolesService } from '../roles/roles.service';
 import { RedisService } from '../../common/services/redis.service';
-import userModel from './model/user.model';
+import User from './model/user.model';
 import { liveClient } from '../app';
 import Features from '../features/model/features.model';
 
@@ -103,17 +104,17 @@ export class GuildService {
   }
 
   async guildMemberCreate(guildMember: IGuildMember) {
-    const user = await userModel.findOne({ discordId: guildMember.userId });
+    const user = await User.findOne({ discordId: guildMember.userId });
 
     if (user) {
-      await userModel.updateOne(
+      await User.updateOne(
         { _id: user._id },
         {
           $addToSet: { guilds: guildMember.guildId },
         },
       );
     } else {
-      await userModel.insertMany({
+      await User.insertMany({
         name: guildMember.userName,
         discordId: guildMember.userId,
         guilds: [guildMember.guildId],
@@ -130,7 +131,7 @@ export class GuildService {
 
   async guildMemberDelete(guildMember: IGuildMember) {
     await Promise.all([
-      userModel.updateOne(
+      User.updateOne(
         { discordId: guildMember.userId },
         {
           $pull: { guilds: guildMember.guildId },
@@ -143,5 +144,17 @@ export class GuildService {
         },
       ),
     ]);
+  }
+
+  async guildPresenceUpdate(presence: IGuildPresence) {
+    await User.updateOne(
+      { 'discord.id': presence.userId },
+      {
+        $set: {
+          activityStatus: presence.status,
+          activities: presence.activities,
+        },
+      },
+    );
   }
 }
