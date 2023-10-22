@@ -132,3 +132,20 @@ export interface IEmoji {
   animated: boolean;
   createdAt?: Date;
 }
+
+/**Guild Presence */
+export interface IGuildPresence {
+  guildId: string;
+  userId: string;
+  status: string;
+  activities: IGuildPresenceActivities[];
+}
+
+export interface IGuildPresenceActivities {
+  name: string;
+  type: number;
+  url: string;
+  details: string;
+  state: string;
+  createdTimestamp: string;
+}

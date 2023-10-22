@@ -26,6 +26,8 @@ export interface ProtoGrpcType {
     IGuildMessage: MessageTypeDefinition;
     IGuildMessageDelete: MessageTypeDefinition;
     IGuildMessageUpdate: MessageTypeDefinition;
+    IGuildPresenceActivities: MessageTypeDefinition;
+    IGuildPresenceUpdate: MessageTypeDefinition;
     IMessageAttachments: MessageTypeDefinition;
     IMessageMentionRoles: MessageTypeDefinition;
     IMessageMentionUsers: MessageTypeDefinition;

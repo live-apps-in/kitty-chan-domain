@@ -5,6 +5,7 @@ import {
   IGuildMember,
   IGuildMemberUpdate,
   IGuildMessage,
+  IGuildPresence,
   IMessageDelete,
   IMessageReaction,
   IMessageUpdate,
@@ -233,5 +234,14 @@ export class EventsHandler implements EventsServiceHandlers {
       guildMember,
       DiscordEventsType.memberDelete,
     );
+  }
+
+  /**Guild Presence Update */
+  async guildPresenceUpdate(
+    call: ServerUnaryCall<any, NoResponse>,
+    callback: sendUnaryData<any>,
+  ) {
+    callback(null);
+    const guildPresence = call.request as IGuildPresence;
   }
 }

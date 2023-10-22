@@ -13,6 +13,7 @@ service EventsService{
   rpc guildMemberAdd (IGuildMember) returns (NoResponse);
   rpc guildMemberRemove (IGuildMember) returns (NoResponse);
   rpc guildMemberUpdate (IGuildMemberUpdate) returns (NoResponse);
+  rpc guildPresenceUpdate (IGuildPresenceUpdate) returns (NoResponse);
 }
 
 
@@ -95,7 +96,7 @@ message IBasicGuild{
   string guildId = 1;
   string guildName = 2;
   string guildOwner = 3;
-  string guildMembersCount = 4;
+  int64 guildMembersCount = 4;
   string guildIcon = 5;
 }
 
@@ -131,4 +132,20 @@ message IEmoji{
   string id = 2;
   string name = 3;
   string createdAt = 4;
+}
+
+message IGuildPresenceUpdate{
+  string guildId = 1;
+  string userId = 2;
+  string status = 3;
+  repeated IGuildPresenceActivities activities = 4;
+}
+
+message IGuildPresenceActivities{
+  string name = 1;
+  int32 type = 2;
+  string url = 3;
+  string details = 4;
+  string state = 5;
+  string createdTimestamp = 6;
 }
