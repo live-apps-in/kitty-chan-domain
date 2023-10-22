@@ -29,33 +29,15 @@ export class LoggerService {
       return;
     }
 
-    const getLoggerConfig = await this.buildTemplate(
+    await this.sendTemplateMessage(
+      validateFF.channelId,
       validateFF.templateId,
       message,
     );
-
-    if (!getLoggerConfig) {
-      return;
-    }
-
-    if (getLoggerConfig.type === DiscordTemplateType.plain) {
-      await liveClient.message.send(
-        validateFF.channelId,
-        getLoggerConfig.plainContent,
-      );
-
-      return;
-    } else if (getLoggerConfig.embed) {
-      await liveClient.message.sendEmbed(validateFF.channelId, [
-        getLoggerConfig.embed,
-      ]);
-    }
   }
 
   /**Guild Member Update Logger */
   async memberUpdate(member: IGuildMemberUpdate) {
-    const features = await Features.findOne({ guildId: member.guildId });
-
     const memberCache = await liveClient.member.fetch(
       member.guildId,
       member.userId,
@@ -69,113 +51,73 @@ export class LoggerService {
     const fetchUpdates = this.findMemberUpdateProps(memberCache, member);
     if (!fetchUpdates.hasUpdate) return;
 
-    const guild = await liveClient.guild.fetch(member.guildId);
-
     /**Avatar */
     if (fetchUpdates.avatar) {
-      const featStatus = features?.logger?.memberAvatarUpdate?.isActive;
-      const featChannelId = features?.logger?.memberAvatarUpdate?.channelId;
-      const featTemplateId = features?.logger?.memberAvatarUpdate?.templateId;
-
-      if (!featStatus || !featChannelId) {
+      const validateFF = await this.validateLoggerFF(
+        member.guildId,
+        DiscordEventsType.memberAvatarUpdate,
+      );
+      if (!validateFF) {
         return;
       }
 
-      const template = await this.getTemplate(featTemplateId);
-
-      const buildTemplate = {
-        ...template.embed,
-      };
-
-      const payload = {
-        ...member,
-        guildName: guild.name,
-        editedAt: Math.floor(Date.now() / 1000).toString(),
-      };
-
-      const embeds: any = await this.templateService.fillEmbedTemplate(
-        payload,
-        buildTemplate,
+      return this.sendTemplateMessage(
+        validateFF.channelId,
+        validateFF.templateId,
+        member,
       );
-
-      await liveClient.message.sendEmbed(featChannelId, [embeds]);
-
-      return;
     }
 
     /**Username */
     if (fetchUpdates.username) {
-      const featStatus = features?.logger?.memberUsernameUpdate?.isActive;
-      const featChannelId = features?.logger?.memberUsernameUpdate?.channelId;
-      const featTemplateId = features?.logger?.memberUsernameUpdate?.templateId;
-
-      if (!featStatus || !featChannelId) {
+      const validateFF = await this.validateLoggerFF(
+        member.guildId,
+        DiscordEventsType.memberUsernameUpdate,
+      );
+      if (!validateFF) {
         return;
       }
 
-      const template = await this.getTemplate(featTemplateId);
-
-      const buildTemplate = {
-        ...template.embed,
-      };
-
-      const payload = {
+      const mutatedMember = {
         ...member,
-        guildName: guild.name,
         oldUsername:
           `${memberCache.user.username}#${memberCache.user.discriminator}` ||
           'N/A',
         newUsername: member.username,
-        editedAt: Math.floor(Date.now() / 1000).toString(),
       };
 
-      const embeds: any = await this.templateService.fillEmbedTemplate(
-        payload,
-        buildTemplate,
+      return this.sendTemplateMessage(
+        validateFF.channelId,
+        validateFF.templateId,
+        mutatedMember,
       );
-
-      await liveClient.message.sendEmbed(featChannelId, [embeds]);
-
-      return;
     }
 
     /**Nickname */
     if (fetchUpdates.nickname) {
-      const featStatus = features?.logger?.memberNicknameUpdate?.isActive;
-      const featChannelId = features?.logger?.memberNicknameUpdate?.channelId;
-      const featTemplateId = features?.logger?.memberNicknameUpdate?.templateId;
-
-      if (!featStatus || !featChannelId) {
+      const validateFF = await this.validateLoggerFF(
+        member.guildId,
+        DiscordEventsType.memberNicknameUpdate,
+      );
+      if (!validateFF) {
         return;
       }
 
-      const template = await this.getTemplate(featTemplateId);
-
-      const buildTemplate = {
-        ...template.embed,
-      };
-
-      const payload = {
+      const mutatedMember = {
         ...member,
-        guildName: guild.name,
         oldNickname: memberCache.nick || '',
         newNickname: member.nickname || memberCache.user.display_name,
-        editedAt: Math.floor(Date.now() / 1000).toString(),
       };
 
-      const embeds: any = await this.templateService.fillEmbedTemplate(
-        payload,
-        buildTemplate,
+      return this.sendTemplateMessage(
+        validateFF.channelId,
+        validateFF.templateId,
+        mutatedMember,
       );
-
-      await liveClient.message.sendEmbed(featChannelId, [embeds]);
-
-      return;
     }
 
     /**Roles */
     const { role } = fetchUpdates;
-    let getLoggerConfig;
     let validateFF;
 
     if (role.added || role.removed) {
@@ -188,11 +130,6 @@ export class LoggerService {
         if (!validateFF) {
           return;
         }
-
-        getLoggerConfig = await this.buildTemplate(
-          validateFF.templateId,
-          member,
-        );
       } else if (fetchUpdates.role.removed) {
         validateFF = await this.validateLoggerFF(
           member.guildId,
@@ -202,31 +139,13 @@ export class LoggerService {
         if (!validateFF) {
           return;
         }
-
-        getLoggerConfig = await this.buildTemplate(
-          validateFF.templateId,
-          member,
-        );
       }
 
-      if (!getLoggerConfig) {
-        return;
-      }
-
-      if (getLoggerConfig.type === DiscordTemplateType.plain) {
-        await liveClient.message.send(
-          validateFF.channelId,
-          getLoggerConfig.plainContent,
-        );
-
-        return;
-      } else {
-        await liveClient.message.sendEmbed(validateFF.channelId, [
-          getLoggerConfig.embed,
-        ]);
-      }
-
-      return;
+      return this.sendTemplateMessage(
+        validateFF.channelId,
+        validateFF.templateId,
+        member,
+      );
     }
   }
 
@@ -304,9 +223,16 @@ export class LoggerService {
     };
   }
 
-  private async buildTemplate(templateId: string, content: any) {
-    let res: { type: DiscordTemplateType; plainContent?: string; embed?: any };
+  /**Get Template */
+  private async getTemplate(templateId: string = null) {
+    return this.templateRepo.findById(templateId);
+  }
 
+  private async sendTemplateMessage(
+    channelId: string,
+    templateId: string,
+    content: any,
+  ) {
     const template = await this.getTemplate(templateId);
 
     if (!template) {
@@ -314,44 +240,23 @@ export class LoggerService {
     }
 
     const guild = await liveClient.guild.fetch(content.guildId);
-
-    const mutatedMessage = {
-      ...content,
-      guildName: guild.name,
-    };
+    const guildName = guild.name;
 
     if (template.type === DiscordTemplateType.plain) {
       const plainContent = await this.templateService.fillPlainTemplate(
-        mutatedMessage,
+        { ...content, guildName },
         template.content,
       );
 
-      res = {
-        type: DiscordTemplateType.plain,
-        plainContent,
-      };
+      await liveClient.message.send(channelId, plainContent);
     } else if (template.type === DiscordTemplateType.embed) {
-      //Convert milliseconds to seconds
-      const dateObject = new Date(Math.floor(content.editedAt / 1000) * 1000);
-      const unixTimestampInSec = dateObject.getTime() / 1000;
-      content.editedAt = unixTimestampInSec;
+      content.guildName = guildName;
 
-      const embed: any = await this.templateService.fillEmbedTemplate(
-        mutatedMessage,
-        { ...template.embed },
-      );
+      const embed: any = await this.templateService.fillEmbedTemplate(content, {
+        ...template.embed,
+      });
 
-      res = {
-        type: DiscordTemplateType.embed,
-        embed,
-      };
+      await liveClient.message.sendEmbed(channelId, [embed]);
     }
-
-    return res;
-  }
-
-  /**Get Template */
-  private async getTemplate(templateId: string = null) {
-    return this.templateRepo.findById(templateId);
   }
 }
