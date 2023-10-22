@@ -30,7 +30,7 @@ export class GuildService {
           $set: {
             name: guildName,
             icon: guildIcon,
-            membersCount: guild.guildMembersCount
+            membersCount: guild.guildMembersCount,
           },
         },
       );
@@ -42,7 +42,7 @@ export class GuildService {
       name: guildName,
       guildId,
       ownerId: guild.guildOwner,
-      membersCount: guild.guildMembersCount
+      membersCount: guild.guildMembersCount,
     });
 
     /**Create Features for Guild */
@@ -119,14 +119,29 @@ export class GuildService {
         guilds: [guildMember.guildId],
       });
     }
+
+    await Guild.updateOne(
+      { guildId: guildMember.guildId },
+      {
+        $inc: { membersCount: 1 },
+      },
+    );
   }
 
   async guildMemberDelete(guildMember: IGuildMember) {
-    await userModel.updateOne(
-      { discordId: guildMember.userId },
-      {
-        $pull: { guilds: guildMember.guildId },
-      },
-    );
+    await Promise.all([
+      userModel.updateOne(
+        { discordId: guildMember.userId },
+        {
+          $pull: { guilds: guildMember.guildId },
+        },
+      ),
+      Guild.updateOne(
+        { guildId: guildMember.guildId },
+        {
+          $inc: { membersCount: -1 },
+        },
+      ),
+    ]);
   }
 }

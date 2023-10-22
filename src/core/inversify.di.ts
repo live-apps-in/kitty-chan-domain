@@ -4,7 +4,7 @@ import { Container } from 'inversify';
 import { TYPES } from './inversify.types';
 import { App } from '../modules/app';
 import { SharedService } from '../common/services/shared.service';
-import { StatsLoggerService } from '../modules/stats/stats_logger.service';
+import { GuildStatsService } from '../modules/stats/guild_stats.service';
 import { CommandService } from '../modules/commands/commands.service';
 import { UtilityService } from '../common/services/utils.service';
 import { ConversationService } from '../modules/conversation/conversation.service';
@@ -60,8 +60,8 @@ container.bind<AxiosService>(TYPES.AxiosService).to(AxiosService);
 container.bind<RedisService>(TYPES.RedisService).to(RedisService);
 container.bind<QueueService>(TYPES.QueueService).to(QueueService);
 container
-  .bind<StatsLoggerService>(TYPES.StatsLoggerService)
-  .to(StatsLoggerService);
+  .bind<GuildStatsService>(TYPES.GuildStatsService)
+  .to(GuildStatsService);
 container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService);
 container
   .bind<FeatureFlagService>(TYPES.FeatureFlagService)

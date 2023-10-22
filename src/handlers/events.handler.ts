@@ -11,7 +11,7 @@ import {
 } from '../common/interface/shared.interface';
 import { CommandService } from '../modules/commands/commands.service';
 import { GuildService } from '../modules/guild/guild.service';
-import { StatsLoggerService } from '../modules/stats/stats_logger.service';
+import { GuildStatsService } from '../modules/stats/guild_stats.service';
 import { PortalService } from '../modules/portal/portal.service';
 import { RolesService } from '../modules/roles/roles.service';
 import { FeatureFlagService } from '../common/services/featureFlag.service';
@@ -30,8 +30,8 @@ export class EventsHandler implements EventsServiceHandlers {
   [name: string]: any;
   constructor(
     @inject(TYPES.LanguageFilter) private readonly langFilter: LanguageFilter,
-    @inject(TYPES.StatsLoggerService)
-    private readonly statsLoggerService: StatsLoggerService,
+    @inject(TYPES.GuildStatsService)
+    private readonly guildStatsService: GuildStatsService,
     @inject(TYPES.CommandService)
     private readonly commandService: CommandService,
     @inject(TYPES.FeatureFlagService)
@@ -58,8 +58,11 @@ export class EventsHandler implements EventsServiceHandlers {
     //Validate if Bot message
     if (guildMessage.isBot) return;
 
-    //Log
-    this.statsLoggerService.log_message_count(guildMessage);
+    //Guild Stats Logger
+    this.guildStatsService.log_message(
+      guildMessage,
+      DiscordEventsType.messageCreate,
+    );
 
     ///Service Stats
     const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
@@ -85,7 +88,15 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
 
     const message = call.request as IMessageUpdate;
+
+    //Logger
     this.loggerService.messageUpdateDelete(
+      message,
+      DiscordEventsType.messageUpdate,
+    );
+
+    //Guild Stats
+    this.guildStatsService.log_message(
       message,
       DiscordEventsType.messageUpdate,
     );
@@ -99,7 +110,13 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
 
     const message = call.request as IMessageDelete;
+
     this.loggerService.messageUpdateDelete(
+      message,
+      DiscordEventsType.messageDelete,
+    );
+
+    this.guildStatsService.log_message(
       message,
       DiscordEventsType.messageDelete,
     );
@@ -172,18 +189,11 @@ export class EventsHandler implements EventsServiceHandlers {
 
     //Sync Guild Member
     this.guildService.guildMemberCreate(guildMember);
-  }
 
-  /**Guild Member Remove */
-  async guildMemberRemove(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-    const guildMember = call.request as IGuildMember;
-
-    //Sync Guild Member
-    this.guildService.guildMemberDelete(guildMember);
+    this.guildStatsService.log_member(
+      guildMember,
+      DiscordEventsType.memberCreate,
+    );
   }
 
   /**Guild Member Update */
@@ -201,5 +211,27 @@ export class EventsHandler implements EventsServiceHandlers {
     await liveClient.member.fetch(guildMember.guildId, guildMember.userId, {
       ignoreCache: true,
     });
+
+    this.guildStatsService.log_member(
+      guildMember,
+      DiscordEventsType.memberUpdate,
+    );
+  }
+
+  /**Guild Member Remove */
+  async guildMemberRemove(
+    call: ServerUnaryCall<any, NoResponse>,
+    callback: sendUnaryData<any>,
+  ) {
+    callback(null);
+    const guildMember = call.request as IGuildMember;
+
+    //Sync Guild Member
+    this.guildService.guildMemberDelete(guildMember);
+
+    this.guildStatsService.log_member(
+      guildMember,
+      DiscordEventsType.memberDelete,
+    );
   }
 }

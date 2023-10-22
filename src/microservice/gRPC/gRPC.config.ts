@@ -2,7 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import { CommandService } from '../../modules/commands/commands.service';
 import { GuildService } from '../../modules/guild/guild.service';
-import { StatsLoggerService } from '../../modules/stats/stats_logger.service';
+import { GuildStatsService } from '../../modules/stats/guild_stats.service';
 import { PortalService } from '../../modules/portal/portal.service';
 import { RolesService } from '../../modules/roles/roles.service';
 import { FeatureFlagService } from '../../common/services/featureFlag.service';
@@ -30,8 +30,8 @@ const proto = grpc.loadPackageDefinition(
 const languageFilterService = container.get<LanguageFilter>(
   TYPES.LanguageFilter,
 );
-const statsLoggerService = container.get<StatsLoggerService>(
-  TYPES.StatsLoggerService,
+const guildStatsService = container.get<GuildStatsService>(
+  TYPES.GuildStatsService,
 );
 const commandService = container.get<CommandService>(TYPES.CommandService);
 const featureFlagService = container.get<FeatureFlagService>(
@@ -46,7 +46,7 @@ const loggerService = container.get<LoggerService>(TYPES.LoggerService);
 
 const eventsGrpcController = new EventsHandler(
   languageFilterService,
-  statsLoggerService,
+  guildStatsService,
   commandService,
   featureFlagService,
   portalService,
