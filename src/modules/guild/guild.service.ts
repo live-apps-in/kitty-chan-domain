@@ -30,6 +30,7 @@ export class GuildService {
           $set: {
             name: guildName,
             icon: guildIcon,
+            membersCount: guild.guildMembersCount
           },
         },
       );
@@ -41,6 +42,7 @@ export class GuildService {
       name: guildName,
       guildId,
       ownerId: guild.guildOwner,
+      membersCount: guild.guildMembersCount
     });
 
     /**Create Features for Guild */
