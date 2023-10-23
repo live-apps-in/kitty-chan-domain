@@ -12,7 +12,7 @@ export interface User {
 const User: Schema = new Schema({
   name: String,
   discordId: String,
-  Discord: Object,
+  discord: Object,
   guilds: [String],
   activityStatus: String,
   activities: Array<any>,
