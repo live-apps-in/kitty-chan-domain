@@ -20,7 +20,7 @@ export const liveClient = new LiveClient({
 @injectable()
 export class App {
   /**
-   * All of sockets listeners are migrated from monolith to Events & Domain microservice
+   * All sockets listeners are migrated from monolith to Events & Domain microservice
    */
   async start() {
     /**
