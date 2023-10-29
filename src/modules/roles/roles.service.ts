@@ -22,50 +22,6 @@ export class ReactionRolesActionDto {
 
 @injectable()
 export class RolesService {
-  ///Trigger from LiveCord
-
-  ///Create Reaction Role
-  async createReactionRole(dto: ReactionRolesActionDto) {
-    const { channelId, rolesMapping } = dto;
-    const embed: DiscordEmbeds[] = [
-      {
-        ...dto.discordEmbedConfig,
-      },
-    ];
-
-    const res: any = await liveClient.message.sendEmbed(channelId, embed);
-
-    if (!res?.id)
-      throw new HttpException('Unable to create Reaction Role', 400);
-
-    ///Persist Role mapping
-    await ReactionRoles.insertMany({
-      name: dto.name,
-      guildId: dto.guildId,
-      channelId: dto.channelId,
-      rolesMapping: dto.rolesMapping,
-      messageId: res.id,
-    });
-
-    ///Map all emoji
-    for (let index = 0; index < rolesMapping.length; index++) {
-      const emoji = rolesMapping[index].emoji;
-
-      await liveClient.message.react(
-        channelId,
-        res.id,
-        emoji.type === 'standard'
-          ? encodeURIComponent(emoji.standardEmoji)
-          : encodeURIComponent(`${emoji.name}:${emoji.id}`),
-      );
-    }
-
-    const reactionRoleMessageRef = res.id;
-    return {
-      reactionRoleMessageRef,
-    };
-  }
-
   ///Update Reaction Role
   async updateReactionRole(dto: ReactionRolesActionDto) {
     const { channelId, rolesMapping, reactionRoleMessageRef } = dto;
@@ -100,7 +56,7 @@ export class RolesService {
 
     const emojiToBeUpdated: any[] = compareRolesMapping(
       rolesMapping,
-      reaction_role.rolesMapping,
+      reaction_role.roleEmojiMapping,
     );
 
     for (let index = 0; index < emojiToBeUpdated.length; index++) {
@@ -159,18 +115,20 @@ export class RolesService {
     let role: any;
 
     if (emojiType === 'guild') {
-      role = reaction_role.rolesMapping.find(
+      role = reaction_role.roleEmojiMapping.find(
         (e: any) => e.emoji.id === emoji.id,
       );
     }
 
     if (emojiType === 'standard') {
-      role = reaction_role.rolesMapping.find(
+      role = reaction_role.roleEmojiMapping.find(
         (e: any) => e.emoji.standardEmoji === emoji.name,
       );
     }
 
-    if (!role) return false;
+    if (!role) {
+      return false;
+    }
 
     ///Add role to User
     return liveClient.roles.set(reaction_role.guildId, userId, role.roleId);
@@ -186,19 +144,22 @@ export class RolesService {
 
     const emojiType = emoji.id ? 'guild' : 'standard';
     let role;
+
     if (emojiType === 'guild') {
-      role = reaction_role.rolesMapping.find(
+      role = reaction_role.roleEmojiMapping.find(
         (e: any) => e.emoji.id === emoji.id,
       );
     }
 
     if (emojiType === 'standard') {
-      role = reaction_role.rolesMapping.find(
+      role = reaction_role.roleEmojiMapping.find(
         (e: any) => e.emoji.standardEmoji === emoji.name,
       );
     }
 
-    if (!role) return false;
+    if (!role) {
+      return false;
+    }
 
     ///Add role to User
     await liveClient.roles.remove(reaction_role.guildId, userId, role.roleId);

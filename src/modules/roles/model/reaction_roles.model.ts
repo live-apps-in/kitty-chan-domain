@@ -4,7 +4,7 @@ export interface IReactionRole {
   name: string;
   guildId: string;
   channelId: string;
-  rolesMapping: string[];
+  roleEmojiMapping: any[];
   messageId: string;
 }
 
@@ -12,7 +12,7 @@ const ReactionRolesSchema = new Schema({
   name: String,
   guildId: String,
   channelId: String,
-  rolesMapping: Array<any>,
+  roleEmojiMapping: Array<any>,
   messageId: String,
 });
 
