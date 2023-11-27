@@ -9,6 +9,7 @@ import { DiscordEmbedField } from '../../types/discord.types';
 import { QueueService } from './queue.service';
 import { IGuildMessage } from '../interface/shared.interface';
 import { AxiosService } from './axios.service';
+import { esClient } from '../../database/elastic-search';
 
 interface ServiceStats {
   service: string;
@@ -35,19 +36,19 @@ export class ServiceStatus {
 
     const mongo = await this.mongo(guildId);
     const redis = await this.redis();
+    const es = await this.es();
     const ff = await this.featureFlag(guildId);
     const queue = await this.queue();
     const rest = await this.rest();
-    const liveCordgRPC = await this.liveCordgRPC();
     const liveAppsDiscordAPI = await this.liveAppsDiscordAPI(guildId);
     const liveAppsDiscordCache = await this.liveAppsDiscordCache(guildId);
 
     serviceStats.push(mongo);
     serviceStats.push(redis);
+    serviceStats.push(es);
     serviceStats.push(queue);
     serviceStats.push(ff);
     serviceStats.push(rest);
-    serviceStats.push(liveCordgRPC);
     serviceStats.push(liveAppsDiscordAPI);
     serviceStats.push(liveAppsDiscordCache);
 
@@ -151,7 +152,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
     } as ServiceStats;
   }
 
-  /**Redis - Check by Redis PING*/
+  /**Redis - Check using Redis Ping*/
   private async redis() {
     const start = performance.now();
     const getGuildFF = await this.redisService.ping();
@@ -167,6 +168,27 @@ Certain features won't work unless kitty chan can access these services. 💡`,
 
     return {
       service: 'Redis',
+      isAvailable: true,
+      latency: Number((end - start).toFixed(2)),
+    } as ServiceStats;
+  }
+
+  /**ES - Check using Elastic Search Ping*/
+  private async es() {
+    const start = performance.now();
+    const esPing = (await esClient.ping()).body;
+    const end = performance.now();
+
+    if (!esPing) {
+      return {
+        service: 'Elastic Search',
+        isAvailable: false,
+        latency: null,
+      } as ServiceStats;
+    }
+
+    return {
+      service: 'Elastic Search',
       isAvailable: true,
       latency: Number((end - start).toFixed(2)),
     } as ServiceStats;
@@ -288,17 +310,6 @@ Certain features won't work unless kitty chan can access these services. 💡`,
       service: 'REST Service',
       isAvailable: true,
       latency: Number((end - start).toFixed(2)),
-    } as ServiceStats;
-  }
-
-  /**LiveCord - make a gRPC call
-   * LiveCord microservice is deprecated
-   */
-  private async liveCordgRPC() {
-    return {
-      service: 'LiveCord gRPC (Deprecated)',
-      isAvailable: false,
-      latency: null,
     } as ServiceStats;
   }
 }

@@ -27,3 +27,6 @@ JWT_SECRET=meow
 #RabbitMQ
 RABBIT_USER=cat
 RABBIT_PASS=meow
+
+#Elastic Search
+ES_HOST=http://localhost:9200
