@@ -26,6 +26,7 @@ import { AxiosService } from '../common/services/axios.service';
 import { DataStructure } from '../common/services/dataStructure.service';
 import { DiscordActionService } from '../common/services/discord_action.service';
 import { FeaturesRepo } from '../modules/features/repo/features.repo';
+import { EsService } from '../common/services/es.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -74,5 +75,8 @@ container.bind<DataStructure>(TYPES.DataStructureService).to(DataStructure);
 container
   .bind<DiscordActionService>(TYPES.DiscordActionService)
   .to(DiscordActionService);
+container
+  .bind<EsService>(TYPES.EsService)
+  .to(EsService);
 
 export default container;

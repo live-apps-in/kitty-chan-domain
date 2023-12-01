@@ -2,6 +2,9 @@ import { injectable } from 'inversify';
 import 'dotenv/config';
 import { OnInit } from '../jobs/onInit';
 import { Client as LiveClient } from '@live-apps/discord';
+import container from '../core/inversify.di';
+import { EsService } from '../common/services/es.service';
+import { TYPES } from '../core/inversify.types';
 
 /**
  * LiveApps Discord Client Config
@@ -27,6 +30,7 @@ export class App {
      * On client bootstrap
      */
     ///Loaders - OnInit
-    await new OnInit().bootstrap();
+    const esClient = container.get<EsService>(TYPES.EsService);
+    await new OnInit(esClient).bootstrap();
   }
 }
