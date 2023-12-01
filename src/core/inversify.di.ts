@@ -75,8 +75,6 @@ container.bind<DataStructure>(TYPES.DataStructureService).to(DataStructure);
 container
   .bind<DiscordActionService>(TYPES.DiscordActionService)
   .to(DiscordActionService);
-container
-  .bind<EsService>(TYPES.EsService)
-  .to(EsService);
+container.bind<EsService>(TYPES.EsService).to(EsService);
 
 export default container;

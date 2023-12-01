@@ -3,8 +3,8 @@ import { EsService } from '../common/services/es.service';
 import LanguageLibs from '../modules/language/model/language_libs.model';
 
 /* Data Libs */
-export let strong_language_en = [];
-export let hinglish_words = [];
+export const strong_language_en = [];
+export const hinglish_words = [];
 export class OnInit {
   constructor(@inject(EsService) private readonly esService: EsService) {}
   async bootstrap() {
