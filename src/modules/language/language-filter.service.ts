@@ -7,7 +7,10 @@ import featuresModel from '../features/model/features.model';
 import { LanguageFilterConfigDto } from './dto/language-filter.dto';
 import LanguageLibsModel from './model/language-libs.model';
 import { DataStructure } from '../../common/services/data-structure.service';
-import { StrongLanguage, StrongLanguageConfig } from './dto/strong-language.dto';
+import {
+  StrongLanguage,
+  StrongLanguageConfig,
+} from './dto/strong-language.dto';
 import { StrongLanguageCodes } from './enum/strong-language.enum';
 import { DiscordActionService } from '../../common/services/discord-action.service';
 import { LanguageProcessorService } from './language-processor.service';
