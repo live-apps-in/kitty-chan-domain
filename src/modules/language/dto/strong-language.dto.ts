@@ -1,6 +1,6 @@
-import { FeatureDefault } from '../../../common/dto/FeaturesDefault.dto';
-import { LanguageAction } from '../enum/language_filter.enum';
-import { StrongLanguageCodes } from '../enum/strong_language.enum';
+import { FeatureDefault } from '../../../common/dto/features-default.dto';
+import { LanguageAction } from '../enum/language-filter.enum';
+import { StrongLanguageCodes } from '../enum/strong-language.enum';
 
 class StrongLanguageTriggerAction {
   public action: LanguageAction;

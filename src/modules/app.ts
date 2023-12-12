@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import 'dotenv/config';
-import { OnInit } from '../jobs/onInit';
+import { OnInit } from '../jobs/on-init';
 import { Client as LiveClient } from '@live-apps/discord';
 import container from '../core/inversify.di';
 import { EsService } from '../common/services/es.service';

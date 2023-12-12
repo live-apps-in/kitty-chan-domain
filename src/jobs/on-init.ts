@@ -1,6 +1,6 @@
 import { inject } from 'inversify';
 import { EsService } from '../common/services/es.service';
-import LanguageLibs from '../modules/language/model/language_libs.model';
+import LanguageLibs from '../modules/language/model/language-libs.model';
 import { esClient } from '../database/elastic-search';
 import { v4 } from 'uuid';
 

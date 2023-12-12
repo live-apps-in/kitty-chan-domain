@@ -1,5 +1,5 @@
-import { FeatureDefault } from '../../../common/dto/FeaturesDefault.dto';
-import { LanguageAction } from '../enum/language_filter.enum';
+import { FeatureDefault } from '../../../common/dto/features-default.dto';
+import { LanguageAction } from '../enum/language-filter.enum';
 
 export class LanguageFilterDto extends FeatureDefault {
   public languageFilterConfig: LanguageFilterConfigDto[];

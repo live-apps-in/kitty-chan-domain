@@ -12,19 +12,19 @@ import {
 } from '../common/interface/shared.interface';
 import { CommandService } from '../modules/commands/commands.service';
 import { GuildService } from '../modules/guild/guild.service';
-import { GuildStatsService } from '../modules/stats/guild_stats.service';
+import { GuildStatsService } from '../modules/stats/guild-stats.service';
 import { PortalService } from '../modules/portal/portal.service';
 import { RolesService } from '../modules/roles/roles.service';
-import { FeatureFlagService } from '../common/services/featureFlag.service';
+import { FeatureFlagService } from '../common/services/feature-flag.service';
 import { TYPES } from '../core/inversify.types';
 import { EventsServiceHandlers } from '../proto/kitty_chan/EventsService';
 import { NoResponse } from '../proto/kitty_chan/NoResponse';
-import { ServiceStatus } from '../common/services/service_status.service';
+import { ServiceStatus } from '../common/services/service-status.service';
 import { WelcomerService } from '../modules/greet/welcomer.service';
 import { LoggerService } from '../modules/logger/logger.service';
 import { liveClient } from '../modules/app';
 import { LanguageFilter } from '../modules/language/language-filter.service';
-import { DiscordEventsType } from '../common/enum/discord_events.enum';
+import { DiscordEventsType } from '../common/enum/discord-events.enum';
 
 @injectable()
 export class EventsHandler implements EventsServiceHandlers {

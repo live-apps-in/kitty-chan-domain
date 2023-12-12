@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { DiscordEventsType } from '../../../common/enum/discord_events.enum';
+import { DiscordEventsType } from '../../../common/enum/discord-events.enum';
 
 export interface MemberLog {
   userId: string;

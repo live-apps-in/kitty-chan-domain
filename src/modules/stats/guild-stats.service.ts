@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 import { IGuild } from '../../common/interface/shared.interface';
-import MessageLog from './model/message_logs.model';
-import { DiscordEventsType } from '../../common/enum/discord_events.enum';
-import MemberLog from './model/member_logs.model';
+import MessageLog from './model/message-logs.model';
+import { DiscordEventsType } from '../../common/enum/discord-events.enum';
+import MemberLog from './model/member-logs.model';
 
 @injectable()
 export class GuildStatsService {

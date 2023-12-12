@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { IGuild } from '../interface/shared.interface';
 import { liveClient } from '../../modules/app';
-import { DiscordActions } from '../enum/discord_action.enum';
+import { DiscordActions } from '../enum/discord-action.enum';
 
 @injectable()
 export class DiscordActionService {

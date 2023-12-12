@@ -1,12 +1,12 @@
 import { injectable } from 'inversify';
 import { IGuildMember } from '../../common/interface/shared.interface';
-import DiscordTemplateModel from '../template/model/discord_templates.model';
+import DiscordTemplateModel from '../template/model/discord-templates.model';
 import { liveClient } from '../app';
 import Guild from '../guild/model/guild.model';
 import {
   DiscordTemplateType,
   DiscordTemplateTarget,
-} from '../../common/enum/discord_template.enum';
+} from '../../common/enum/discord-template.enum';
 
 @injectable()
 export class WelcomerService {

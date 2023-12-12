@@ -1,4 +1,4 @@
-import { FeatDefaultWithTemplates } from '../../../common/dto/FeaturesDefault.dto';
+import { FeatDefaultWithTemplates } from '../../../common/dto/features-default.dto';
 
 export class GreetDto {
   public isActive: boolean;

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { IGuild, IGuildMessage } from '../../common/interface/shared.interface';
-import PortalRoom from './model/portal_room.model';
+import PortalRoom from './model/portal-room.model';
 import { SharedService } from '../../common/services/shared.service';
 import { liveClient } from '../app';
 import { PortalMsg } from '../../common/messages/portal/portal';

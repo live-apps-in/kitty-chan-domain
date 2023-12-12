@@ -3,13 +3,13 @@ import {
   IGuildMemberUpdate,
   IMessageUpdate,
 } from '../../common/interface/shared.interface';
-import { DiscordTemplateType } from '../../common/enum/discord_template.enum';
+import { DiscordTemplateType } from '../../common/enum/discord-template.enum';
 import { liveClient } from '../app';
 import { TYPES } from '../../core/inversify.types';
-import { DiscordTemplateService } from '../../common/services/discord_template.service';
+import { DiscordTemplateService } from '../../common/services/discord-template.service';
 import Features from '../features/model/features.model';
 import { TemplateRepo } from '../../repository/template.repo';
-import { DiscordEventsType } from '../../common/enum/discord_events.enum';
+import { DiscordEventsType } from '../../common/enum/discord-events.enum';
 
 @injectable()
 export class LoggerService {

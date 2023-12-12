@@ -1,4 +1,4 @@
-import { FeatureDefault } from '../../../common/dto/FeaturesDefault.dto';
+import { FeatureDefault } from '../../../common/dto/features-default.dto';
 
 /**Portal Config */
 export class PortalDto extends FeatureDefault {
