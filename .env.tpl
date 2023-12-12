@@ -30,3 +30,6 @@ RABBIT_PASS=meow
 
 #Elastic Search
 ES_HOST=http://localhost:9200
+
+# App Config
+LOAD_SYSTEM_DATA=true

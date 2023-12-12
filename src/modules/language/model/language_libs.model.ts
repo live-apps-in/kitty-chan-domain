@@ -5,6 +5,7 @@ export interface ILanguageLibs {
   data: string[];
   system: boolean;
   guildId: string;
+  type: string;
 }
 
 const LanguageLibs: Schema = new Schema({
@@ -12,6 +13,7 @@ const LanguageLibs: Schema = new Schema({
   data: Array<string>,
   system: Boolean,
   guildId: String,
+  type: String,
 });
 
 export default model<ILanguageLibs>('language_libs', LanguageLibs);

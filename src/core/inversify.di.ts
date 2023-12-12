@@ -21,12 +21,13 @@ import { WelcomerService } from '../modules/greet/welcomer.service';
 import { LoggerService } from '../modules/logger/logger.service';
 import { DiscordTemplateService } from '../common/services/discord_template.service';
 import { TemplateRepo } from '../repository/template.repo';
-import { LanguageFilter } from '../modules/language/languageFilter.service';
+import { LanguageFilter } from '../modules/language/language-filter.service';
 import { AxiosService } from '../common/services/axios.service';
 import { DataStructure } from '../common/services/dataStructure.service';
 import { DiscordActionService } from '../common/services/discord_action.service';
 import { FeaturesRepo } from '../modules/features/repo/features.repo';
 import { EsService } from '../common/services/es.service';
+import { LanguageProcessorService } from '../modules/language/language-processor.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -35,6 +36,9 @@ const container = new Container({
 /**App services */
 container.bind<App>(TYPES.App).to(App);
 container.bind<LanguageFilter>(TYPES.LanguageFilter).to(LanguageFilter);
+container
+  .bind<LanguageProcessorService>(TYPES.LanguageProcessorService)
+  .to(LanguageProcessorService);
 container.bind<CommandService>(TYPES.CommandService).to(CommandService);
 container.bind<PortalService>(TYPES.PortalService).to(PortalService);
 container.bind<RolesService>(TYPES.RolesService).to(RolesService);

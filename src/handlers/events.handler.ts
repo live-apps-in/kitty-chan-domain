@@ -23,7 +23,7 @@ import { ServiceStatus } from '../common/services/service_status.service';
 import { WelcomerService } from '../modules/greet/welcomer.service';
 import { LoggerService } from '../modules/logger/logger.service';
 import { liveClient } from '../modules/app';
-import { LanguageFilter } from '../modules/language/languageFilter.service';
+import { LanguageFilter } from '../modules/language/language-filter.service';
 import { DiscordEventsType } from '../common/enum/discord_events.enum';
 
 @injectable()
@@ -51,7 +51,7 @@ export class EventsHandler implements EventsServiceHandlers {
     call: ServerUnaryCall<any, NoResponse>,
     callback: sendUnaryData<any>,
   ) {
-    ///Acknowledge gRPC call
+    //Acknowledge gRPC call
     callback(null);
 
     const guildMessage = call.request as IGuildMessage;
@@ -65,18 +65,18 @@ export class EventsHandler implements EventsServiceHandlers {
       DiscordEventsType.messageCreate,
     );
 
-    ///Service Stats
+    //Service Stats
     const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
     if (serviceStats) return;
 
-    ///Check Portal Intent
+    //Check Portal Intent
     const isPortal = await this.portalService.validate_channel(guildMessage);
     if (isPortal) return;
 
-    ///Language Services
+    //Language Services
     this.langFilter.languageFactory(guildMessage);
 
-    ///Commands
+    //Commands
     const isCommand = await this.commandService.validateCommand(guildMessage);
     if (isCommand) return;
   }

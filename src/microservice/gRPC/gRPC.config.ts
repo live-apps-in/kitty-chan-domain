@@ -13,7 +13,7 @@ import { ServiceStatus } from '../../common/services/service_status.service';
 import { WelcomerService } from '../../modules/greet/welcomer.service';
 import { LoggerService } from '../../modules/logger/logger.service';
 import container from '../../core/inversify.di';
-import { LanguageFilter } from '../../modules/language/languageFilter.service';
+import { LanguageFilter } from '../../modules/language/language-filter.service';
 
 /**
  * Load Proto

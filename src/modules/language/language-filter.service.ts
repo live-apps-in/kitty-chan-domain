@@ -10,6 +10,7 @@ import { DataStructure } from '../../common/services/dataStructure.service';
 import { StrongLanguage, StrongLanguageConfig } from './dto/strongLanguage.dto';
 import { StrongLanguageCodes } from './enum/strong_language.enum';
 import { DiscordActionService } from '../../common/services/discord_action.service';
+import { LanguageProcessorService } from './language-processor.service';
 
 @injectable()
 export class LanguageFilter {
@@ -19,6 +20,8 @@ export class LanguageFilter {
     private readonly dataStructure: DataStructure,
     @inject(TYPES.DiscordActionService)
     private readonly discordActionService: DiscordActionService,
+    @inject(TYPES.LanguageProcessorService)
+    private readonly languageProcessor: LanguageProcessorService,
   ) {}
 
   async languageFactory(guild: IGuild): Promise<void> {
@@ -60,6 +63,12 @@ export class LanguageFilter {
 
     languageConfig.map(async (e) => {
       if (e.language === StrongLanguageCodes.EN) {
+        await this.languageProcessor.textMatchAndWhiteList(
+          'language-lib',
+          'strong-language-esn',
+          messageContent,
+        );
+
         const languageLib = await this.getLanguageLib(guild, e.whitelistLib);
 
         const { detected } = this.dataStructure.matchPhrase(
