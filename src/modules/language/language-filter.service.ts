@@ -3,8 +3,7 @@ import { TYPES } from '../../core/inversify.types';
 import { RedisService } from '../../common/services/redis.service';
 import { IGuild } from '../../common/interface/shared.interface';
 import featuresModel from '../features/model/features.model';
-import { LanguageFilterConfigDto } from './dto/language-filter.dto';
-import LanguageLibsModel from './model/language-libs.model';
+import { LanguageFilterDto } from './dto/language-filter.dto';
 import { DataStructure } from '../../common/services/data-structure.service';
 import {
   StrongLanguage,
@@ -64,13 +63,13 @@ export class LanguageFilter {
 
     const { messageContent } = guild;
 
-    languageConfig.map(async (e) => {
-      if (e.language === StrongLanguageCodes.EN) {
+    languageConfig.map(async (config) => {
+      if (config.language === StrongLanguageCodes.EN) {
         const { detected } = await this.languageProcessor.textMatchAndWhiteList(
           'language-lib',
           LanguageLibRefIds['strong-language-en'],
           messageContent,
-          e.whitelistLib,
+          config.whitelistLib,
         );
 
         if (detected) {
@@ -88,18 +87,17 @@ export class LanguageFilter {
    * Uses Data Libs & Data Structure service
    */
   private async languageFilter(guild: IGuild) {
-    const languageFilterConfig = await this.getLanguageFilterConfig(guild);
+    const { languageFilterConfig } = await this.getLanguageFilterConfig(guild);
 
-    for (const e of languageFilterConfig) {
-      const languageLib = await this.getLanguageLib(guild, e.languageLibId);
-
-      const { detected } = this.dataStructure.matchPhrase(
+    for (const config of languageFilterConfig) {
+      const { detected } = await this.languageProcessor.textMatchAndWhiteList(
+        'language-lib',
+        config.languageLibId,
         guild.messageContent,
-        languageLib,
       );
 
       if (detected) {
-        const actionConfig = e.actionConfig as any;
+        const actionConfig = config.actionConfig as any;
 
         if (detected) {
           await this.discordActionService.actionFactory(
@@ -115,8 +113,8 @@ export class LanguageFilter {
   /**Language FIlter Config */
   private async getLanguageFilterConfig(
     guild: IGuild,
-  ): Promise<LanguageFilterConfigDto[]> {
-    let languageFilterConfig: LanguageFilterConfigDto[] = [];
+  ): Promise<LanguageFilterDto> {
+    let languageFilterConfig: LanguageFilterDto;
     const cacheKey = `guild-${guild.guildId}:feature:languageFilterConfig`;
 
     const cachedConfig = await this.redisService.get(cacheKey);
@@ -127,8 +125,7 @@ export class LanguageFilter {
         { language: 1 },
       );
 
-      languageFilterConfig =
-        languageFeature?.language?.languageFilter?.languageFilterConfig || [];
+      languageFilterConfig = languageFeature?.language?.languageFilter;
 
       await this.redisService.setWithExpiry(
         cacheKey,
@@ -152,12 +149,12 @@ export class LanguageFilter {
     const cachedConfig = await this.redisService.get(cacheKey);
 
     if (!cachedConfig) {
-      const strongLanguageFeature = await featuresModel.findOne(
+      const languageFeature = await featuresModel.findOne(
         { guildId: guild.guildId },
         { language: 1 },
       );
 
-      strongLanguageConfig = strongLanguageFeature?.language?.strongLanguage;
+      strongLanguageConfig = languageFeature?.language?.strongLanguage;
 
       await this.redisService.setWithExpiry(
         cacheKey,
@@ -169,33 +166,5 @@ export class LanguageFilter {
     }
 
     return strongLanguageConfig;
-  }
-
-  /**Language Filter - Data Lib */
-  private async getLanguageLib(
-    guild: IGuild,
-    languageLibId: string,
-  ): Promise<string[]> {
-    let languageLib: string[] = [];
-    const cacheKey = `guild-${guild.guildId}:languageLib-${languageLibId}`;
-
-    const cachedLanguageLib = await this.redisService.get(cacheKey);
-
-    if (!cachedLanguageLib) {
-      const getLanguageLib = await LanguageLibsModel.findOne({
-        _id: languageLibId,
-      });
-      languageLib = getLanguageLib?.data || [];
-
-      await this.redisService.setWithExpiry(
-        cacheKey,
-        JSON.stringify(languageLib),
-        300,
-      );
-    } else {
-      languageLib = JSON.parse(cachedLanguageLib) || [];
-    }
-
-    return languageLib;
   }
 }
