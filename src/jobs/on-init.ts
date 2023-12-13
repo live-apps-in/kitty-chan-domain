@@ -3,6 +3,7 @@ import { EsService } from '../common/services/es.service';
 import LanguageLibs from '../modules/language/model/language-libs.model';
 import { esClient } from '../database/elastic-search';
 import { v4 } from 'uuid';
+import { LanguageLibRefIds } from '../common/store/language-lib.store';
 
 /* Data Libs */
 export const strong_language_en = [];
@@ -10,27 +11,62 @@ export const hinglish_words = [];
 export class OnInit {
   constructor(@inject(EsService) private readonly esService: EsService) {}
   async bootstrap() {
-    if (process.env.LOAD_SYSTEM_DATA === 'true') {
-      await Promise.all([this.loadSystemLanguageLibs()]);
+    await this.syncLanguageLibRefId();
+
+    if (process.env.LOAD_LANGUAGE_LIBS === 'true') {
+      await this.loadSystemLanguageLibs();
+
       console.info('System data imported!');
     }
   }
 
+  /**Create or Update Elastic Search indices */
+  private async createOrUpdateElasticIndex() {
+    const indexName = 'language-lib';
+    const indexExists = await esClient.indices.exists({ index: indexName });
+
+    if (indexExists.body) {
+      console.log(`Index ${indexName} already exists. Skipping creation.`);
+      return;
+    }
+
+    await esClient.indices.create({
+      index: indexName,
+      body: {
+        settings: {
+          analysis: {
+            tokenizer: 'whitespace',
+            filter: ['lowercase'],
+          },
+        },
+        mappings: {
+          properties: {
+            data: {
+              type: 'keyword', // Change type to keyword for exact match
+              ignore_above: 256, // Adjust if necessary
+            },
+          },
+        },
+      },
+    });
+  }
   /**
    * Load Language Library to Elastic Search
    */
   private async loadSystemLanguageLibs() {
     //Delete all existing data
+    //Workaround - Multiple delete causing conflict in seqNo
     await esClient.deleteByQuery({
       index: 'language-lib',
       body: {
         query: {
-          terms: {
-            id: ['strong-language-en', 'language-filter-hindi'],
+          match: {
+            id: 'strong-language-en',
           },
         },
       },
     });
+
     const languageLibs = await LanguageLibs.find({ system: true }).lean();
 
     languageLibs.map(async (e) => {
@@ -49,6 +85,15 @@ export class OnInit {
           ...languageData,
         });
       }
+    });
+  }
+
+  private async syncLanguageLibRefId() {
+    const languageLibs = await LanguageLibs.find({ system: true }).lean();
+
+    languageLibs.map((e) => {
+      //Update refId to local store
+      LanguageLibRefIds[e.name] = e._id.toString();
     });
   }
 }

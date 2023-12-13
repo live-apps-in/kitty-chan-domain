@@ -37,7 +37,7 @@ jobs:
             --build-arg REDIS_PASS=${{ vars.REDIS_PASS }} \
             --build-arg MONGO_URI=${{ secrets.MONGO_URI }} \
             --build-arg ES_HOST=${{ vars.ES_HOST }} \
-            --build-arg LOAD_SYSTEM_DATA=${{ vars.LOAD_SYSTEM_DATA }} \
+            --build-arg LOAD_LANGUAGE_LIBS=${{ vars.LOAD_LANGUAGE_LIBS }} \
             -t jagalive/kittychan-domain:${{ github.sha }} .
           docker tag jagalive/kittychan-domain:${{ github.sha }} jagalive/kittychan-domain:latest
         working-directory: ./

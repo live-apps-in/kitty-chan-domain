@@ -32,4 +32,4 @@ RABBIT_PASS=meow
 ES_HOST=http://localhost:9200
 
 # App Config
-LOAD_SYSTEM_DATA=true
+LOAD_LANGUAGE_LIBS=false

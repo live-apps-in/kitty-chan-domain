@@ -9,7 +9,11 @@ export class EsService {
 
   async searchText(index: string, query: any) {
     const res = await esClient.search({ index, body: query });
-    return res;
+
+    return res.body.hits.hits.map((hit) => ({
+      id: hit._id,
+      data: hit._source.data,
+    }));
   }
 
   async countById(id: string) {

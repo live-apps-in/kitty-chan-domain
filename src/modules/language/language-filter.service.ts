@@ -2,7 +2,6 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../core/inversify.types';
 import { RedisService } from '../../common/services/redis.service';
 import { IGuild } from '../../common/interface/shared.interface';
-import { strong_language_en } from '../../jobs/on-init';
 import featuresModel from '../features/model/features.model';
 import { LanguageFilterConfigDto } from './dto/language-filter.dto';
 import LanguageLibsModel from './model/language-libs.model';
@@ -14,6 +13,7 @@ import {
 import { StrongLanguageCodes } from './enum/strong-language.enum';
 import { DiscordActionService } from '../../common/services/discord-action.service';
 import { LanguageProcessorService } from './language-processor.service';
+import { LanguageLibRefIds } from '../../common/store/language-lib.store';
 
 @injectable()
 export class LanguageFilter {
@@ -66,18 +66,11 @@ export class LanguageFilter {
 
     languageConfig.map(async (e) => {
       if (e.language === StrongLanguageCodes.EN) {
-        await this.languageProcessor.textMatchAndWhiteList(
+        const { detected } = await this.languageProcessor.textMatchAndWhiteList(
           'language-lib',
-          'strong-language-esn',
+          LanguageLibRefIds['strong-language-en'],
           messageContent,
-        );
-
-        const languageLib = await this.getLanguageLib(guild, e.whitelistLib);
-
-        const { detected } = this.dataStructure.matchPhrase(
-          messageContent,
-          strong_language_en,
-          languageLib,
+          e.whitelistLib,
         );
 
         if (detected) {
