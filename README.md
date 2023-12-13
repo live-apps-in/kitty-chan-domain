@@ -16,9 +16,9 @@ This guide will help you set up the project on your local machine.
 
 - Node.js v16.16.0 (recommended using nvm)
 - MongoDB
-- Elastic Search
+- Elastic Search v7.5
 - Docker (recommended if running all other kitty chan microservices all together)
-- kitty chan Events [kitty-chan-events](https://github.com/live-apps-in/kitty-chan-events). (This microservice receives events from this events service)
+- kitty chan Events [kitty-chan-events](https://github.com/live-apps-in/kitty-chan-events). (Domain microservice receives gRPC events from this events microservice)
 
 ## Installation
 
