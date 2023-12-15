@@ -13,24 +13,47 @@ export class LanguageProcessorService {
   /**Match Phrase with Elastic Search */
   async textMatchAndWhiteList(
     index: string,
-    id: string,
+    libId: string,
     text: string,
     whitelistLibId?: string,
   ) {
-    const getMatch = await this.esService.searchText(
+    const matchResults = await this.esService.searchText(
       index,
-      this.getSearchTextQuery(id, text),
+      this.getSearchTextQuery(libId, text),
     );
-    const formatMatchData = getMatch.map((e) => {
+    const formatMatchData = matchResults.map((e) => {
       return e.data.toLowerCase();
     });
 
-    const res = await this.dataStructure.matchPhrase(
+    const filterExactMatch = this.dataStructure.matchPhrase(
       text.toLowerCase(),
       formatMatchData,
     );
 
-    return res;
+    if (filterExactMatch.detected && whitelistLibId) {
+      const matchedText = filterExactMatch.match.join(' ');
+      const whitelistSearchResults = await this.esService.searchText(
+        index,
+        this.getSearchTextQuery(whitelistLibId, matchedText),
+      );
+      const formatWhitelistMatchData = whitelistSearchResults.map((e) => {
+        return e.data.toLowerCase();
+      });
+
+      const whitelistMatch = this.dataStructure.matchPhrase(
+        matchedText.toLowerCase(),
+        formatWhitelistMatchData,
+      );
+
+      filterExactMatch.match = filterExactMatch.match.filter(
+        (item) => !whitelistMatch.match.includes(item),
+      );
+    }
+
+    return {
+      detected: filterExactMatch.match.length ? true : false,
+      match: filterExactMatch,
+    };
   }
 
   private getSearchTextQuery(id: string, text: string) {

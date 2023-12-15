@@ -8,7 +8,7 @@ export class DataStructure {
     message: string,
     lib: string[],
     whitelist: string[] = [],
-  ): { detected: boolean; texts: string[] } {
+  ): { detected: boolean; match: string[] } {
     this.trie = new Trie(); // Reset the trie before inserting new phrases
     this.insertPhrases(lib);
 
@@ -17,7 +17,7 @@ export class DataStructure {
 
     return {
       detected,
-      texts: detectedTexts,
+      match: detectedTexts,
     };
   }
   private insertPhrases(phrases: string[]) {
