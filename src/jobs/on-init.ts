@@ -56,16 +56,23 @@ export class OnInit {
   private async loadSystemLanguageLibs() {
     //Delete all existing data
     //Workaround - Multiple delete causing conflict in seqNo
-    await esClient.deleteByQuery({
-      index: 'language-lib',
-      body: {
-        query: {
-          match: {
-            id: 'strong-language-en',
+    const languageIndexName = 'language-lib';
+    const languageLibIndex = await esClient.indices.exists({
+      index: languageIndexName,
+    });
+    if (languageLibIndex.body) {
+      console.log(`Deleting index - ${languageIndexName}`);
+      await esClient.deleteByQuery({
+        index: languageIndexName,
+        body: {
+          query: {
+            match: {
+              id: 'strong-language-en',
+            },
           },
         },
-      },
-    });
+      });
+    }
 
     const languageLibs = await LanguageLibs.find({ system: true }).lean();
 
