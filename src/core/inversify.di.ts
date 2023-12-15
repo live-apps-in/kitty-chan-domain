@@ -7,8 +7,6 @@ import { SharedService } from '../common/services/shared.service';
 import { GuildStatsService } from '../modules/stats/guild-stats.service';
 import { CommandService } from '../modules/commands/commands.service';
 import { UtilityService } from '../common/services/utils.service';
-import { ConversationService } from '../modules/conversation/conversation.service';
-import { ConversationRepository } from '../repository/conversation.repo';
 import { GuildRepo } from '../repository/guild.repo';
 import { FeatureFlagService } from '../common/services/feature-flag.service';
 import { PortalService } from '../modules/portal/portal.service';
@@ -46,15 +44,7 @@ container.bind<GuildService>(TYPES.GuildService).to(GuildService);
 container.bind<WelcomerService>(TYPES.WelcomerService).to(WelcomerService);
 container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
 
-/**Conversation Service */
-container
-  .bind<ConversationService>(TYPES.ConversationService)
-  .to(ConversationService);
-
 /**Repository */
-container
-  .bind<ConversationRepository>(TYPES.ConversationRepository)
-  .to(ConversationRepository);
 container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);
 container.bind<TemplateRepo>(TYPES.TemplateRepo).to(TemplateRepo);
 container.bind<FeaturesRepo>(TYPES.FeaturesRepo).to(FeaturesRepo);

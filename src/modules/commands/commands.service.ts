@@ -4,7 +4,6 @@ import 'dotenv/config';
 import { TYPES } from '../../core/inversify.types';
 import { UtilityService } from '../../common/services/utils.service';
 import { flip_coin_wake_word } from './data/wake_words/general';
-import { ConversationService } from '../conversation/conversation.service';
 import { PortalService } from '../portal/portal.service';
 import { liveClient } from '../app';
 
@@ -14,8 +13,6 @@ export class CommandService {
   constructor(
     @inject(TYPES.UtilityService)
     private readonly utilityService: UtilityService,
-    @inject(TYPES.ConversationService)
-    private readonly conversationService: ConversationService,
     @inject(TYPES.PortalService) private readonly portalService: PortalService,
   ) {}
 
@@ -28,17 +25,21 @@ export class CommandService {
       return element !== '';
     });
 
-    if (messageChunk[0] !== `<@${this.CLIENT_ID}>`) return false;
+    if (messageChunk[0] !== `<@${this.CLIENT_ID}>`) {
+      return false;
+    }
 
     ///Flip a coin
     if (messageChunk[1] === 'flip') {
       await this.flip_a_coin(guild, messageChunk);
+
       return true;
     }
 
     ///Flip a coin
     if (messageChunk[1] === 'portal') {
       await this.portalService.validate(messageChunk, guild);
+
       return true;
     }
 
@@ -46,27 +47,13 @@ export class CommandService {
      * temp - will be refactored soon
      */
     if (messageChunk[1] === 'help') {
-      const content = `Hey there! I'm kitty chan. I'm currently at very early stage of development.
+      const content = `Hey there! I'm kitty chan. I'm currently at very early stages of development.
   You will be invited when a stable version is released :)`;
 
       await liveClient.message.reply(guild.channelId, guild.messageId, content);
+
       return true;
     }
-
-    ///Detect conversation (One Way)
-    const tempChunk = [...messageChunk];
-    let cleanMessage = '';
-    for (let index = 1; index < tempChunk.length; index++) {
-      cleanMessage += tempChunk[index] + ' ';
-    }
-    cleanMessage = cleanMessage.trim();
-    const checkConversation = await this.conversationService.filter(
-      messageChunk,
-      cleanMessage,
-      guild,
-    );
-    if (checkConversation) return true;
-    return;
   }
 
   private async flip_a_coin(guild: IGuild, messageChunk: string[]) {
@@ -74,7 +61,9 @@ export class CommandService {
       messageChunk,
       flip_coin_wake_word,
     );
-    if (!isMatch) return;
+    if (!isMatch) {
+      return false;
+    }
 
     let response: any = {};
     if (Math.random() < 0.5) {
@@ -94,7 +83,5 @@ export class CommandService {
       guild.messageId,
       response.message,
     );
-
-    return;
   }
 }
