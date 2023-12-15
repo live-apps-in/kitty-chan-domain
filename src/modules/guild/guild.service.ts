@@ -11,6 +11,7 @@ import { RedisService } from '../../common/services/redis.service';
 import User from './model/user.model';
 import { liveClient } from '../app';
 import Features from '../features/model/features.model';
+import { DiscordPresenceStatus } from '../../common/enum/discord-presence.enum';
 
 @injectable()
 export class GuildService {
@@ -146,14 +147,16 @@ export class GuildService {
     ]);
   }
 
-  async guildPresenceUpdate(presence: IGuildPresence) {
+  async guildPresenceUpdate({ status, activities, userId }: IGuildPresence) {
+    const updatedPresence = {
+      activityStatus: status,
+      activities: status !== DiscordPresenceStatus.OFFLINE ? activities : [],
+    };
+
     await User.updateOne(
-      { 'discord.id': presence.userId },
+      { 'discord.id': userId },
       {
-        $set: {
-          activityStatus: presence.status,
-          activities: presence.activities,
-        },
+        $set: updatedPresence,
       },
     );
   }
