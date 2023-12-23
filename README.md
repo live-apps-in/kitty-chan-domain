@@ -14,7 +14,7 @@ This guide will help you set up the project on your local machine.
 
 ## Prerequisites
 
-- Node.js v16.16.0 (recommended using nvm)
+- Node.js v18.17.0 (recommended using nvm)
 - MongoDB
 - Elastic Search v7.5
 - Docker (recommended if running all other kitty chan microservices all together)
@@ -22,7 +22,7 @@ This guide will help you set up the project on your local machine.
 
 ## Installation
 
-1. Install Node.js v16.16.0. You can use [nvm](https://github.com/nvm-sh/nvm) to manage Node.js versions.
+1. Install Node.js v18.17.0. You can use [nvm](https://github.com/nvm-sh/nvm) to manage Node.js versions.
 
 2. Replace .env.tpl file with the .env including actual values.
 
