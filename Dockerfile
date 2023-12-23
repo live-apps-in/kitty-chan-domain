@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:18-alpine
 WORKDIR /usr/src/kittychan_domain
 COPY package.json .
 RUN npm install -g typescript cpx
