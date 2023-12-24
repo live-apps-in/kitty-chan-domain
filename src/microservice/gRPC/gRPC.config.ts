@@ -14,6 +14,7 @@ import { WelcomerService } from '../../modules/greet/welcomer.service';
 import { LoggerService } from '../../modules/logger/logger.service';
 import container from '../../core/inversify.di';
 import { LanguageFilter } from '../../modules/language/language-filter.service';
+import { AutoSailConfigService } from '../../modules/auto-sail/auto-sail-config.service';
 
 /**
  * Load Proto
@@ -43,6 +44,9 @@ const guildService = container.get<GuildService>(TYPES.GuildService);
 const serviceStatus = container.get<ServiceStatus>(TYPES.ServiceStatus);
 const welcomerService = container.get<WelcomerService>(TYPES.WelcomerService);
 const loggerService = container.get<LoggerService>(TYPES.LoggerService);
+const autoSailConfigService = container.get<AutoSailConfigService>(
+  TYPES.AutoSailConfigService,
+);
 
 const eventsGrpcController = new EventsHandler(
   languageFilterService,
@@ -55,6 +59,7 @@ const eventsGrpcController = new EventsHandler(
   serviceStatus,
   welcomerService,
   loggerService,
+  autoSailConfigService,
 );
 
 const gRpcServer = new grpc.Server();

@@ -25,6 +25,8 @@ import { LoggerService } from '../modules/logger/logger.service';
 import { liveClient } from '../modules/app';
 import { LanguageFilter } from '../modules/language/language-filter.service';
 import { DiscordEventsType } from '../common/enum/discord-events.enum';
+import { AutoSailConfigService } from '../modules/auto-sail/auto-sail-config.service';
+import { AutoSailTriggerEvents } from '../modules/auto-sail/enum/auto-sail-trigger-events.enum';
 
 @injectable()
 export class EventsHandler implements EventsServiceHandlers {
@@ -44,6 +46,8 @@ export class EventsHandler implements EventsServiceHandlers {
     @inject(TYPES.WelcomerService)
     private readonly welcomerService: WelcomerService,
     @inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
+    @inject(TYPES.AutoSailConfigService)
+    private readonly autoSailConfigService: AutoSailConfigService,
   ) {}
 
   /**Message Create Events */
@@ -75,6 +79,12 @@ export class EventsHandler implements EventsServiceHandlers {
 
     //Language Services
     this.langFilter.languageFactory(guildMessage);
+
+    //Auto Sail
+    this.autoSailConfigService.process(
+      guildMessage,
+      AutoSailTriggerEvents.MESSAGE_CREATE,
+    );
 
     //Commands
     const isCommand = await this.commandService.validateCommand(guildMessage);

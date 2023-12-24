@@ -10,6 +10,8 @@ export const TYPES = {
   GuildService: Symbol.for('GuildService'),
   WelcomerService: Symbol.for('WelcomerService'),
   LoggerService: Symbol.for('LoggerService'),
+  AutoSailService: Symbol.for('AutoSailService'),
+  AutoSailConfigService: Symbol.for('AutoSailConfigService'),
 
   /**Conversation Service */
   ConversationService: Symbol.for('ConversationService'),

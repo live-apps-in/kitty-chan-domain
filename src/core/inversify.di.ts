@@ -26,6 +26,8 @@ import { DiscordActionService } from '../common/services/discord-action.service'
 import { FeaturesRepo } from '../modules/features/repo/features.repo';
 import { EsService } from '../common/services/es.service';
 import { LanguageProcessorService } from '../modules/language/language-processor.service';
+import { AutoSailConfigService } from '../modules/auto-sail/auto-sail-config.service';
+import { AutoSailService } from '../modules/auto-sail/auto-sail.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -43,6 +45,10 @@ container.bind<RolesService>(TYPES.RolesService).to(RolesService);
 container.bind<GuildService>(TYPES.GuildService).to(GuildService);
 container.bind<WelcomerService>(TYPES.WelcomerService).to(WelcomerService);
 container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
+container.bind<AutoSailService>(TYPES.AutoSailService).to(AutoSailService);
+container
+  .bind<AutoSailConfigService>(TYPES.AutoSailConfigService)
+  .to(AutoSailConfigService);
 
 /**Repository */
 container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);
