@@ -29,7 +29,7 @@ message IGuildMessage{
   string userId = 5;
   string username = 6;
   string avatar = 7;
-  string messageContent = 8;
+  string plainText = 8;
   IMessageMentions mentions = 9;
   repeated IMessageAttachments attachments = 10;
   bool isBot = 11;
@@ -122,7 +122,7 @@ message IMessageReaction{
   string channelId = 2;
   string messageId = 3;
   string userId = 4;
-  string messageContent = 5;
+  string plainText = 5;
   bool isBot = 6;
   IEmoji emoji = 7;
 }

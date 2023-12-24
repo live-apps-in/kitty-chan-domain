@@ -27,7 +27,7 @@
   "dependencies": {
     "@babel/preset-env": "^7.23.6",
     "@elastic/elasticsearch": "^7.17.12",
-    "@live-apps/discord": "^1.0.19",
+    "@live-apps/discord": "^1.0.20",
     "amqplib": "^0.10.3",
     "axios": "^1.6.2",
     "babel-jest": "^29.7.0",

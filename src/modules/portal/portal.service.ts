@@ -27,7 +27,7 @@ export class PortalService {
   //Validate Channel
   async validate_channel(guild: IGuildMessage) {
     //Check if portal command
-    const messageChunk = guild.messageContent.split(' ');
+    const messageChunk = guild.plainText.split(' ');
     if (messageChunk[1] === 'portal') return;
 
     //Fetch Portal config cache
@@ -77,9 +77,9 @@ export class PortalService {
 
     getSessionGuild.map((e) => {
       if (domain === 'tenor.com') {
-        e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent} \n`;
+        e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.plainText} \n`;
       } else {
-        e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.messageContent}`;
+        e.message = `[ ${guild.username} from **${guild.guildName}** ]: ${guild.plainText}`;
       }
     });
 

@@ -61,14 +61,14 @@ export class LanguageFilter {
     }: { actionConfig: any; languageConfig: StrongLanguageConfig[] } =
       strongLanguageConfig;
 
-    const { messageContent } = guild;
+    const { plainText } = guild;
 
     languageConfig.map(async (config) => {
       if (config.language === StrongLanguageCodes.EN) {
         const { detected } = await this.languageProcessor.textMatchAndWhiteList(
           'language-lib',
           LanguageLibRefIds['strong-language-en'],
-          messageContent,
+          plainText,
           config.whitelistLib,
         );
 
@@ -93,7 +93,7 @@ export class LanguageFilter {
       const { detected } = await this.languageProcessor.textMatchAndWhiteList(
         'language-lib',
         config.languageLibId,
-        guild.messageContent,
+        guild.plainText,
       );
 
       if (detected) {

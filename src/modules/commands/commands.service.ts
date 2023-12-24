@@ -18,7 +18,7 @@ export class CommandService {
 
   ///Validate and Filter Command
   async validateCommand(guild: IGuild) {
-    const message = guild.messageContent.trim().toLowerCase();
+    const message = guild.plainText.trim().toLowerCase();
     let messageChunk = message.split(' ');
 
     messageChunk = messageChunk.filter((element) => {

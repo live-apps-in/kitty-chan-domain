@@ -7,21 +7,31 @@ import { DiscordActions } from '../enum/discord-action.enum';
 export class DiscordActionService {
   async actionFactory(action: DiscordActions, guild: IGuild, config: any) {
     switch (action) {
-      case DiscordActions.REACT:
+      case DiscordActions.MESSAGE_CREATE: {
+        await this.createMessage(guild, config);
+
+        break;
+      }
+
+      case DiscordActions.MESSAGE_REACT:
         await this.react(guild, config);
         break;
 
-      case DiscordActions.REPLY:
+      case DiscordActions.MESSAGE_REPLY:
         await this.reply(guild, config);
         break;
 
-      case DiscordActions.DELETE:
+      case DiscordActions.MESSAGE_DELETE:
         await this.deleteMessage(guild);
         break;
 
       default:
         break;
     }
+  }
+
+  private async createMessage(guild: IGuild, config: any) {
+    await liveClient.message.send(guild.channelId, config.plainMessage);
   }
 
   private async react(guild: IGuild, config: any) {

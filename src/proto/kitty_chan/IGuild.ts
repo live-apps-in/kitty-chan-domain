@@ -8,7 +8,7 @@ export interface IGuild {
   userId?: string;
   username?: string;
   avatar?: string;
-  messageContent?: string;
+  plainText?: string;
   isBot?: boolean;
 }
 
@@ -20,6 +20,6 @@ export interface IGuild__Output {
   userId?: string;
   username?: string;
   avatar?: string;
-  messageContent?: string;
+  plainText?: string;
   isBot?: boolean;
 }

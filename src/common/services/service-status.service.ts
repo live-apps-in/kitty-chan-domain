@@ -56,8 +56,8 @@ export class ServiceStatus {
   }
 
   /** */
-  async validateCommand({ guildId, channelId, messageContent }: IGuildMessage) {
-    const message = messageContent.trim().toLowerCase();
+  async validateCommand({ guildId, channelId, plainText }: IGuildMessage) {
+    const message = plainText.trim().toLowerCase();
     const messageChunk = message.split(' ');
 
     ///Check if kitty chan tagged

@@ -1,5 +1,6 @@
 export enum DiscordActions {
-  REACT = 'react',
-  REPLY = 'reply',
-  DELETE = 'delete',
+  MESSAGE_CREATE = 'messageCreate',
+  MESSAGE_REACT = 'messageReact',
+  MESSAGE_REPLY = 'messageReply',
+  MESSAGE_DELETE = 'messageDelete',
 }

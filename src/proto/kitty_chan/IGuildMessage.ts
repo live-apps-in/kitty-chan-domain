@@ -17,7 +17,7 @@ export interface IGuildMessage {
   userId?: string;
   username?: string;
   avatar?: string;
-  messageContent?: string;
+  plainText?: string;
   mentions?: _kitty_chan_IMessageMentions | null;
   attachments?: _kitty_chan_IMessageAttachments[];
   isBot?: boolean;
@@ -31,7 +31,7 @@ export interface IGuildMessage__Output {
   userId?: string;
   username?: string;
   avatar?: string;
-  messageContent?: string;
+  plainText?: string;
   mentions?: _kitty_chan_IMessageMentions__Output;
   attachments?: _kitty_chan_IMessageAttachments__Output[];
   isBot?: boolean;

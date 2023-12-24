@@ -1,11 +1,18 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { AutoSailConfigDto } from './dto/auto-sail-config.dto';
 import { AutoSailConstraintsType } from './enum/auto-sail-constraints-type.enum';
 import { AutoSailConstraintsDto } from './dto/auto-sail-constraints.dto';
 import { AutoSailConstraintsMapping } from './mappings/auto-sail-constraints.mapping';
+import { TYPES } from '../../core/inversify.types';
+import { DiscordActionService } from '../../common/services/discord-action.service';
+import { DiscordActions } from '../../common/enum/discord-action.enum';
 
 @injectable()
 export class AutoSailService {
+  constructor(
+    @inject(TYPES.DiscordActionService)
+    private readonly discordActionService: DiscordActionService,
+  ) {}
   async automate(
     payload: any,
     triggerEvent: string,
@@ -22,6 +29,14 @@ export class AutoSailService {
     for (const config of filterConfig) {
       if (!this.validateConstraints(config, triggerEvent, payload)) {
         continue;
+      }
+
+      for (const action of config.actionConfig) {
+        await this.discordActionService.actionFactory(
+          triggerEvent as DiscordActions,
+          payload,
+          action.messageConfig,
+        );
       }
     }
   }
