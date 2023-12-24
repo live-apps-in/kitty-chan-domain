@@ -59,7 +59,7 @@ export class SharedService {
       domain: '',
     };
 
-    const links = message.plainText.match(/(https?:\/\/|www\.)\S+/gi) || [];
+    const links = message.plainMessage.match(/(https?:\/\/|www\.)\S+/gi) || [];
 
     for (const link of links) {
       res.isLink = true;

@@ -9,7 +9,7 @@ export class IGuild {
     public userId?: string,
     public username?: string,
     public avatar?: string,
-    public plainText?: string,
+    public plainMessage?: string,
     public isBot?: boolean,
     public payload?: Message,
     public featureFlag?: any,
@@ -24,7 +24,7 @@ export class IGuildMessage {
   public userId?: string;
   public username?: string;
   public avatar?: string;
-  public plainText?: string;
+  public plainMessage?: string;
   public mentions?: IMessageMentions;
   public attachments?: IMessageAttachments[];
   public isBot?: boolean;
@@ -120,7 +120,7 @@ export interface IMessageReaction {
   channelId?: string;
   messageId?: string;
   userId?: string;
-  plainText?: string;
+  plainMessage?: string;
   isBot?: boolean;
   emoji?: IEmoji;
 }

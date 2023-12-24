@@ -3,7 +3,7 @@ export interface IMessageReaction {
   channelId?: string;
   messageId?: string;
   userId?: string;
-  plainText?: string;
+  plainMessage?: string;
   isBot?: boolean;
   emoji?: IEmoji;
 }

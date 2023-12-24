@@ -10,7 +10,7 @@ export interface IMessageReaction {
   channelId?: string;
   messageId?: string;
   userId?: string;
-  plainText?: string;
+  plainMessage?: string;
   isBot?: boolean;
   emoji?: _kitty_chan_IEmoji | null;
 }
@@ -20,7 +20,7 @@ export interface IMessageReaction__Output {
   channelId?: string;
   messageId?: string;
   userId?: string;
-  plainText?: string;
+  plainMessage?: string;
   isBot?: boolean;
   emoji?: _kitty_chan_IEmoji__Output;
 }
