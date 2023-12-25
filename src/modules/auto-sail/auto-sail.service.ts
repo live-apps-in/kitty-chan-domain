@@ -1,8 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { AutoSailConfigDto } from './dto/auto-sail-config.dto';
-import { AutoSailConstraintsType } from './enum/auto-sail-constraints-type.enum';
 import { AutoSailConstraintsDto } from './dto/auto-sail-constraints.dto';
-import { AutoSailConstraintsMapping } from './mappings/auto-sail-constraints.mapping';
+import { AutoSailDynamicFieldsMapping } from './mappings/auto-sail-constraints.mapping';
 import { TYPES } from '../../core/inversify.types';
 import { DiscordActionService } from '../../common/services/discord-action.service';
 import { DiscordActions } from '../../common/enum/discord-action.enum';
@@ -41,7 +40,7 @@ export class AutoSailService {
     }
   }
 
-  private async validateConstraints(
+  private validateConstraints(
     { constraints }: AutoSailConfigDto,
     triggerEvent: string,
     payload: any,
@@ -49,21 +48,14 @@ export class AutoSailService {
     let isValid = false;
 
     for (const constraint of constraints) {
-      switch (constraint.type) {
-        case AutoSailConstraintsType.MESSAGE: {
-          isValid = this.validateCondition(constraint, triggerEvent, payload);
+      isValid = this.validateCondition(constraint, triggerEvent, payload);
 
-          break;
-        }
-
-        default:
-          break;
+      if (!isValid) {
+        break;
       }
     }
 
-    if (!isValid) {
-      return false;
-    }
+    return isValid;
   }
 
   private validateCondition(
@@ -74,13 +66,17 @@ export class AutoSailService {
     for (const condition of constraints.conditions as any[]) {
       for (const key of Object.keys(condition)) {
         switch (key) {
-          case 'equals': {
+          case 'text_equal':
+          case 'text_not_equal': {
+            const configValue = condition[key]?.value;
+            const payloadValue =
+              payload[
+                AutoSailDynamicFieldsMapping?.[triggerEvent]?.[constraints.type]
+              ];
+
             if (
-              condition.equals?.value?.includes(
-                payload[
-                  AutoSailConstraintsMapping?.[triggerEvent]?.[constraints.type]
-                ],
-              )
+              (key === 'text_equal' && configValue?.includes(payloadValue)) ||
+              (key === 'text_not_equal' && !configValue?.includes(payloadValue))
             ) {
               return true;
             }
@@ -88,13 +84,27 @@ export class AutoSailService {
             return false;
           }
 
-          case 'notEquals': {
+          case 'time_gt':
+          case 'time_lt': {
+            const configIsoTime = new Date(condition[key]?.value);
+            const targetIsoTime = new Date(
+              payload[
+                AutoSailDynamicFieldsMapping?.[triggerEvent]?.[constraints.type]
+              ],
+            );
+
             if (
-              !condition.notEquals?.value?.includes(
-                payload[
-                  AutoSailConstraintsMapping?.[triggerEvent]?.[constraints.type]
-                ],
-              )
+              isNaN(configIsoTime.getTime()) ||
+              isNaN(targetIsoTime.getTime())
+            ) {
+              return false;
+            }
+
+            if (
+              (key === 'time_gt' &&
+                targetIsoTime.getTime() > configIsoTime.getTime()) ||
+              (key === 'time_lt' &&
+                targetIsoTime.getTime() < configIsoTime.getTime())
             ) {
               return true;
             }
@@ -102,8 +112,24 @@ export class AutoSailService {
             return false;
           }
 
-          default:
-            break;
+          case 'user_equal':
+          case 'user_not_equal': {
+            const configUserId = condition[key]?.value;
+            const targetUserId =
+              payload[
+                AutoSailDynamicFieldsMapping?.[triggerEvent]?.[constraints.type]
+              ];
+
+            if (
+              (key === 'user_equal' && configUserId?.includes(targetUserId)) ||
+              (key === 'user_not_equal' &&
+                !configUserId?.includes(targetUserId))
+            ) {
+              return true;
+            }
+
+            return false;
+          }
         }
       }
     }

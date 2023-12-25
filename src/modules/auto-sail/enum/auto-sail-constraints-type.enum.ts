@@ -1,4 +1,5 @@
 export enum AutoSailConstraintsType {
   MESSAGE = 'message',
-  TIME = 'time',
+  CREATED_AT = 'createdAt',
+  USER_ID = 'userId',
 }
