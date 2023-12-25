@@ -33,6 +33,7 @@ message IGuildMessage{
   IMessageMentions mentions = 9;
   repeated IMessageAttachments attachments = 10;
   bool isBot = 11;
+  string createdAt = 12;
 }
 
 message IMessageMentions{

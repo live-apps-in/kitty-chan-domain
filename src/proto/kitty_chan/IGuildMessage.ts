@@ -21,6 +21,7 @@ export interface IGuildMessage {
   mentions?: _kitty_chan_IMessageMentions | null;
   attachments?: _kitty_chan_IMessageAttachments[];
   isBot?: boolean;
+  createdAt?: string;
 }
 
 export interface IGuildMessage__Output {
@@ -35,4 +36,5 @@ export interface IGuildMessage__Output {
   mentions?: _kitty_chan_IMessageMentions__Output;
   attachments?: _kitty_chan_IMessageAttachments__Output[];
   isBot?: boolean;
+  createdAt?: string;
 }

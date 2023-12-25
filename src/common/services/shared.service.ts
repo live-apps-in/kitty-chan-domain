@@ -1,7 +1,6 @@
-import { GuildMember, Message } from 'discord.js';
+import { GuildMember } from 'discord.js';
 import { injectable } from 'inversify';
 import {
-  IGuild,
   IGuildMember,
   IGuildMessage,
   IMessageReaction,
@@ -9,24 +8,6 @@ import {
 
 @injectable()
 export class SharedService {
-  ////Extract users and channel info
-  extractGuildInfo(content: Message) {
-    const guild = new IGuild(
-      content.guildId,
-      content.guild.name,
-      content.channelId,
-      content.id,
-      content.author.id,
-      content.author.username,
-      content.author.avatar,
-      content.content,
-      content.author.bot,
-      content,
-      {},
-    );
-
-    return guild;
-  }
   ////Extract users and channel info
   extractGuildFromMember(member: GuildMember) {
     const guildMember: IGuildMember = {

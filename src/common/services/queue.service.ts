@@ -7,7 +7,7 @@ export class QueueService {
   private RABBIT_USER = process.env.RABBIT_USER;
   private RABBIT_PASS = process.env.RABBIT_PASS;
   private RABBIT_OPT = {
-    /** eslint-disable-next-line */
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     credentials: require('amqplib').credentials.plain(
       this.RABBIT_USER,
       this.RABBIT_PASS,
