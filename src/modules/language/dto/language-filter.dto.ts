@@ -7,16 +7,12 @@ export class LanguageFilterDto extends FeatureDefault {
 
 export class LanguageFilterConfigDto {
   public isActive: boolean;
-
   public languageLibId: string;
-
   public actionConfig: LanguageFilterTriggerAction;
 }
 
 class LanguageFilterTriggerAction {
   public action: LanguageAction;
-
-  public reactEmoji: string;
-
-  public replyMessage: string;
+  public emoji: string;
+  public plainMessage: string;
 }

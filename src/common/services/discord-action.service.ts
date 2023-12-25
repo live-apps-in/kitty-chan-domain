@@ -38,7 +38,7 @@ export class DiscordActionService {
     await liveClient.message.react(
       guild.channelId,
       guild.messageId,
-      config.reactEmoji,
+      config.emoji,
     );
   }
 
@@ -46,7 +46,7 @@ export class DiscordActionService {
     await liveClient.message.reply(
       guild.channelId,
       guild.messageId,
-      config.replyMessage,
+      config.plainMessage,
     );
   }
 

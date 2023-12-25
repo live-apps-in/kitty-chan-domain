@@ -1,6 +1,6 @@
 import { AutoSailConfigDto } from './auto-sail-config.dto';
 
-export class AutoSailCreateDto {
+export interface AutoSailCreateDto {
   name: string;
   description: string;
   guildId: string;

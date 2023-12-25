@@ -1,4 +1,4 @@
-import { AutoSailActionEvents } from '../../modules/auto-sail/enum/auto-sail-action.enum';
+import { DiscordActions } from '../enum/discord-action.enum';
 
 interface ActionMessageConfig {
   channelId?: string;
@@ -10,6 +10,6 @@ interface ActionMessageConfig {
 }
 
 export class ActionConfigDto {
-  action: AutoSailActionEvents;
+  action: DiscordActions;
   messageConfig: ActionMessageConfig;
 }

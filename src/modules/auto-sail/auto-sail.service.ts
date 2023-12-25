@@ -33,7 +33,7 @@ export class AutoSailService {
 
       for (const action of config.actionConfig) {
         await this.discordActionService.actionFactory(
-          triggerEvent as DiscordActions,
+          action.action as DiscordActions,
           payload,
           action.messageConfig,
         );

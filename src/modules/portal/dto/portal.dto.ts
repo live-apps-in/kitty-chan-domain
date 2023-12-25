@@ -1,13 +1,12 @@
 import { FeatureDefault } from '../../../common/dto/features-default.dto';
 
 /**Portal Config */
-export class PortalDto extends FeatureDefault {
+export interface PortalDto extends FeatureDefault {
   channelId: string;
 }
 
 /**Portal Room */
-export class PortalRoomDto {
+export interface PortalRoomDto {
   description: string;
-
   tags: string[];
 }

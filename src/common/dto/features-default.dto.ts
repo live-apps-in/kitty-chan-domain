@@ -1,9 +1,8 @@
-export class FeatureDefault {
-  public isActive: boolean;
+export interface FeatureDefault {
+  isActive: boolean;
 }
 
-export class FeatDefaultWithTemplates extends FeatureDefault {
-  public channelId: string;
-
-  public templateId: string;
+export interface FeatDefaultWithTemplates extends FeatureDefault {
+  channelId: string;
+  templateId: string;
 }
