@@ -19,6 +19,18 @@ export class RedisService {
     client.del(key);
   }
 
+  async getFromSet(key: string) {
+    return client.smembers(key);
+  }
+
+  async addToSet(key: string, value: string) {
+    return client.sadd(key, value);
+  }
+
+  async removeFromSet(key: string, value: string) {
+    return client.srem(key, value);
+  }
+
   async ping() {
     return client.ping();
   }

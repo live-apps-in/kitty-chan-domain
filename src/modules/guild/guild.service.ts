@@ -23,6 +23,9 @@ export class GuildService {
   async guildCreate(guild: IBasicGuild) {
     const { guildId, guildName, guildIcon } = guild;
 
+    /**Add guildId to Redis cache */
+    await this.redisService.addToSet('kittychan-guildIds', guildId);
+
     /**Find or create guild */
     const getServer = await Guild.findOne({ guildId });
     if (getServer) {
@@ -55,14 +58,6 @@ export class GuildService {
         guildId,
       });
     }
-
-    ///Jaga's Discord ID
-    const userId = '516438995824017420';
-
-    await liveClient.user.sendMessage(
-      userId,
-      `Added to ${guild.guildName} - ${guild.guildId}`,
-    );
   }
 
   async guildUpdate(guild: IBasicGuild) {
@@ -89,19 +84,13 @@ export class GuildService {
   async guildDelete(guild: IBasicGuild) {
     const { guildId } = guild;
 
-    ///Remove feature flag in Redis
-    await this.redisService.delete(`guild:${guildId}:flags`);
+    await Promise.all([
+      /**Add guildId to Redis cache */
+      this.redisService.removeFromSet('kittychan-guildIds', guildId),
 
-    ///Remove Reaction Role Mongo cache
-    await this.rolesService.deleteReactionRolesByGuild(guildId);
-
-    ///Jaga's Discord ID
-    const userId = '516438995824017420';
-
-    await liveClient.user.sendMessage(
-      userId,
-      `Removed from ${guild.guildName} - ${guild.guildId}`,
-    );
+      /**Remove feature flag in Redis */
+      this.redisService.delete(`guild:${guildId}:flags`),
+    ]);
   }
 
   async guildMemberCreate(guildMember: IGuildMember) {

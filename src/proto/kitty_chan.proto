@@ -10,7 +10,7 @@ service EventsService{
   rpc guildCreate (IBasicGuild) returns (NoResponse);
   rpc guildUpdate (IBasicGuild) returns (NoResponse);
   rpc guildDelete (IBasicGuild) returns (NoResponse);
-  rpc guildMemberAdd (IGuildMember) returns (NoResponse);
+  rpc guildMemberCreate (IGuildMember) returns (NoResponse);
   rpc guildMemberRemove (IGuildMember) returns (NoResponse);
   rpc guildMemberUpdate (IGuildMemberUpdate) returns (NoResponse);
   rpc guildPresenceUpdate (IGuildPresenceUpdate) returns (NoResponse);

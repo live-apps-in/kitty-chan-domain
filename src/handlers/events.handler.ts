@@ -15,7 +15,6 @@ import { GuildService } from '../modules/guild/guild.service';
 import { GuildStatsService } from '../modules/stats/guild-stats.service';
 import { PortalService } from '../modules/portal/portal.service';
 import { RolesService } from '../modules/roles/roles.service';
-import { FeatureFlagService } from '../common/services/feature-flag.service';
 import { TYPES } from '../core/inversify.types';
 import { EventsServiceHandlers } from '../proto/kitty_chan/EventsService';
 import { NoResponse } from '../proto/kitty_chan/NoResponse';
@@ -37,8 +36,6 @@ export class EventsHandler implements EventsServiceHandlers {
     private readonly guildStatsService: GuildStatsService,
     @inject(TYPES.CommandService)
     private readonly commandService: CommandService,
-    @inject(TYPES.FeatureFlagService)
-    private readonly featureFlagService: FeatureFlagService,
     @inject(TYPES.PortalService) private readonly portalService: PortalService,
     @inject(TYPES.RolesService) private readonly rolesService: RolesService,
     @inject(TYPES.GuildService) private readonly guildService: GuildService,
@@ -163,7 +160,8 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
 
     const payload = call.request as IBasicGuild;
-    this.guildService.guildCreate(payload);
+
+    await this.guildService.guildCreate(payload);
   }
 
   /**Guild Update Events */
@@ -174,7 +172,8 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
 
     const payload = call.request as IBasicGuild;
-    this.guildService.guildUpdate(payload);
+
+    await this.guildService.guildUpdate(payload);
   }
 
   /**Guild Create Events */
@@ -185,11 +184,12 @@ export class EventsHandler implements EventsServiceHandlers {
     callback(null);
 
     const payload = call.request as IBasicGuild;
-    this.guildService.guildDelete(payload);
+
+    await this.guildService.guildDelete(payload);
   }
 
   /**Guild Member Add */
-  async guildMemberAdd(
+  async guildMemberCreate(
     call: ServerUnaryCall<any, NoResponse>,
     callback: sendUnaryData<any>,
   ) {

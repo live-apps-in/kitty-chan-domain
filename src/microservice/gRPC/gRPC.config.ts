@@ -5,7 +5,6 @@ import { GuildService } from '../../modules/guild/guild.service';
 import { GuildStatsService } from '../../modules/stats/guild-stats.service';
 import { PortalService } from '../../modules/portal/portal.service';
 import { RolesService } from '../../modules/roles/roles.service';
-import { FeatureFlagService } from '../../common/services/feature-flag.service';
 import { TYPES } from '../../core/inversify.types';
 import { EventsHandler } from '../../handlers/events.handler';
 import { ProtoGrpcType } from '../../proto/kitty_chan';
@@ -35,9 +34,6 @@ const guildStatsService = container.get<GuildStatsService>(
   TYPES.GuildStatsService,
 );
 const commandService = container.get<CommandService>(TYPES.CommandService);
-const featureFlagService = container.get<FeatureFlagService>(
-  TYPES.FeatureFlagService,
-);
 const portalService = container.get<PortalService>(TYPES.PortalService);
 const rolesService = container.get<RolesService>(TYPES.RolesService);
 const guildService = container.get<GuildService>(TYPES.GuildService);
@@ -52,7 +48,6 @@ const eventsGrpcController = new EventsHandler(
   languageFilterService,
   guildStatsService,
   commandService,
-  featureFlagService,
   portalService,
   rolesService,
   guildService,

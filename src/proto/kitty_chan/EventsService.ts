@@ -122,43 +122,43 @@ export interface EventsServiceClient extends grpc.Client {
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
 
-  guildMemberAdd(
+  guildMemberCreate(
     argument: _kitty_chan_IGuildMember,
     metadata: grpc.Metadata,
     options: grpc.CallOptions,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
-  guildMemberAdd(
+  guildMemberCreate(
     argument: _kitty_chan_IGuildMember,
     metadata: grpc.Metadata,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
-  guildMemberAdd(
+  guildMemberCreate(
     argument: _kitty_chan_IGuildMember,
     options: grpc.CallOptions,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
-  guildMemberAdd(
+  guildMemberCreate(
     argument: _kitty_chan_IGuildMember,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
-  guildMemberAdd(
+  guildMemberCreate(
     argument: _kitty_chan_IGuildMember,
     metadata: grpc.Metadata,
     options: grpc.CallOptions,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
-  guildMemberAdd(
+  guildMemberCreate(
     argument: _kitty_chan_IGuildMember,
     metadata: grpc.Metadata,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
-  guildMemberAdd(
+  guildMemberCreate(
     argument: _kitty_chan_IGuildMember,
     options: grpc.CallOptions,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
-  guildMemberAdd(
+  guildMemberCreate(
     argument: _kitty_chan_IGuildMember,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
@@ -545,7 +545,7 @@ export interface EventsServiceHandlers
     _kitty_chan_NoResponse
   >;
 
-  guildMemberAdd: grpc.handleUnaryCall<
+  guildMemberCreate: grpc.handleUnaryCall<
     _kitty_chan_IGuildMember__Output,
     _kitty_chan_NoResponse
   >;
@@ -609,7 +609,7 @@ export interface EventsServiceDefinition extends grpc.ServiceDefinition {
     _kitty_chan_IBasicGuild__Output,
     _kitty_chan_NoResponse__Output
   >;
-  guildMemberAdd: MethodDefinition<
+  guildMemberCreate: MethodDefinition<
     _kitty_chan_IGuildMember,
     _kitty_chan_NoResponse,
     _kitty_chan_IGuildMember__Output,
