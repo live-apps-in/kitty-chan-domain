@@ -253,14 +253,14 @@ Certain features won't work unless kitty chan can access these services. 💡`,
 
     if (!getGuild) {
       return {
-        service: 'LiveApps Discord (API)',
+        service: 'LiveApps Discord (Cache Miss)',
         isAvailable: false,
         latency: null,
       } as ServiceStats;
     }
 
     return {
-      service: 'LiveApps Discord (API)',
+      service: 'LiveApps Discord (Cache Miss)',
       isAvailable: true,
       latency: Number((end - start).toFixed(2)),
     } as ServiceStats;
@@ -276,14 +276,14 @@ Certain features won't work unless kitty chan can access these services. 💡`,
 
     if (!getGuild) {
       return {
-        service: 'LiveApps Discord (Cache)',
+        service: 'LiveApps Discord (Cache Hit)',
         isAvailable: false,
         latency: null,
       } as ServiceStats;
     }
 
     return {
-      service: 'LiveApps Discord (Cache)',
+      service: 'LiveApps Discord (Cache Hit)',
       isAvailable: true,
       latency: Number((end - start).toFixed(2)),
     } as ServiceStats;
