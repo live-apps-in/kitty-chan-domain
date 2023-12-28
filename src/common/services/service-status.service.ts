@@ -40,8 +40,8 @@ export class ServiceStatus {
     const ff = await this.featureFlag(guildId);
     const queue = await this.queue();
     const rest = await this.rest();
-    const liveAppsDiscordAPI = await this.liveAppsDiscordAPI(guildId);
     const liveAppsDiscordCache = await this.liveAppsDiscordCache(guildId);
+    const liveAppsDiscordAPI = await this.liveAppsDiscordAPI(guildId);
 
     serviceStats.push(mongo);
     serviceStats.push(redis);
@@ -49,8 +49,8 @@ export class ServiceStatus {
     serviceStats.push(queue);
     serviceStats.push(ff);
     serviceStats.push(rest);
-    serviceStats.push(liveAppsDiscordAPI);
     serviceStats.push(liveAppsDiscordCache);
+    serviceStats.push(liveAppsDiscordAPI);
 
     return serviceStats;
   }
