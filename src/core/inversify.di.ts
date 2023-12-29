@@ -28,6 +28,7 @@ import { EsService } from '../common/services/es.service';
 import { LanguageProcessorService } from '../modules/language/language-processor.service';
 import { AutoSailConfigService } from '../modules/auto-sail/auto-sail-config.service';
 import { AutoSailService } from '../modules/auto-sail/auto-sail.service';
+import { AutoSailConstraintsService } from '../modules/auto-sail/auto-sail-constraints.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -49,6 +50,9 @@ container.bind<AutoSailService>(TYPES.AutoSailService).to(AutoSailService);
 container
   .bind<AutoSailConfigService>(TYPES.AutoSailConfigService)
   .to(AutoSailConfigService);
+container
+  .bind<AutoSailConstraintsService>(TYPES.AutoSailConstraintsService)
+  .to(AutoSailConstraintsService);
 
 /**Repository */
 container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);

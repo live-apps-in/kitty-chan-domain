@@ -6,3 +6,10 @@ export const AutoSailDynamicFieldsMapping = {
     userId: 'userId',
   },
 };
+
+export const AutoSailConstraintsMapping = {
+  message: 'text',
+  userId: 'text',
+  roleId: 'text',
+  createdAt: 'date',
+};

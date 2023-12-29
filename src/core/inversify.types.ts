@@ -12,6 +12,7 @@ export const TYPES = {
   LoggerService: Symbol.for('LoggerService'),
   AutoSailService: Symbol.for('AutoSailService'),
   AutoSailConfigService: Symbol.for('AutoSailConfigService'),
+  AutoSailConstraintsService: Symbol.for('AutoSailConstraintsService'),
 
   /**Conversation Service */
   ConversationService: Symbol.for('ConversationService'),
