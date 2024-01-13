@@ -1,27 +1,27 @@
 import { injectable } from 'inversify';
 import { IGuild } from '../interface/shared.interface';
 import { liveClient } from '../../modules/app';
-import { DiscordActions } from '../enum/discord-action.enum';
+import { DiscordActionTypes } from '../enum/discord-action.enum';
 
 @injectable()
 export class DiscordActionService {
-  async actionFactory(action: DiscordActions, guild: IGuild, config: any) {
+  async actionFactory(action: DiscordActionTypes, guild: IGuild, config: any) {
     switch (action) {
-      case DiscordActions.MESSAGE_CREATE: {
+      case DiscordActionTypes.MESSAGE_CREATE: {
         await this.createMessage(guild, config);
 
         break;
       }
 
-      case DiscordActions.MESSAGE_REACT:
+      case DiscordActionTypes.MESSAGE_REACT:
         await this.react(guild, config);
         break;
 
-      case DiscordActions.MESSAGE_REPLY:
+      case DiscordActionTypes.MESSAGE_REPLY:
         await this.reply(guild, config);
         break;
 
-      case DiscordActions.MESSAGE_DELETE:
+      case DiscordActionTypes.MESSAGE_DELETE:
         await this.deleteMessage(guild);
         break;
 

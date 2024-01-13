@@ -73,11 +73,13 @@ export class LanguageFilter {
         );
 
         if (detected) {
-          await this.discordActionService.actionFactory(
-            actionConfig.action,
-            guild,
-            actionConfig,
-          );
+          for (const config of actionConfig) {
+            await this.discordActionService.actionFactory(
+              config.action,
+              guild,
+              config.messageConfig,
+            );
+          }
         }
       }
     });
@@ -97,13 +99,13 @@ export class LanguageFilter {
       );
 
       if (detected) {
-        const actionConfig = config.actionConfig as any;
+        const actionConfigs = config.actionConfig as any;
 
-        if (detected) {
+        for (const actionConfig of actionConfigs) {
           await this.discordActionService.actionFactory(
             actionConfig.action,
             guild,
-            actionConfig,
+            actionConfig.messageConfig,
           );
         }
       }

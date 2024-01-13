@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { AutoSailConfigDto } from './dto/auto-sail-config.dto';
 import { TYPES } from '../../core/inversify.types';
 import { DiscordActionService } from '../../common/services/discord-action.service';
-import { DiscordActions } from '../../common/enum/discord-action.enum';
+import { DiscordActionTypes } from '../../common/enum/discord-action.enum';
 import { AutoSailConstraintsService } from './auto-sail-constraints.service';
 
 @injectable()
@@ -39,7 +39,7 @@ export class AutoSailService {
 
       for (const action of config.actionConfig) {
         await this.discordActionService.actionFactory(
-          action.action as DiscordActions,
+          action.action as DiscordActionTypes,
           payload,
           action.messageConfig,
         );
