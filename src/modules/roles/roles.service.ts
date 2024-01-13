@@ -1,7 +1,6 @@
 import { injectable } from 'inversify';
 import { DiscordEmbeds } from '../../types/discord.types';
 import ReactionRoles from './model/reaction-roles.model';
-import { HttpException } from '../../core/exception';
 import ReactionRole from './model/reaction-roles.model';
 import { IMessageReaction } from '../../common/interface/shared.interface';
 import { compareRolesMapping } from '../../utils/roles-mapping';
@@ -34,8 +33,10 @@ export class RolesService {
     const reaction_role = await ReactionRole.findOne({
       messageId: reactionRoleMessageRef,
     });
-    if (!reaction_role)
-      throw new HttpException('Cannot find Reaction Role', 400);
+
+    if (!reaction_role) {
+      return false;
+    }
 
     ///Update Message
     await liveClient.message.editEmbed(
@@ -82,12 +83,13 @@ export class RolesService {
     const reaction_role = await ReactionRole.findOne({
       messageId: reactionRoleMessageRef,
     });
-    if (!reaction_role)
-      throw new HttpException('Cannot find Reaction Role', 400);
+
+    if (!reaction_role) {
+      return false;
+    }
 
     ///Delete Message
     await liveClient.message.delete(channelId, reactionRoleMessageRef);
-
     await ReactionRoles.deleteOne({ messageId: reactionRoleMessageRef });
 
     return {

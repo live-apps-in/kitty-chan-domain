@@ -8,6 +8,7 @@ import './database/mongo';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import './microservice/gRPC/gRPC.config';
+import './core/exception';
 
 async function bootstrap() {
   const _app = container.get<App>(TYPES.App);

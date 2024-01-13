@@ -1,20 +1,8 @@
-/////TODO - Handle Global Exception in Separate File
+const globalErrorHandler = (error: Error) => {
+  console.error(
+    `\x1b[31m[ ${new Date()} ] Unhandled Exception: ${error.stack}\x1b[0m\n`,
+  );
+};
 
-export class HttpException extends Error {
-  constructor(
-    public readonly message: string,
-    public readonly statusCode: number,
-  ) {
-    super(message);
-  }
-}
-
-export class ValidationException extends Error {
-  constructor(
-    public readonly message: string,
-    public readonly error: any,
-    public readonly statusCode: number,
-  ) {
-    super();
-  }
-}
+process.on('uncaughtException', globalErrorHandler);
+process.on('unhandledRejection', globalErrorHandler);
