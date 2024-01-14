@@ -14,6 +14,8 @@ import { LoggerService } from '../../modules/logger/logger.service';
 import container from '../../core/inversify.di';
 import { LanguageFilter } from '../../modules/language/language-filter.service';
 import { AutoSailConfigService } from '../../modules/auto-sail/auto-sail-config.service';
+import { CronHandler } from '../../handlers/cron.handler';
+import { CronService } from '../../modules/cron/cron.service';
 
 /**
  * Load Proto
@@ -44,6 +46,7 @@ const autoSailConfigService = container.get<AutoSailConfigService>(
   TYPES.AutoSailConfigService,
 );
 
+/**Events Service */
 const eventsGrpcController = new EventsHandler(
   languageFilterService,
   guildStatsService,
@@ -57,12 +60,19 @@ const eventsGrpcController = new EventsHandler(
   autoSailConfigService,
 );
 
+/**Cron Service */
+const cronService = container.get<CronService>(TYPES.CronService);
+const cronGrpcController = new CronHandler(cronService);
+
+/**gRPC Server */
 const gRpcServer = new grpc.Server();
 
 gRpcServer.addService(
   proto.kitty_chan.EventsService.service,
   eventsGrpcController,
 );
+
+gRpcServer.addService(proto.kitty_chan.CronService.service, cronGrpcController);
 
 gRpcServer.bindAsync(
   process.env.GRPC_URL,

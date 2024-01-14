@@ -29,6 +29,7 @@ import { LanguageProcessorService } from '../modules/language/language-processor
 import { AutoSailConfigService } from '../modules/auto-sail/auto-sail-config.service';
 import { AutoSailService } from '../modules/auto-sail/auto-sail.service';
 import { AutoSailConstraintsService } from '../modules/auto-sail/auto-sail-constraints.service';
+import { CronService } from '../modules/cron/cron.service';
 
 const container = new Container({
   defaultScope: 'Singleton',
@@ -53,6 +54,7 @@ container
 container
   .bind<AutoSailConstraintsService>(TYPES.AutoSailConstraintsService)
   .to(AutoSailConstraintsService);
+container.bind<CronService>(TYPES.CronService).to(CronService);
 
 /**Repository */
 container.bind<GuildRepo>(TYPES.GuildRepo).to(GuildRepo);

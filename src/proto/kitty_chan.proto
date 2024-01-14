@@ -16,10 +16,15 @@ service EventsService{
   rpc guildPresenceUpdate (IGuildPresenceUpdate) returns (NoResponse);
 }
 
+service CronService{
+  rpc cronCreate (ICronCreate) returns (NoResponse);
+}
+
 
 /**Common**/
 message NoResponse{}
 
+/** Events Service **/
 /**Guild Message**/
 message IGuildMessage{
   string guildId = 1;
@@ -149,4 +154,10 @@ message IGuildPresenceActivities{
   string details = 4;
   string state = 5;
   string createdTimestamp = 6;
+}
+
+/** Cron Service **/
+message ICronCreate{
+  string id = 1;
+  string expression = 2;
 }
