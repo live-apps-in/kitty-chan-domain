@@ -11,7 +11,7 @@ export class CronHandler implements CronServiceHandlers {
 
   constructor(@inject(CronService) private readonly cronService: CronService) {}
 
-  /**Guild Message Delete */
+  /**Cron Create */
   async cronCreate(
     call: ServerUnaryCall<any, NoResponse>,
     callback: sendUnaryData<any>,
