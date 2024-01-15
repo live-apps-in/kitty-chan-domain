@@ -1,3 +1,3 @@
 export enum CronModuleTypes {
-  AUTOSAIL = 'autosail',
+  AUTOSAIL = 'autoSail',
 }

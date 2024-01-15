@@ -31,6 +31,18 @@ export class RedisService {
     return client.srem(key, value);
   }
 
+  async rightPush(key: string, value: string) {
+    return client.rpush(key, value);
+  }
+
+  async leftPop(key: string) {
+    return client.lpop(key);
+  }
+
+  async expire(key: string, value: number) {
+    return client.expire(key, value);
+  }
+
   async ping() {
     return client.ping();
   }
