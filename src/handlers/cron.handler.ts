@@ -22,4 +22,26 @@ export class CronHandler implements CronServiceHandlers {
 
     await this.cronService.createCron(message);
   }
+
+  async cronUpdate(
+    call: ServerUnaryCall<any, NoResponse>,
+    callback: sendUnaryData<any>,
+  ) {
+    callback(null);
+
+    const message = call.request as ICronCreate;
+
+    await this.cronService.updateCron(message);
+  }
+
+  async cronDelete(
+    call: ServerUnaryCall<any, NoResponse>,
+    callback: sendUnaryData<any>,
+  ) {
+    callback(null);
+
+    const message = call.request as ICronCreate;
+
+    await this.cronService.deleteCron(message.id);
+  }
 }

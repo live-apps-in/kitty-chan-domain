@@ -52,6 +52,88 @@ export interface CronServiceClient extends grpc.Client {
     argument: _kitty_chan_ICronCreate,
     callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
   ): grpc.ClientUnaryCall;
+
+  cronDelete(
+    argument: _kitty_chan_ICronCreate,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronDelete(
+    argument: _kitty_chan_ICronCreate,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronDelete(
+    argument: _kitty_chan_ICronCreate,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronDelete(
+    argument: _kitty_chan_ICronCreate,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronDelete(
+    argument: _kitty_chan_ICronCreate,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronDelete(
+    argument: _kitty_chan_ICronCreate,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronDelete(
+    argument: _kitty_chan_ICronCreate,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronDelete(
+    argument: _kitty_chan_ICronCreate,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+
+  cronUpdate(
+    argument: _kitty_chan_ICronCreate,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronUpdate(
+    argument: _kitty_chan_ICronCreate,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronUpdate(
+    argument: _kitty_chan_ICronCreate,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronUpdate(
+    argument: _kitty_chan_ICronCreate,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronUpdate(
+    argument: _kitty_chan_ICronCreate,
+    metadata: grpc.Metadata,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronUpdate(
+    argument: _kitty_chan_ICronCreate,
+    metadata: grpc.Metadata,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronUpdate(
+    argument: _kitty_chan_ICronCreate,
+    options: grpc.CallOptions,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
+  cronUpdate(
+    argument: _kitty_chan_ICronCreate,
+    callback: grpc.requestCallback<_kitty_chan_NoResponse__Output>,
+  ): grpc.ClientUnaryCall;
 }
 
 export interface CronServiceHandlers extends grpc.UntypedServiceImplementation {
@@ -59,10 +141,32 @@ export interface CronServiceHandlers extends grpc.UntypedServiceImplementation {
     _kitty_chan_ICronCreate__Output,
     _kitty_chan_NoResponse
   >;
+
+  cronDelete: grpc.handleUnaryCall<
+    _kitty_chan_ICronCreate__Output,
+    _kitty_chan_NoResponse
+  >;
+
+  cronUpdate: grpc.handleUnaryCall<
+    _kitty_chan_ICronCreate__Output,
+    _kitty_chan_NoResponse
+  >;
 }
 
 export interface CronServiceDefinition extends grpc.ServiceDefinition {
   cronCreate: MethodDefinition<
+    _kitty_chan_ICronCreate,
+    _kitty_chan_NoResponse,
+    _kitty_chan_ICronCreate__Output,
+    _kitty_chan_NoResponse__Output
+  >;
+  cronDelete: MethodDefinition<
+    _kitty_chan_ICronCreate,
+    _kitty_chan_NoResponse,
+    _kitty_chan_ICronCreate__Output,
+    _kitty_chan_NoResponse__Output
+  >;
+  cronUpdate: MethodDefinition<
     _kitty_chan_ICronCreate,
     _kitty_chan_NoResponse,
     _kitty_chan_ICronCreate__Output,

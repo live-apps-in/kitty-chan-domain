@@ -20,6 +20,15 @@ export class CronService {
     this.scheduler.addCronJob(job);
   }
 
+  async updateCron({ id, expression }: ICronCreate) {
+    this.deleteCron(id);
+    this.createCron({ id, expression });
+  }
+
+  async deleteCron(id: string) {
+    this.scheduler.removeById(id);
+  }
+
   private async handle(id: string) {
     console.log('Cron Trigger: ' + id);
   }

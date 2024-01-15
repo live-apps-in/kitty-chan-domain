@@ -18,11 +18,12 @@ service EventsService{
 
 service CronService{
   rpc cronCreate (ICronCreate) returns (NoResponse);
+  rpc cronUpdate (ICronCreate) returns (NoResponse);
+  rpc cronDelete (ICronCreate) returns (NoResponse);
 }
 
-
-/**Common**/
-message NoResponse{}
+/**Shared**/
+message NoResponse { }
 
 /** Events Service **/
 /**Guild Message**/
