@@ -1,56 +1,68 @@
 import { injectable } from 'inversify';
-import { IGuild } from '../interface/shared.interface';
 import { liveClient } from '../../modules/app';
 import { DiscordActionTypes } from '../enum/discord-action.enum';
+import { ActionConfigDto } from '../dto/action-config.dto';
 
 @injectable()
 export class DiscordActionService {
-  async actionFactory(action: DiscordActionTypes, guild: IGuild, config: any) {
+  async actionFactory(action: DiscordActionTypes, config: any) {
     switch (action) {
       case DiscordActionTypes.MESSAGE_CREATE: {
-        await this.createMessage(guild, config);
+        await this.createMessage(config);
 
-        break;
+        return;
       }
 
-      case DiscordActionTypes.MESSAGE_REACT:
-        await this.react(guild, config);
-        break;
+      case DiscordActionTypes.MESSAGE_REACT: {
+        await this.react(config);
 
-      case DiscordActionTypes.MESSAGE_REPLY:
-        await this.reply(guild, config);
-        break;
+        return;
+      }
 
-      case DiscordActionTypes.MESSAGE_DELETE:
-        await this.deleteMessage(guild);
-        break;
+      case DiscordActionTypes.MESSAGE_REPLY: {
+        await this.reply(config);
+
+        return;
+      }
+
+      case DiscordActionTypes.MESSAGE_DELETE: {
+        await this.deleteMessage(config);
+
+        return;
+      }
 
       default:
         break;
     }
   }
 
-  private async createMessage(guild: IGuild, config: any) {
-    await liveClient.message.send(guild.channelId, config.plainMessage);
+  async process(actionConfigs: ActionConfigDto[]) {
+    for (const actionConfig of actionConfigs) {
+      await this.actionFactory(actionConfig.action, actionConfig.messageConfig);
+    }
   }
 
-  private async react(guild: IGuild, config: any) {
+  private async createMessage(config: any) {
+    await liveClient.message.send(config.channelId, config.plainMessage);
+  }
+
+  private async react(config: any) {
     await liveClient.message.react(
-      guild.channelId,
-      guild.messageId,
+      config.channelId,
+      config.messageId,
       config.emoji,
     );
   }
 
-  private async reply(guild: IGuild, config: any) {
+  private async reply(config: any) {
     await liveClient.message.reply(
-      guild.channelId,
-      guild.messageId,
+      config.channelId,
+      config.messageId,
       config.plainMessage,
     );
   }
 
-  private async deleteMessage(guild: IGuild) {
-    await liveClient.message.delete(guild.channelId, guild.messageId);
+  private async deleteMessage(config: any) {
+    await liveClient.message.delete(config.channelId, config.messageId);
   }
 }

@@ -72,14 +72,13 @@ export class LanguageFilter {
           config.whitelistLib,
         );
 
+        for (const config of actionConfig) {
+          config.messageConfig.channelId = guild.channelId;
+          config.messageConfig.messageId = guild.messageId;
+        }
+
         if (detected) {
-          for (const config of actionConfig) {
-            await this.discordActionService.actionFactory(
-              config.action,
-              guild,
-              config.messageConfig,
-            );
-          }
+          await this.discordActionService.process(actionConfig);
         }
       }
     });
@@ -98,16 +97,13 @@ export class LanguageFilter {
         guild.plainMessage,
       );
 
-      if (detected) {
-        const actionConfigs = config.actionConfig as any;
+      for (const actionConfig of config.actionConfig as any) {
+        actionConfig.messageConfig.channelId = guild.channelId;
+        actionConfig.messageConfig.messageId = guild.messageId;
+      }
 
-        for (const actionConfig of actionConfigs) {
-          await this.discordActionService.actionFactory(
-            actionConfig.action,
-            guild,
-            actionConfig.messageConfig,
-          );
-        }
+      if (detected) {
+        await this.discordActionService.process(config.actionConfig);
       }
     }
   }

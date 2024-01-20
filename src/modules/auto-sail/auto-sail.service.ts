@@ -2,8 +2,8 @@ import { inject, injectable } from 'inversify';
 import { AutoSailConfigDto } from './dto/auto-sail-config.dto';
 import { TYPES } from '../../core/inversify.types';
 import { DiscordActionService } from '../../common/services/discord-action.service';
-import { DiscordActionTypes } from '../../common/enum/discord-action.enum';
 import { AutoSailConstraintsService } from './auto-sail-constraints.service';
+import AutoSailModel from './model/auto-sail.model';
 
 @injectable()
 export class AutoSailService {
@@ -13,6 +13,7 @@ export class AutoSailService {
     @inject(TYPES.AutoSailConstraintsService)
     private readonly autoSailConstraintsService: AutoSailConstraintsService,
   ) {}
+
   async automate(
     payload: any,
     triggerEvent: string,
@@ -37,13 +38,24 @@ export class AutoSailService {
         continue;
       }
 
-      for (const action of config.actionConfig) {
-        await this.discordActionService.actionFactory(
-          action.action as DiscordActionTypes,
-          payload,
-          action.messageConfig,
-        );
+      for (const actionConfig of config.actionConfig as any) {
+        actionConfig.messageConfig.channelId = payload.channelId;
+        actionConfig.messageConfig.messageId = payload.messageId;
       }
+
+      await this.discordActionService.process(config.actionConfig);
     }
+  }
+
+  async handleCron(id: string) {
+    const autoSail = await AutoSailModel.findOne({
+      'config.cronConfig.cronRefId': id.toString(),
+    });
+
+    if (!autoSail) {
+      return false;
+    }
+
+    await this.discordActionService.process(autoSail.config.actionConfig);
   }
 }

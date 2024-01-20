@@ -5,6 +5,8 @@ import CronModel from './model/cron.model';
 import { TYPES } from '../../core/inversify.types';
 import { RedisService } from '../../common/services/redis.service';
 import { DeploymentMode } from '../../common/enum/deployment-mode.enum';
+import { CronModuleTypes } from './enum/cron-modules.enum';
+import { AutoSailService } from '../auto-sail/auto-sail.service';
 
 @injectable()
 export class CronService {
@@ -16,6 +18,8 @@ export class CronService {
 
   constructor(
     @inject(TYPES.RedisService) private readonly redisService: RedisService,
+    @inject(TYPES.AutoSailService)
+    private readonly autoSailService: AutoSailService,
   ) {
     this.scheduler = new ToadScheduler();
     this.bootstrap();
@@ -40,7 +44,17 @@ export class CronService {
   }
 
   private async handle(id: string) {
-    console.log('Cron Trigger: ' + id);
+    const getCron = await CronModel.findOne({ _id: id });
+
+    if (!getCron) {
+      this.scheduler.removeById(id);
+    }
+
+    switch (getCron.module) {
+      case CronModuleTypes.AUTOSAIL: {
+        this.autoSailService.handleCron(id);
+      }
+    }
   }
 
   /**Load and sync cron jobs */
