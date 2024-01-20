@@ -21,7 +21,7 @@ import { NoResponse } from '../proto/kitty_chan/NoResponse';
 import { ServiceStatus } from '../common/services/service-status.service';
 import { WelcomerService } from '../modules/greet/welcomer.service';
 import { LoggerService } from '../modules/logger/logger.service';
-import { liveClient } from '../modules/app';
+import { discordClient } from '../modules/app';
 import { LanguageFilter } from '../modules/language/language-filter.service';
 import { DiscordEventsType } from '../common/enum/discord-events.enum';
 import { AutoSailConfigService } from '../modules/auto-sail/auto-sail-config.service';
@@ -219,7 +219,7 @@ export class EventsHandler implements EventsServiceHandlers {
     this.loggerService.memberUpdate(guildMember);
 
     //Update Member cache
-    await liveClient.member.fetch(guildMember.guildId, guildMember.userId, {
+    await discordClient.member.fetch(guildMember.guildId, guildMember.userId, {
       ignoreCache: true,
     });
 

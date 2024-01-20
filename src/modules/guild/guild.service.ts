@@ -9,7 +9,7 @@ import { TYPES } from '../../core/inversify.types';
 import { RolesService } from '../roles/roles.service';
 import { RedisService } from '../../common/services/redis.service';
 import User from './model/user.model';
-import { liveClient } from '../app';
+import { discordClient } from '../app';
 import Features from '../features/model/features.model';
 import { DiscordPresenceStatus } from '../../common/enum/discord-presence.enum';
 
@@ -63,7 +63,7 @@ export class GuildService {
   async guildUpdate(guild: IBasicGuild) {
     const { guildId } = guild;
 
-    const getDiscordGuild = await liveClient.guild.fetch(guildId, {
+    const getDiscordGuild = await discordClient.guild.fetch(guildId, {
       ignoreCache: true,
     });
     if (!getDiscordGuild) {

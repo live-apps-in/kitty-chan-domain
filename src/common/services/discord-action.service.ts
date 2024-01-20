@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { liveClient } from '../../modules/app';
+import { discordClient } from '../../modules/app';
 import { DiscordActionTypes } from '../enum/discord-action.enum';
 import { ActionConfigDto } from '../dto/action-config.dto';
 
@@ -43,11 +43,11 @@ export class DiscordActionService {
   }
 
   private async createMessage(config: any) {
-    await liveClient.message.send(config.channelId, config.plainMessage);
+    await discordClient.message.send(config.channelId, config.plainMessage);
   }
 
   private async react(config: any) {
-    await liveClient.message.react(
+    await discordClient.message.react(
       config.channelId,
       config.messageId,
       config.emoji,
@@ -55,7 +55,7 @@ export class DiscordActionService {
   }
 
   private async reply(config: any) {
-    await liveClient.message.reply(
+    await discordClient.message.reply(
       config.channelId,
       config.messageId,
       config.plainMessage,
@@ -63,6 +63,6 @@ export class DiscordActionService {
   }
 
   private async deleteMessage(config: any) {
-    await liveClient.message.delete(config.channelId, config.messageId);
+    await discordClient.message.delete(config.channelId, config.messageId);
   }
 }

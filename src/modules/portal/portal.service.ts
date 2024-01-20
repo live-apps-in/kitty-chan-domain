@@ -3,7 +3,7 @@ import { TYPES } from '../../core/inversify.types';
 import { IGuild, IGuildMessage } from '../../common/interface/shared.interface';
 import PortalRoom from './model/portal-room.model';
 import { SharedService } from '../../common/services/shared.service';
-import { liveClient } from '../app';
+import { discordClient } from '../app';
 import { PortalMsg } from '../../common/messages/portal/portal';
 import { FeaturesRepo } from '../features/repo/features.repo';
 import { FeaturesEnum } from '../features/enum/features.enum';
@@ -125,13 +125,17 @@ export class PortalService {
 
   //Common Reply Handler
   private async reply(content: string, guild: IGuild) {
-    await liveClient.message.reply(guild.channelId, guild.messageId, content);
+    await discordClient.message.reply(
+      guild.channelId,
+      guild.messageId,
+      content,
+    );
     return;
   }
 
   private async message(guilds: any[]) {
     guilds.map(async (e) => {
-      await liveClient.message.send(e.channelId, e.message);
+      await discordClient.message.send(e.channelId, e.message);
     });
   }
 }

@@ -3,7 +3,7 @@ import { TYPES } from '../../core/inversify.types';
 import { GuildRepo } from '../../repository/guild.repo';
 import { performance } from 'perf_hooks';
 import { RedisService } from './redis.service';
-import { liveClient } from '../../modules/app';
+import { discordClient } from '../../modules/app';
 import { DiscordEmbeds } from '@live-apps/discord';
 import { DiscordEmbedField } from '../../types/discord.types';
 import { QueueService } from './queue.service';
@@ -128,7 +128,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
       embeds.fields?.push({ name: '', value: '' }); // Add an empty field for spacing
     }
 
-    await liveClient.message.sendEmbed(channelId, [embeds]);
+    await discordClient.message.sendEmbed(channelId, [embeds]);
   }
 
   /**MongoDB - Check by fetching home guild */
@@ -245,7 +245,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   /**LiveApps Discord - API call */
   private async liveAppsDiscordAPI(guildId: string) {
     const start = performance.now();
-    const getGuild = await liveClient.guild.fetch(guildId, {
+    const getGuild = await discordClient.guild.fetch(guildId, {
       ignoreCache: true,
       expiry: 3600,
     });
@@ -269,7 +269,7 @@ Certain features won't work unless kitty chan can access these services. 💡`,
   /**LiveApps Discord - Fetch Cache */
   private async liveAppsDiscordCache(guildId: string) {
     const start = performance.now();
-    const getGuild = await liveClient.guild.fetch(guildId, {
+    const getGuild = await discordClient.guild.fetch(guildId, {
       expiry: 3600,
     });
     const end = performance.now();

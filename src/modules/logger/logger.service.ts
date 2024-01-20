@@ -4,7 +4,7 @@ import {
   IMessageUpdate,
 } from '../../common/interface/shared.interface';
 import { DiscordTemplateType } from '../../common/enum/discord-template.enum';
-import { liveClient } from '../app';
+import { discordClient } from '../app';
 import { TYPES } from '../../core/inversify.types';
 import { DiscordTemplateService } from '../../common/services/discord-template.service';
 import Features from '../features/model/features.model';
@@ -38,7 +38,7 @@ export class LoggerService {
 
   /**Guild Member Update Logger */
   async memberUpdate(member: IGuildMemberUpdate) {
-    const memberCache = await liveClient.member.fetch(
+    const memberCache = await discordClient.member.fetch(
       member.guildId,
       member.userId,
       { onlyCache: true },
@@ -239,7 +239,7 @@ export class LoggerService {
       return;
     }
 
-    const guild = await liveClient.guild.fetch(content.guildId);
+    const guild = await discordClient.guild.fetch(content.guildId);
     const guildName = guild.name;
 
     if (template.type === DiscordTemplateType.plain) {
@@ -248,7 +248,7 @@ export class LoggerService {
         template.content,
       );
 
-      await liveClient.message.send(channelId, plainContent);
+      await discordClient.message.send(channelId, plainContent);
     } else if (template.type === DiscordTemplateType.embed) {
       content.guildName = guildName;
 
@@ -256,7 +256,7 @@ export class LoggerService {
         ...template.embed,
       });
 
-      await liveClient.message.sendEmbed(channelId, [embed]);
+      await discordClient.message.sendEmbed(channelId, [embed]);
     }
   }
 }

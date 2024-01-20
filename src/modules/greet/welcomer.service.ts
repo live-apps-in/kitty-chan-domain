@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { IGuildMember } from '../../common/interface/shared.interface';
 import DiscordTemplateModel from '../template/model/discord-templates.model';
-import { liveClient } from '../app';
+import { discordClient } from '../app';
 import Guild from '../guild/model/guild.model';
 import {
   DiscordTemplateType,
@@ -19,7 +19,7 @@ export class WelcomerService {
     const template = await this.getDefaultTemplate();
     if (!template) return;
 
-    await liveClient.message.send(
+    await discordClient.message.send(
       guildConfig.welcomer.channelId,
       await this.fillTemplatePlaceHolder(template.content, guild),
     );

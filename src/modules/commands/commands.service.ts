@@ -5,7 +5,7 @@ import { TYPES } from '../../core/inversify.types';
 import { UtilityService } from '../../common/services/utils.service';
 import { flip_coin_wake_word } from './data/wake_words/general';
 import { PortalService } from '../portal/portal.service';
-import { liveClient } from '../app';
+import { discordClient } from '../app';
 
 @injectable()
 export class CommandService {
@@ -50,7 +50,11 @@ export class CommandService {
       const content = `Hey there! I'm kitty chan. I'm currently at very early stages of development.
   You will be invited when a stable version is released :)`;
 
-      await liveClient.message.reply(guild.channelId, guild.messageId, content);
+      await discordClient.message.reply(
+        guild.channelId,
+        guild.messageId,
+        content,
+      );
 
       return true;
     }
@@ -78,7 +82,7 @@ export class CommandService {
       };
     }
 
-    await liveClient.message.reply(
+    await discordClient.message.reply(
       guild.channelId,
       guild.messageId,
       response.message,

@@ -4,7 +4,7 @@ import ReactionRoles from './model/reaction-roles.model';
 import ReactionRole from './model/reaction-roles.model';
 import { IMessageReaction } from '../../common/interface/shared.interface';
 import { compareRolesMapping } from '../../utils/roles-mapping';
-import { liveClient } from '../app';
+import { discordClient } from '../app';
 
 /**
  * Reaction Roles Action
@@ -39,7 +39,7 @@ export class RolesService {
     }
 
     ///Update Message
-    await liveClient.message.editEmbed(
+    await discordClient.message.editEmbed(
       channelId,
       reactionRoleMessageRef,
       embed,
@@ -63,7 +63,7 @@ export class RolesService {
     for (let index = 0; index < emojiToBeUpdated.length; index++) {
       const emoji = emojiToBeUpdated[index].emoji;
 
-      await liveClient.message.react(
+      await discordClient.message.react(
         channelId,
         reactionRoleMessageRef,
         emoji.type === 'standard'
@@ -89,7 +89,7 @@ export class RolesService {
     }
 
     ///Delete Message
-    await liveClient.message.delete(channelId, reactionRoleMessageRef);
+    await discordClient.message.delete(channelId, reactionRoleMessageRef);
     await ReactionRoles.deleteOne({ messageId: reactionRoleMessageRef });
 
     return {
@@ -129,7 +129,7 @@ export class RolesService {
     }
 
     ///Add role to User
-    return liveClient.roles.set(reaction_role.guildId, userId, role.roleId);
+    return discordClient.roles.set(reaction_role.guildId, userId, role.roleId);
   }
 
   ///Handle Role React
@@ -160,6 +160,10 @@ export class RolesService {
     }
 
     ///Add role to User
-    await liveClient.roles.remove(reaction_role.guildId, userId, role.roleId);
+    await discordClient.roles.remove(
+      reaction_role.guildId,
+      userId,
+      role.roleId,
+    );
   }
 }

@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import 'dotenv/config';
 import { OnInit } from '../jobs/on-init';
-import { Client as LiveClient } from '@live-apps/discord';
+import { Client as LiveAppsDiscordClient } from '@live-apps/discord';
 import container from '../core/inversify.di';
 import { EsService } from '../common/services/es.service';
 import { TYPES } from '../core/inversify.types';
@@ -9,7 +9,7 @@ import { TYPES } from '../core/inversify.types';
 /**
  * LiveApps Discord Client Config
  */
-export const liveClient = new LiveClient({
+export const discordClient = new LiveAppsDiscordClient({
   events: [],
   redisOptions: {
     host: process.env.REDIS_HOST,
