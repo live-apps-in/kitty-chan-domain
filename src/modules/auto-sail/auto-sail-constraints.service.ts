@@ -11,6 +11,7 @@ export class AutoSailConstraintsService {
     payload: any,
   ) {
     let isValid = false;
+
     for (const constraint of constraints) {
       const conditionTypeKey = AutoSailConstraintsTypeMapping[constraint.type];
 

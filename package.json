@@ -15,15 +15,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaga-live/kitty-chan-discord-ts.git"
+    "url": "git+https://github.com/live-apps-in/kitty-chan-domain.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jaga-live/kitty-chan-discord-ts/issues"
+    "url": "https://github.com/live-apps-in/kitty-chan-domain/issues"
   },
-  "homepage": "https://github.com/jaga-live/kitty-chan-discord-ts#readme",
+  "homepage": "https://github.com/live-apps-in/kitty-chan-domain#readme",
   "dependencies": {
     "@babel/preset-env": "^7.23.9",
     "@elastic/elasticsearch": "^7.17.12",
