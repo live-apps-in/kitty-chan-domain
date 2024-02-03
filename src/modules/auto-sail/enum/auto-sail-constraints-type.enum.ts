@@ -1,5 +1,5 @@
 export enum AutoSailConstraintsType {
-  MESSAGE = 'message',
+  PLAIN_MESSAGE = 'plainMessage',
   CREATED_AT = 'createdAt',
   USER_ID = 'userId',
 }

@@ -1,10 +1,7 @@
 import { injectable } from 'inversify';
 import { AutoSailConfigDto } from './dto/auto-sail-config.dto';
 import { AutoSailConstraintsDto } from './dto/auto-sail-constraints.dto';
-import {
-  AutoSailConstraintsMapping,
-  AutoSailDynamicFieldsMapping,
-} from './mappings/auto-sail-constraints.mapping';
+import { AutoSailConstraintsTypeMapping } from './mappings/auto-sail-constraints.mapping';
 
 @injectable()
 export class AutoSailConstraintsService {
@@ -15,7 +12,7 @@ export class AutoSailConstraintsService {
   ) {
     let isValid = false;
     for (const constraint of constraints) {
-      const conditionTypeKey = AutoSailConstraintsMapping[constraint.type];
+      const conditionTypeKey = AutoSailConstraintsTypeMapping[constraint.type];
 
       isValid = this[`${conditionTypeKey}Validation`](
         constraint,
@@ -42,10 +39,7 @@ export class AutoSailConstraintsService {
           case 'equal':
           case 'notEqual': {
             const configValue = condition[key]?.value;
-            const payloadValue =
-              payload[
-                AutoSailDynamicFieldsMapping?.[triggerEvent]?.[constraint.type]
-              ];
+            const payloadValue = payload[constraint.type];
 
             if (
               (key === 'equal' && configValue?.includes(payloadValue)) ||
@@ -72,11 +66,12 @@ export class AutoSailConstraintsService {
           case 'gt':
           case 'lt': {
             const configIsoTime = new Date(condition[key]?.value);
-            const targetIsoTime = new Date(
-              payload[
-                AutoSailDynamicFieldsMapping?.[triggerEvent]?.[constraint.type]
-              ],
-            );
+            let targetIsoTime = new Date(payload[constraint.type]);
+
+            /**If value for constraint type is not available, current date is used */
+            targetIsoTime = isNaN(targetIsoTime.getTime())
+              ? new Date()
+              : targetIsoTime;
 
             if (
               isNaN(configIsoTime.getTime()) ||

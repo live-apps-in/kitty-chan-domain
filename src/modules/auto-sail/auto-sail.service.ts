@@ -19,6 +19,7 @@ export class AutoSailService {
     triggerEvent: string,
     autoSailConfig: AutoSailConfigDto[],
   ) {
+    /**Filter out configs matching the current event */
     const filterConfig = autoSailConfig.filter(
       (config) => config.triggerEvent === triggerEvent,
     );
