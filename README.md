@@ -18,7 +18,7 @@ This guide will help you set up the project on your local machine.
 - MongoDB
 - Elastic Search v7.5
 - Docker (recommended if running all other kitty chan microservices all together)
-- kitty chan Events [kitty-chan-events](https://github.com/live-apps-in/kitty-chan-events). (Domain microservice receives gRPC events from this events microservice)
+- kitty chan Events [kitty-chan-events](https://github.com/live-apps-in/kitty-chan-events). (Domain microservice receives gRPC events from this events microservice).
 
 ## Installation
 
