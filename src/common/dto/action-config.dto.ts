@@ -1,4 +1,4 @@
-import { DiscordActionTypes } from '../enum/discord-action.enum';
+import { DiscordActionTypes } from 'src/common/enum/discord-action.enum';
 
 interface ActionMessageConfig {
   channelId?: string;

@@ -1,20 +1,20 @@
-import { IValueCase } from '../../../common/interface/value-case.interface';
-import { AutoSailConstraintsType } from '../enum/auto-sail-constraints-type.enum';
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IValueCase } from 'src/common/interface/value-case.interface';
+import { AutoSailConstraintsType } from 'src/modules/auto-sail/enum/auto-sail-constraints-type.enum';
 
-export interface AutoSailConstraintsDto {
+export class AutoSailConstraintsDto {
+  @IsEnum(AutoSailConstraintsType)
+  @IsNotEmpty()
   type: AutoSailConstraintsType;
+
+  @IsNotEmpty()
   conditions: AutoSailConditionDto[];
 }
 
-interface MessageConditionDTO {
-  equals?: IValueCase;
-  notEquals?: IValueCase;
+interface AutoSailConditionDto {
+  equal?: IValueCase;
+  notEqual?: IValueCase;
+  gt?: IValueCase;
+  lt?: IValueCase;
+  f;
 }
-
-interface TimeConditionDTO {
-  equals?: IValueCase;
-  greaterThan?: IValueCase;
-  lessThan?: IValueCase;
-}
-
-type AutoSailConditionDto = MessageConditionDTO | TimeConditionDTO;

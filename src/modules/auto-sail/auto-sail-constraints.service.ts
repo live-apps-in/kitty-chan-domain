@@ -1,9 +1,9 @@
-import { injectable } from 'inversify';
 import { AutoSailConfigDto } from './dto/auto-sail-config.dto';
 import { AutoSailConstraintsDto } from './dto/auto-sail-constraints.dto';
 import { AutoSailConstraintsTypeMapping } from './mappings/auto-sail-constraints.mapping';
+import { Injectable } from '@nestjs/common';
 
-@injectable()
+@Injectable()
 export class AutoSailConstraintsService {
   public validateConstraints(
     { constraints }: AutoSailConfigDto,

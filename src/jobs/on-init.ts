@@ -1,15 +1,20 @@
-import { inject } from 'inversify';
-import { EsService } from '../common/services/es.service';
-import LanguageLibs from '../modules/language/model/language-libs.model';
-import { esClient } from '../database/elastic-search';
+import { Inject } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { LanguageLibRefIds } from 'src/common/constants/es.store';
+import { EsService } from 'src/common/services/connectivity/es.service';
+import { LanguageLibs } from 'src/modules/language/models/language_libs.model';
 import { v4 } from 'uuid';
-import { LanguageLibRefIds } from '../common/store/language-lib.store';
 
 /* Data Libs */
 export const strong_language_en = [];
 export const hinglish_words = [];
 export class OnInit {
-  constructor(@inject(EsService) private readonly esService: EsService) {}
+  constructor(
+    @Inject(EsService) private readonly esService: EsService,
+    @InjectModel('language_libs')
+    private readonly languageLibModel: Model<LanguageLibs>,
+  ) {}
   async bootstrap() {
     await this.syncLanguageLibRefId();
 
@@ -23,32 +28,14 @@ export class OnInit {
   /**Create or Update Elastic Search indices */
   private async createOrUpdateElasticIndex() {
     const indexName = 'language-lib';
-    const indexExists = await esClient.indices.exists({ index: indexName });
+    const indexExists = await this.esService.indexExists(indexName);
 
     if (indexExists.body) {
       console.log(`Index ${indexName} already exists. Skipping creation.`);
       return;
     }
 
-    await esClient.indices.create({
-      index: indexName,
-      body: {
-        settings: {
-          analysis: {
-            tokenizer: 'whitespace',
-            filter: ['lowercase'],
-          },
-        },
-        mappings: {
-          properties: {
-            data: {
-              type: 'keyword', // Change type to keyword for exact match
-              ignore_above: 256, // Adjust if necessary
-            },
-          },
-        },
-      },
-    });
+    await this.esService.createIndex(indexName);
   }
   /**
    * Load Language Library to Elastic Search
@@ -57,24 +44,19 @@ export class OnInit {
     //Delete all existing data
     //Workaround - Multiple delete causing conflict in seqNo
     const languageIndexName = 'language-lib';
-    const languageLibIndex = await esClient.indices.exists({
-      index: languageIndexName,
-    });
+    const languageLibIndex =
+      await this.esService.indexExists(languageIndexName);
     if (languageLibIndex.body) {
       console.log(`Deleting index - ${languageIndexName}`);
-      await esClient.deleteByQuery({
-        index: languageIndexName,
-        body: {
-          query: {
-            match: {
-              id: 'strong-language-en',
-            },
-          },
-        },
-      });
+      await this.esService.deleteByQuery(
+        languageIndexName,
+        'strong-language-en',
+      );
     }
 
-    const languageLibs = await LanguageLibs.find({ system: true }).lean();
+    const languageLibs = await this.languageLibModel
+      .find({ system: true })
+      .lean();
 
     languageLibs.map(async (e) => {
       for (const data of e.data) {
@@ -96,7 +78,9 @@ export class OnInit {
   }
 
   private async syncLanguageLibRefId() {
-    const languageLibs = await LanguageLibs.find({ system: true }).lean();
+    const languageLibs = await this.languageLibModel
+      .find({ system: true })
+      .lean();
 
     languageLibs.map((e) => {
       //Update refId to local store
