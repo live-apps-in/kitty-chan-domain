@@ -36,6 +36,7 @@ import { RedisProvider } from 'src/providers/redis.provider';
     UtilityService,
   ],
   exports: [
+    DiscordProvider,
     RedisProvider,
     EsProvider,
     AxiosService,

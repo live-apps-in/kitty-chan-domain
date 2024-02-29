@@ -1,9 +1,8 @@
-import { injectable } from 'inversify';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PROVIDER_TYPES } from 'src/common/constants/provider.types';
 import { Client as EsClient } from '@elastic/elasticsearch';
 
-@injectable()
+@Injectable()
 export class EsService {
   constructor(
     @Inject(PROVIDER_TYPES.EsClient) private readonly esClient: EsClient,

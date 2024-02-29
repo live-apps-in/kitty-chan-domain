@@ -1,11 +1,10 @@
-import { injectable } from 'inversify';
 import { DiscordActionTypes } from '../enum/discord-action.enum';
 import { ActionConfigDto } from '../dto/action-config.dto';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PROVIDER_TYPES } from 'src/common/constants/provider.types';
 import { Client } from '@live-apps/discord';
 
-@injectable()
+@Injectable()
 export class DiscordActionService {
   constructor(
     @Inject(PROVIDER_TYPES.DiscordClient)

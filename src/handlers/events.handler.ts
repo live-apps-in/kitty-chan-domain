@@ -1,13 +1,18 @@
 import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { DiscordEventsType } from 'src/common/enum/discord-events.enum';
-import { IGuildMessage } from 'src/common/interface/guild.interface';
+import {
+  IGuildMessage,
+  IMessageDelete,
+  IMessageUpdate,
+} from 'src/common/interface/guild.interface';
 import { HealthService } from 'src/common/services/health.service';
 import { AnalyticsService } from 'src/modules/analytics/analytics.service';
 import { AutoSailConfigService } from 'src/modules/auto-sail/auto-sail-config.service';
 import { AutoSailTriggerEvents } from 'src/modules/auto-sail/enum/auto-sail-trigger-events.enum';
 import { CommandService } from 'src/modules/commands/commands.service';
 import { LanguageFilter } from 'src/modules/language/language-filter.service';
+import { LoggerService } from 'src/modules/logger/logger.service';
 
 @Controller()
 export class EventsController {
@@ -22,6 +27,8 @@ export class EventsController {
     private readonly autoSailConfigService: AutoSailConfigService,
     @Inject(CommandService)
     private readonly commandService: CommandService,
+    @Inject(LoggerService)
+    private readonly loggerService: LoggerService,
   ) {}
   @GrpcMethod('EventsService', 'messageCreate')
   async messageCreate(message: IGuildMessage): Promise<any> {
@@ -58,13 +65,23 @@ export class EventsController {
   }
 
   @GrpcMethod('EventsService', 'messageUpdate')
-  messageUpdate(data: any): any {
-    console.log(data);
+  async messageUpdate(message: IMessageUpdate): Promise<any> {
+    this.loggerService.messageUpdateDelete(
+      message,
+      DiscordEventsType.messageUpdate,
+    );
+
+    this.analyticsService.log_message(message, DiscordEventsType.messageUpdate);
   }
 
   @GrpcMethod('EventsService', 'messageDelete')
-  messageDelete(data: any): any {
-    console.log(data);
+  messageDelete(message: IMessageDelete): any {
+    this.loggerService.messageUpdateDelete(
+      message,
+      DiscordEventsType.messageDelete,
+    );
+
+    this.analyticsService.log_message(message, DiscordEventsType.messageDelete);
   }
 
   @GrpcMethod('EventsService', 'messageReactionAdd')

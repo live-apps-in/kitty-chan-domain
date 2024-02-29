@@ -17,6 +17,7 @@ import { SharedModule } from 'src/common/services/shared.module';
 import { JobModule } from 'src/jobs/jobs.module';
 import { AutoSailModule } from 'src/modules/auto-sail/auto-sail.module';
 import { CommandsModule } from 'src/modules/commands/commands.module';
+import { LoggerModule } from 'src/modules/logger/logger.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CommandsModule } from 'src/modules/commands/commands.module';
     JobModule,
     AutoSailModule,
     CommandsModule,
+    LoggerModule,
   ],
   controllers: [EventsController],
   providers: [
