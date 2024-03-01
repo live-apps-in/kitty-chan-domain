@@ -18,6 +18,8 @@ import { JobModule } from 'src/jobs/jobs.module';
 import { AutoSailModule } from 'src/modules/auto-sail/auto-sail.module';
 import { CommandsModule } from 'src/modules/commands/commands.module';
 import { LoggerModule } from 'src/modules/logger/logger.module';
+import { RolesModule } from 'src/modules/roles/roles.module';
+import { GreetModule } from 'src/modules/greet/greet.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { LoggerModule } from 'src/modules/logger/logger.module';
     AutoSailModule,
     CommandsModule,
     LoggerModule,
+    RolesModule,
+    GreetModule,
   ],
   controllers: [EventsController],
   providers: [
