@@ -1,17 +1,19 @@
-import { inject, injectable } from 'inversify';
 import { AutoSailConfigDto } from './dto/auto-sail-config.dto';
-import { TYPES } from '../../core/inversify.types';
 import { DiscordActionService } from '../../common/services/discord-action.service';
 import { AutoSailConstraintsService } from './auto-sail-constraints.service';
-import AutoSailModel from './model/auto-sail.model';
+import { Inject, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { AutoSail } from 'src/modules/auto-sail/models/auto-sail.model';
+import { Model } from 'mongoose';
 
-@injectable()
+@Injectable()
 export class AutoSailService {
   constructor(
-    @inject(TYPES.DiscordActionService)
+    @Inject(DiscordActionService)
     private readonly discordActionService: DiscordActionService,
-    @inject(TYPES.AutoSailConstraintsService)
+    @Inject(AutoSailConstraintsService)
     private readonly autoSailConstraintsService: AutoSailConstraintsService,
+    @InjectModel('auto_sail') private readonly autoSailModel: Model<AutoSail>,
   ) {}
 
   async automate(
@@ -49,7 +51,7 @@ export class AutoSailService {
   }
 
   async handleCron(id: string) {
-    const autoSail = await AutoSailModel.findOne({
+    const autoSail = await this.autoSailModel.findOne({
       'config.cronConfig.cronRefId': id.toString(),
     });
 

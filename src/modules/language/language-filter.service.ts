@@ -1,29 +1,29 @@
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../core/inversify.types';
-import { RedisService } from '../../common/services/redis.service';
-import { IGuild } from '../../common/interface/shared.interface';
-import featuresModel from '../features/model/features.model';
-import { LanguageFilterDto } from './dto/language-filter.dto';
-import { DataStructure } from '../../common/services/data-structure.service';
+import { Injectable, Inject } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { LanguageLibRefIds } from 'src/common/constants/es.store';
+import { IGuild } from 'src/common/interface/guild.interface';
+import { DiscordActionService } from 'src/common/services/discord-action.service';
+import { Features } from 'src/modules/features/model/features.model';
+import { LanguageProcessorService } from 'src/modules/language/language-processor.service';
+import { Model } from 'mongoose';
 import {
-  StrongLanguage,
   StrongLanguageConfig,
-} from './dto/strong-language.dto';
-import { StrongLanguageCodes } from './enum/strong-language.enum';
-import { DiscordActionService } from '../../common/services/discord-action.service';
-import { LanguageProcessorService } from './language-processor.service';
-import { LanguageLibRefIds } from '../../common/store/language-lib.store';
+  StrongLanguageDto,
+} from 'src/modules/language/dto/strong_language.dto';
+import { LanguageFilterDto } from 'src/modules/language/dto/language_filter.dto';
+import { StrongLanguageCodes } from 'src/modules/language/enum/strong_language.enum';
+import { RedisService } from 'src/common/services/connectivity/redis.service';
 
-@injectable()
+@Injectable()
 export class LanguageFilter {
   constructor(
-    @inject(TYPES.RedisService) private readonly redisService: RedisService,
-    @inject(TYPES.DataStructureService)
-    private readonly dataStructure: DataStructure,
-    @inject(TYPES.DiscordActionService)
+    @Inject(RedisService) private readonly redisService: RedisService,
+    @Inject(DiscordActionService)
     private readonly discordActionService: DiscordActionService,
-    @inject(TYPES.LanguageProcessorService)
+    @Inject(LanguageProcessorService)
     private readonly languageProcessor: LanguageProcessorService,
+    @InjectModel(Features.name)
+    private readonly featuresModel: Model<Features>,
   ) {}
 
   async languageFactory(guild: IGuild): Promise<void> {
@@ -50,7 +50,7 @@ export class LanguageFilter {
    * If Feature is enabled checks for English Bad words
    */
   private async strongLanguage(guild: IGuild) {
-    const strongLanguageConfig: StrongLanguage =
+    const strongLanguageConfig: StrongLanguageDto =
       await this.getStrongLanguageConfig(guild);
 
     if (!strongLanguageConfig?.isActive) return;
@@ -69,7 +69,7 @@ export class LanguageFilter {
           'language-lib',
           LanguageLibRefIds['strong-language-en'],
           plainMessage,
-          config.whitelistLib,
+          config.whitelistLib.toString(),
         );
 
         for (const config of actionConfig) {
@@ -118,7 +118,7 @@ export class LanguageFilter {
     const cachedConfig = await this.redisService.get(cacheKey);
 
     if (!cachedConfig) {
-      const languageFeature = await featuresModel.findOne(
+      const languageFeature = await this.featuresModel.findOne(
         { guildId: guild.guildId },
         { language: 1 },
       );
@@ -140,14 +140,14 @@ export class LanguageFilter {
   /**Strong Language Config */
   private async getStrongLanguageConfig(
     guild: IGuild,
-  ): Promise<StrongLanguage> {
-    let strongLanguageConfig: StrongLanguage;
+  ): Promise<StrongLanguageDto> {
+    let strongLanguageConfig: StrongLanguageDto;
     const cacheKey = `guild-${guild.guildId}:feature:strongLanguageConfig`;
 
     const cachedConfig = await this.redisService.get(cacheKey);
 
     if (!cachedConfig) {
-      const languageFeature = await featuresModel.findOne(
+      const languageFeature = await this.featuresModel.findOne(
         { guildId: guild.guildId },
         { language: 1 },
       );

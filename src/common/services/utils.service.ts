@@ -1,6 +1,6 @@
-import { injectable } from 'inversify';
+import { Injectable } from '@nestjs/common';
 
-@injectable()
+@Injectable()
 export class UtilityService {
   async match_wake_phrase(messageChunk: string[], phraseLib: string[][]) {
     const res = {

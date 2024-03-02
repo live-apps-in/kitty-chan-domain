@@ -1,37 +1,21 @@
-import 'reflect-metadata';
-import express from 'express';
-import 'reflect-metadata';
-import container from './core/inversify.di';
-import { App } from './modules/app';
-import { TYPES } from './core/inversify.types';
-import './database/mongo';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import './microservice/gRPC/gRPC.config';
-import './core/exception';
+import * as dotenv from 'dotenv';
+dotenv.config();
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { kittyChangRPCOptions } from 'src/microservice/gRPC';
+import { OnInit } from 'src/jobs/on-init';
 
 async function bootstrap() {
-  const _app = container.get<App>(TYPES.App);
-  _app.start();
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    kittyChangRPCOptions,
+  );
+
+  //Perform data sync during application bootstrap
+  await app.get(OnInit).bootstrap();
+
+  await app.listen();
 }
 
 bootstrap();
-const app = express();
-
-/* Use http server for Web Sockets */
-const httpServer = createServer(app);
-httpServer.listen(process.env.PORT || 5000, () => {
-  console.log('App Started');
-});
-
-const io = new Server(httpServer, {
-  cors: {
-    origin: '*',
-  },
-});
-
-io.on('connection', () => {
-  console.log('Connected to Socket');
-});
-
-export default io;

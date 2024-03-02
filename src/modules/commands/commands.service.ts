@@ -1,19 +1,19 @@
-import { inject, injectable } from 'inversify';
-import { IGuild } from '../../common/interface/shared.interface';
-import 'dotenv/config';
-import { TYPES } from '../../core/inversify.types';
-import { UtilityService } from '../../common/services/utils.service';
-import { flip_coin_wake_word } from './data/wake_words/general';
-import { PortalService } from '../portal/portal.service';
-import { discordClient } from '../app';
+import { Client } from '@live-apps/discord';
+import { Inject, Injectable } from '@nestjs/common';
+import { PROVIDER_TYPES } from 'src/common/constants/provider.types';
+import { IGuild } from 'src/common/interface/guild.interface';
+import { UtilityService } from 'src/common/services/utils.service';
+import { flip_coin_wake_word } from 'src/modules/commands/wake_words/general';
 
-@injectable()
+@Injectable()
 export class CommandService {
   private CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+
   constructor(
-    @inject(TYPES.UtilityService)
+    @Inject(UtilityService)
     private readonly utilityService: UtilityService,
-    @inject(TYPES.PortalService) private readonly portalService: PortalService,
+    @Inject(PROVIDER_TYPES.DiscordClient)
+    private readonly discordClient: Client,
   ) {}
 
   ///Validate and Filter Command
@@ -36,13 +36,6 @@ export class CommandService {
       return true;
     }
 
-    ///Flip a coin
-    if (messageChunk[1] === 'portal') {
-      await this.portalService.validate(messageChunk, guild);
-
-      return true;
-    }
-
     /**Help Command
      * temp - will be refactored soon
      */
@@ -50,7 +43,7 @@ export class CommandService {
       const content = `Hey there! I'm kitty chan. I'm currently at very early stages of development.
   You will be invited when a stable version is released :)`;
 
-      await discordClient.message.reply(
+      await this.discordClient.message.reply(
         guild.channelId,
         guild.messageId,
         content,
@@ -82,7 +75,7 @@ export class CommandService {
       };
     }
 
-    await discordClient.message.reply(
+    await this.discordClient.message.reply(
       guild.channelId,
       guild.messageId,
       response.message,

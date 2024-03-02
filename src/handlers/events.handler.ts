@@ -1,259 +1,177 @@
-import { sendUnaryData, ServerUnaryCall } from '@grpc/grpc-js';
-import { inject, injectable } from 'inversify';
+import { Client } from '@live-apps/discord';
+import { Controller, Inject } from '@nestjs/common';
+import { GrpcMethod } from '@nestjs/microservices';
+import { PROVIDER_TYPES } from 'src/common/constants/provider.types';
+import { DiscordEventsType } from 'src/common/enum/discord-events.enum';
 import {
   IBasicGuild,
   IGuildMember,
-  IGuildMemberUpdate,
   IGuildMessage,
   IGuildPresence,
   IMessageDelete,
   IMessageReaction,
   IMessageUpdate,
-} from '../common/interface/shared.interface';
-import { CommandService } from '../modules/commands/commands.service';
-import { GuildService } from '../modules/guild/guild.service';
-import { GuildStatsService } from '../modules/stats/guild-stats.service';
-import { PortalService } from '../modules/portal/portal.service';
-import { RolesService } from '../modules/roles/roles.service';
-import { TYPES } from '../core/inversify.types';
-import { EventsServiceHandlers } from '../proto/kitty_chan/EventsService';
-import { NoResponse } from '../proto/kitty_chan/NoResponse';
-import { ServiceStatus } from '../common/services/service-status.service';
-import { WelcomerService } from '../modules/greet/welcomer.service';
-import { LoggerService } from '../modules/logger/logger.service';
-import { discordClient } from '../modules/app';
-import { LanguageFilter } from '../modules/language/language-filter.service';
-import { DiscordEventsType } from '../common/enum/discord-events.enum';
-import { AutoSailConfigService } from '../modules/auto-sail/auto-sail-config.service';
-import { AutoSailTriggerEvents } from '../modules/auto-sail/enum/auto-sail-trigger-events.enum';
+} from 'src/common/interface/guild.interface';
+import { HealthService } from 'src/common/services/health.service';
+import { AnalyticsService } from 'src/modules/analytics/analytics.service';
+import { AutoSailConfigService } from 'src/modules/auto-sail/auto-sail-config.service';
+import { AutoSailTriggerEvents } from 'src/modules/auto-sail/enum/auto-sail-trigger-events.enum';
+import { CommandService } from 'src/modules/commands/commands.service';
+import { WelcomerService } from 'src/modules/greet/welcomer.service';
+import { GuildService } from 'src/modules/guild/guild.service';
+import { LanguageFilter } from 'src/modules/language/language-filter.service';
+import { LoggerService } from 'src/modules/logger/logger.service';
+import { ReactionRolesService } from 'src/modules/roles/reaction-roles.service';
 
-@injectable()
-export class EventsHandler implements EventsServiceHandlers {
-  [name: string]: any;
+@Controller()
+export class EventsController {
   constructor(
-    @inject(TYPES.LanguageFilter) private readonly langFilter: LanguageFilter,
-    @inject(TYPES.GuildStatsService)
-    private readonly guildStatsService: GuildStatsService,
-    @inject(TYPES.CommandService)
-    private readonly commandService: CommandService,
-    @inject(TYPES.PortalService) private readonly portalService: PortalService,
-    @inject(TYPES.RolesService) private readonly rolesService: RolesService,
-    @inject(TYPES.GuildService) private readonly guildService: GuildService,
-    @inject(TYPES.ServiceStatus) private readonly serviceStatus: ServiceStatus,
-    @inject(TYPES.WelcomerService)
-    private readonly welcomerService: WelcomerService,
-    @inject(TYPES.LoggerService) private readonly loggerService: LoggerService,
-    @inject(TYPES.AutoSailConfigService)
+    @Inject(PROVIDER_TYPES.DiscordClient)
+    private readonly discordClient: Client,
+    @Inject(AnalyticsService)
+    private readonly analyticsService: AnalyticsService,
+    @Inject(HealthService)
+    private readonly healthService: HealthService,
+    @Inject(LanguageFilter)
+    private readonly languageFilterService: LanguageFilter,
+    @Inject(AutoSailConfigService)
     private readonly autoSailConfigService: AutoSailConfigService,
+    @Inject(CommandService)
+    private readonly commandService: CommandService,
+    @Inject(LoggerService)
+    private readonly loggerService: LoggerService,
+    @Inject(ReactionRolesService)
+    private readonly reactionRolesService: ReactionRolesService,
+    @Inject(GuildService)
+    private readonly guildService: GuildService,
+    @Inject(WelcomerService)
+    private readonly welcomerService: WelcomerService,
   ) {}
+  @GrpcMethod('EventsService', 'messageCreate')
+  async messageCreate(message: IGuildMessage) {
+    //Return if bot message
+    if (message.isBot) {
+      return;
+    }
 
-  /**Message Create Events */
-  async messageCreate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    //Acknowledge gRPC call
-    callback(null);
+    //Log Message info
+    this.analyticsService.log_message(message, DiscordEventsType.messageCreate);
 
-    const guildMessage = call.request as IGuildMessage;
-
-    //Validate if Bot message
-    if (guildMessage.isBot) return;
-
-    //Guild Stats Logger
-    this.guildStatsService.log_message(
-      guildMessage,
-      DiscordEventsType.messageCreate,
-    );
-
-    //Service Stats
-    const serviceStats = await this.serviceStatus.validateCommand(guildMessage);
-    if (serviceStats) return;
-
-    //Check Portal Intent
-    const isPortal = await this.portalService.validate_channel(guildMessage);
-    if (isPortal) return;
+    //Public health check
+    const isHealthCheckCommand =
+      await this.healthService.validateCommand(message);
+    if (isHealthCheckCommand) {
+      return;
+    }
 
     //Language Services
-    this.langFilter.languageFactory(guildMessage);
+    this.languageFilterService.languageFactory(message);
 
-    //Auto Sail
+    //AutoSail
     this.autoSailConfigService.process(
-      guildMessage,
+      message,
       AutoSailTriggerEvents.MESSAGE_CREATE,
     );
 
-    //Commands
-    const isCommand = await this.commandService.validateCommand(guildMessage);
-    if (isCommand) return;
+    //Validate Command Intent
+    const isCommandIntent = await this.commandService.validateCommand(message);
+
+    if (isCommandIntent) {
+      return;
+    }
   }
 
-  /**Guild Message Update */
-  async messageUpdate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const message = call.request as IMessageUpdate;
-
-    //Logger
+  @GrpcMethod('EventsService', 'messageUpdate')
+  async messageUpdate(message: IMessageUpdate) {
     this.loggerService.messageUpdateDelete(
       message,
       DiscordEventsType.messageUpdate,
     );
 
-    //Guild Stats
-    this.guildStatsService.log_message(
-      message,
-      DiscordEventsType.messageUpdate,
-    );
+    this.analyticsService.log_message(message, DiscordEventsType.messageUpdate);
   }
 
-  /**Guild Message Delete */
-  async messageDelete(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const message = call.request as IMessageDelete;
-
+  @GrpcMethod('EventsService', 'messageDelete')
+  async messageDelete(message: IMessageDelete) {
     this.loggerService.messageUpdateDelete(
       message,
       DiscordEventsType.messageDelete,
     );
 
-    this.guildStatsService.log_message(
-      message,
-      DiscordEventsType.messageDelete,
-    );
+    this.analyticsService.log_message(message, DiscordEventsType.messageDelete);
   }
 
-  /**Add Message Reaction Events */
-  async messageReactionAdd(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const payload = call.request as IMessageReaction;
-    this.rolesService.setReactionRole(payload);
+  @GrpcMethod('EventsService', 'messageReactionAdd')
+  async messageReactionAdd(message: IMessageReaction) {
+    this.reactionRolesService.setReactionRole(message);
   }
 
-  /**Remove Message Reaction Events */
-  async messageReactionRemove(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const payload = call.request as IMessageReaction;
-    this.rolesService.removeReactionRole(payload);
+  @GrpcMethod('EventsService', 'messageReactionRemove')
+  messageReactionRemove(message: IMessageReaction) {
+    this.reactionRolesService.removeReactionRole(message);
   }
 
-  /**Guild Create Events */
-  async guildCreate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const payload = call.request as IBasicGuild;
-
-    await this.guildService.guildCreate(payload);
+  @GrpcMethod('EventsService', 'guildCreate')
+  async guildCreate(guild: IBasicGuild) {
+    this.guildService.guildCreate(guild);
   }
 
-  /**Guild Update Events */
-  async guildUpdate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const payload = call.request as IBasicGuild;
-
-    await this.guildService.guildUpdate(payload);
+  @GrpcMethod('EventsService', 'guildUpdate')
+  async guildUpdate(guild: IBasicGuild) {
+    this.guildService.guildUpdate(guild);
   }
 
-  /**Guild Create Events */
-  async guildDelete(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const payload = call.request as IBasicGuild;
-
-    await this.guildService.guildDelete(payload);
+  @GrpcMethod('EventsService', 'guildDelete')
+  async guildDelete(guild: IBasicGuild) {
+    this.guildService.guildDelete(guild);
   }
 
-  /**Guild Member Add */
-  async guildMemberCreate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-    const guildMember = call.request as IGuildMember;
+  @GrpcMethod('EventsService', 'guildMemberCreate')
+  async guildMemberCreate(guildMember: IGuildMember) {
+    await Promise.all([
+      this.welcomerService.handle(guildMember),
 
-    this.welcomerService.handle(guildMember);
+      this.guildService.guildMemberCreate(guildMember),
 
-    //Sync Guild Member
-    this.guildService.guildMemberCreate(guildMember);
-
-    this.guildStatsService.log_member(
-      guildMember,
-      DiscordEventsType.memberCreate,
-    );
+      this.analyticsService.log_member(
+        guildMember,
+        DiscordEventsType.memberCreate,
+      ),
+    ]);
   }
 
-  /**Guild Member Update */
-  async guildMemberUpdate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-    const guildMember = call.request as IGuildMemberUpdate;
+  @GrpcMethod('EventsService', 'guildMemberUpdate')
+  async guildMemberUpdate(guildMember: IGuildMember) {
+    await Promise.all([
+      this.loggerService.memberUpdate(guildMember),
 
-    //Logger Service
-    this.loggerService.memberUpdate(guildMember);
+      //Update Member cache
+      this.discordClient.member.fetch(guildMember.guildId, guildMember.userId, {
+        ignoreCache: true,
+      }),
 
-    //Update Member cache
-    await discordClient.member.fetch(guildMember.guildId, guildMember.userId, {
-      ignoreCache: true,
-    });
-
-    this.guildStatsService.log_member(
-      guildMember,
-      DiscordEventsType.memberUpdate,
-    );
+      this.analyticsService.log_member(
+        guildMember,
+        DiscordEventsType.memberUpdate,
+      ),
+    ]);
   }
 
-  /**Guild Member Remove */
-  async guildMemberRemove(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-    const guildMember = call.request as IGuildMember;
+  @GrpcMethod('EventsService', 'guildMemberRemove')
+  async guildMemberRemove(guildMember: IGuildMember) {
+    await Promise.all([
+      //Sync Guild Member
+      this.guildService.guildMemberDelete(guildMember),
 
-    //Sync Guild Member
-    this.guildService.guildMemberDelete(guildMember);
-
-    this.guildStatsService.log_member(
-      guildMember,
-      DiscordEventsType.memberDelete,
-    );
+      this.analyticsService.log_member(
+        guildMember,
+        DiscordEventsType.memberDelete,
+      ),
+    ]);
   }
 
-  /**Guild Presence Update */
-  async guildPresenceUpdate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-    const guildPresence = call.request as IGuildPresence;
-
-    this.guildService.guildPresenceUpdate(guildPresence);
+  @GrpcMethod('EventsService', 'guildPresenceUpdate')
+  async guildPresenceUpdate(guildPresence: IGuildPresence) {
+    await this.guildService.guildPresenceUpdate(guildPresence);
   }
 }

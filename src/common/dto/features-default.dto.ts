@@ -1,8 +1,21 @@
-export interface FeatureDefault {
-  isActive: boolean;
+import { IsBoolean, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+
+/**Fundamental fields for Features */
+export class FeatureDefault {
+  @IsNotEmpty()
+  @IsBoolean()
+  public isActive: boolean;
 }
 
-export interface FeatDefaultWithTemplates extends FeatureDefault {
-  channelId: string;
-  templateId: string;
+/**Features which has access to Message templates */
+export class FeatDefaultWithTemplates extends FeatureDefault {
+  @IsNotEmpty()
+  @ValidateIf((o) => o.channelId !== null)
+  @IsString()
+  public channelId: string;
+
+  @IsNotEmpty()
+  @ValidateIf((o) => o.templateId !== null)
+  @IsString()
+  public templateId: string;
 }

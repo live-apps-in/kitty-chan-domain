@@ -27,9 +27,8 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg KITTY_CHAN_TOKEN=${{ secrets.KITTY_CHAN_TOKEN }} \
-            --build-arg KITTY_CHAN_ID=${{ vars.KITTY_CHAN_ID }} \
             --build-arg DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }} \
+            --build-arg DISCORD_CLIENT_ID=${{ vars.DISCORD_BOT_TOKEN }} \
             --build-arg DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }} \
             --build-arg DISCORD_API=${{ vars.DISCORD_API }} \
             --build-arg GRPC_URL=${{ vars.GRPC_URL }} \

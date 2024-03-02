@@ -1,47 +1,23 @@
-import { sendUnaryData, ServerUnaryCall } from '@grpc/grpc-js';
-import { inject, injectable } from 'inversify';
-import { NoResponse } from '../proto/kitty_chan/NoResponse';
-import { CronServiceHandlers } from '../proto/kitty_chan/CronService';
-import { CronService } from '../modules/cron/cron.service';
-import { ICronCreate } from '../proto/kitty_chan/ICronCreate';
+import { Controller, Inject } from '@nestjs/common';
+import { GrpcMethod } from '@nestjs/microservices';
+import { CronService } from 'src/modules/cron/cron.service';
+import { ICronCreate } from 'src/modules/cron/interface/cron.interface';
 
-@injectable()
-export class CronHandler implements CronServiceHandlers {
-  [name: string]: any;
-
-  constructor(@inject(CronService) private readonly cronService: CronService) {}
-
-  /**Cron Create */
-  async cronCreate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const message = call.request as ICronCreate;
-
-    await this.cronService.createCron(message);
+@Controller()
+export class CronController {
+  constructor(@Inject(CronService) private readonly cronService: CronService) {}
+  @GrpcMethod('CronService', 'cronCreate')
+  async cronCreate(cron: ICronCreate) {
+    await this.cronService.createCron(cron);
   }
 
-  async cronUpdate(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const message = call.request as ICronCreate;
-
-    await this.cronService.updateCron(message);
+  @GrpcMethod('CronService', 'cronUpdate')
+  async cronUpdate(cron: ICronCreate) {
+    await this.cronService.updateCron(cron);
   }
 
-  async cronDelete(
-    call: ServerUnaryCall<any, NoResponse>,
-    callback: sendUnaryData<any>,
-  ) {
-    callback(null);
-
-    const message = call.request as ICronCreate;
-
-    await this.cronService.deleteCron(message.id);
+  @GrpcMethod('CronService', 'cronDelete')
+  async cronDelete(cron: ICronCreate) {
+    await this.cronService.deleteCron(cron.id);
   }
 }

@@ -1,22 +1,29 @@
-import { inject, injectable } from 'inversify';
+import { Injectable, Inject } from '@nestjs/common';
 import {
-  IGuildMemberUpdate,
   IMessageUpdate,
-} from '../../common/interface/shared.interface';
-import { DiscordTemplateType } from '../../common/enum/discord-template.enum';
-import { discordClient } from '../app';
-import { TYPES } from '../../core/inversify.types';
-import { DiscordTemplateService } from '../../common/services/discord-template.service';
-import Features from '../features/model/features.model';
-import { TemplateRepo } from '../../repository/template.repo';
+  IGuildMemberUpdate,
+} from 'src/common/interface/guild.interface';
+import { Features } from 'src/modules/features/model/features.model';
 import { DiscordEventsType } from '../../common/enum/discord-events.enum';
+import { PROVIDER_TYPES } from 'src/common/constants/provider.types';
+import { Client } from '@live-apps/discord';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { DiscordTemplate } from 'src/modules/discord-template/models/discord-template.model';
+import { DiscordTemplateType } from 'src/common/enum/discord-template.enum';
+import { DiscordTemplateService } from 'src/modules/discord-template/discord-template.service';
 
-@injectable()
+@Injectable()
 export class LoggerService {
   constructor(
-    @inject(TYPES.DiscordTemplateService)
+    @Inject(DiscordTemplateService)
     private readonly templateService: DiscordTemplateService,
-    @inject(TYPES.TemplateRepo) private readonly templateRepo: TemplateRepo,
+    @Inject(PROVIDER_TYPES.DiscordClient)
+    private readonly discordClient: Client,
+    @InjectModel('discord_templates')
+    private readonly discordTemplateModel: Model<DiscordTemplate>,
+    @InjectModel(Features.name)
+    private readonly featuresModel: Model<Features>,
   ) {}
 
   /**Guild Message Update Logger */
@@ -25,6 +32,7 @@ export class LoggerService {
     target: DiscordEventsType,
   ) {
     const validateFF = await this.validateLoggerFF(message.guildId, target);
+
     if (!validateFF) {
       return;
     }
@@ -38,7 +46,7 @@ export class LoggerService {
 
   /**Guild Member Update Logger */
   async memberUpdate(member: IGuildMemberUpdate) {
-    const memberCache = await discordClient.member.fetch(
+    const memberCache = await this.discordClient.member.fetch(
       member.guildId,
       member.userId,
       { onlyCache: true },
@@ -207,7 +215,7 @@ export class LoggerService {
   }
 
   private async validateLoggerFF(guildId: string, target: DiscordEventsType) {
-    const features = await Features.findOne({ guildId });
+    const features = await this.featuresModel.findOne({ guildId });
 
     const status = features?.logger?.[target]?.isActive;
     const channelId = features?.logger?.[target]?.channelId;
@@ -223,9 +231,9 @@ export class LoggerService {
     };
   }
 
-  /**Get Template */
-  private async getTemplate(templateId: string = null) {
-    return this.templateRepo.findById(templateId);
+  /**Get Discord Template */
+  private async getDiscordTemplate(templateId: string = null) {
+    return this.discordTemplateModel.findOne({ _id: templateId });
   }
 
   private async sendTemplateMessage(
@@ -233,13 +241,13 @@ export class LoggerService {
     templateId: string,
     content: any,
   ) {
-    const template = await this.getTemplate(templateId);
+    const template = await this.getDiscordTemplate(templateId);
 
     if (!template) {
       return;
     }
 
-    const guild = await discordClient.guild.fetch(content.guildId);
+    const guild = await this.discordClient.guild.fetch(content.guildId);
     const guildName = guild.name;
 
     if (template.type === DiscordTemplateType.plain) {
@@ -248,7 +256,7 @@ export class LoggerService {
         template.content,
       );
 
-      await discordClient.message.send(channelId, plainContent);
+      await this.discordClient.message.send(channelId, plainContent);
     } else if (template.type === DiscordTemplateType.embed) {
       content.guildName = guildName;
 
@@ -256,7 +264,7 @@ export class LoggerService {
         ...template.embed,
       });
 
-      await discordClient.message.sendEmbed(channelId, [embed]);
+      await this.discordClient.message.sendEmbed(channelId, [embed]);
     }
   }
 }

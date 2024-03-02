@@ -1,13 +1,12 @@
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../core/inversify.types';
-import { EsService } from '../../common/services/es.service';
-import { DataStructure } from '../../common/services/data-structure.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { EsService } from '../../common/services/connectivity/es.service';
+import { DataStructure } from 'src/common/services/data-structure.service';
 
-@injectable()
+@Injectable()
 export class LanguageProcessorService {
   constructor(
-    @inject(TYPES.EsService) private readonly esService: EsService,
-    @inject(TYPES.DataStructureService)
+    @Inject(EsService) private readonly esService: EsService,
+    @Inject(DataStructure)
     private readonly dataStructure: DataStructure,
   ) {}
   /**Match Phrase with Elastic Search */

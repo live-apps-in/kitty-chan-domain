@@ -1,17 +1,28 @@
-import { injectable } from 'inversify';
-import { IGuildMember } from '../../common/interface/shared.interface';
-import DiscordTemplateModel from '../template/model/discord-templates.model';
-import { discordClient } from '../app';
-import Guild from '../guild/model/guild.model';
+import { Client } from '@live-apps/discord';
+import { Inject, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { PROVIDER_TYPES } from 'src/common/constants/provider.types';
 import {
   DiscordTemplateType,
   DiscordTemplateTarget,
-} from '../../common/enum/discord-template.enum';
+} from 'src/common/enum/discord-template.enum';
+import { IGuildMember } from 'src/common/interface/guild.interface';
+import { DiscordTemplate } from 'src/modules/discord-template/models/discord-template.model';
+import { Guild } from 'src/modules/guild/models/guild.model';
 
-@injectable()
+@Injectable()
 export class WelcomerService {
+  constructor(
+    @Inject(PROVIDER_TYPES.DiscordClient)
+    private readonly discordClient: Client,
+    @InjectModel(Guild.name) private readonly guildModel: Model<Guild>,
+    @InjectModel(DiscordTemplate.name)
+    private readonly discordTemplateModel: Model<DiscordTemplate>,
+  ) {}
   async handle(guild: IGuildMember) {
-    const guildConfig = (await Guild.findOne({
+    //TODO - Refactor
+    const guildConfig = (await this.guildModel.findOne({
       guildId: guild.guildId,
     })) as any;
     if (!guildConfig?.welcomer?.channelId) return;
@@ -19,14 +30,14 @@ export class WelcomerService {
     const template = await this.getDefaultTemplate();
     if (!template) return;
 
-    await discordClient.message.send(
+    await this.discordClient.message.send(
       guildConfig.welcomer.channelId,
       await this.fillTemplatePlaceHolder(template.content, guild),
     );
   }
 
   private async getDefaultTemplate() {
-    return DiscordTemplateModel.findOne({
+    return this.discordTemplateModel.findOne({
       type: DiscordTemplateType.plain,
       target: DiscordTemplateTarget.WELCOME_MESSAGE,
     });

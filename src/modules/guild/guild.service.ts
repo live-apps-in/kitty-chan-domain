@@ -1,23 +1,28 @@
-import { inject, injectable } from 'inversify';
+import { Client } from '@live-apps/discord';
+import { Injectable, Inject } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { PROVIDER_TYPES } from 'src/common/constants/provider.types';
+import { DiscordPresenceStatus } from 'src/common/enum/discord-presence.enum';
 import {
   IBasicGuild,
   IGuildMember,
   IGuildPresence,
-} from '../../common/interface/shared.interface';
-import Guild from './model/guild.model';
-import { TYPES } from '../../core/inversify.types';
-import { RolesService } from '../roles/roles.service';
-import { RedisService } from '../../common/services/redis.service';
-import User from './model/user.model';
-import { discordClient } from '../app';
-import Features from '../features/model/features.model';
-import { DiscordPresenceStatus } from '../../common/enum/discord-presence.enum';
+} from 'src/common/interface/guild.interface';
+import { RedisService } from 'src/common/services/connectivity/redis.service';
+import { Features } from 'src/modules/features/model/features.model';
+import { Guild } from 'src/modules/guild/models/guild.model';
+import { User } from 'src/modules/user/models/user.model';
 
-@injectable()
+@Injectable()
 export class GuildService {
   constructor(
-    @inject(TYPES.RolesService) private readonly rolesService: RolesService,
-    @inject(TYPES.RedisService) private readonly redisService: RedisService,
+    @Inject(RedisService) private readonly redisService: RedisService,
+    @Inject(PROVIDER_TYPES.DiscordClient)
+    private readonly discordClient: Client,
+    @InjectModel(Guild.name) private readonly guildModel: Model<Guild>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(Features.name) private readonly featuresModel: Model<Features>,
   ) {}
 
   async guildCreate(guild: IBasicGuild) {
@@ -27,9 +32,9 @@ export class GuildService {
     await this.redisService.addToSet('kittychan-guildIds', guildId);
 
     /**Find or create guild */
-    const getServer = await Guild.findOne({ guildId });
+    const getServer = await this.guildModel.findOne({ guildId });
     if (getServer) {
-      await Guild.updateOne(
+      await this.guildModel.updateOne(
         { _id: getServer._id },
         {
           $set: {
@@ -43,7 +48,7 @@ export class GuildService {
       return;
     }
 
-    await Guild.insertMany({
+    await this.guildModel.insertMany({
       name: guildName,
       guildId,
       ownerId: guild.guildOwner,
@@ -51,10 +56,10 @@ export class GuildService {
     });
 
     /**Create Features for Guild */
-    const getFeatures = await Features.findOne({ guildId });
+    const getFeatures = await this.featuresModel.findOne({ guildId });
 
     if (!getFeatures) {
-      await Features.insertMany({
+      await this.featuresModel.insertMany({
         guildId,
       });
     }
@@ -63,14 +68,14 @@ export class GuildService {
   async guildUpdate(guild: IBasicGuild) {
     const { guildId } = guild;
 
-    const getDiscordGuild = await discordClient.guild.fetch(guildId, {
+    const getDiscordGuild = await this.discordClient.guild.fetch(guildId, {
       ignoreCache: true,
     });
     if (!getDiscordGuild) {
       return;
     }
 
-    await Guild.updateOne(
+    await this.guildModel.updateOne(
       { guildId },
       {
         $set: {
@@ -94,24 +99,26 @@ export class GuildService {
   }
 
   async guildMemberCreate(guildMember: IGuildMember) {
-    const user = await User.findOne({ discordId: guildMember.userId });
+    const user = await this.userModel.findOne({
+      discordId: guildMember.userId,
+    });
 
     if (user) {
-      await User.updateOne(
+      await this.userModel.updateOne(
         { _id: user._id },
         {
           $addToSet: { guilds: guildMember.guildId },
         },
       );
     } else {
-      await User.insertMany({
+      await this.userModel.insertMany({
         name: guildMember.userName,
         discordId: guildMember.userId,
         guilds: [guildMember.guildId],
       });
     }
 
-    await Guild.updateOne(
+    await this.guildModel.updateOne(
       { guildId: guildMember.guildId },
       {
         $inc: { membersCount: 1 },
@@ -121,13 +128,13 @@ export class GuildService {
 
   async guildMemberDelete(guildMember: IGuildMember) {
     await Promise.all([
-      User.updateOne(
+      this.userModel.updateOne(
         { discordId: guildMember.userId },
         {
           $pull: { guilds: guildMember.guildId },
         },
       ),
-      Guild.updateOne(
+      this.guildModel.updateOne(
         { guildId: guildMember.guildId },
         {
           $inc: { membersCount: -1 },
@@ -142,7 +149,7 @@ export class GuildService {
       activities: status !== DiscordPresenceStatus.OFFLINE ? activities : [],
     };
 
-    await User.updateOne(
+    await this.userModel.updateOne(
       { 'discord.id': userId },
       {
         $set: updatedPresence,

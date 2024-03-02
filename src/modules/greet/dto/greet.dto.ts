@@ -1,7 +1,19 @@
-import { FeatDefaultWithTemplates } from '../../../common/dto/features-default.dto';
+import { IsBoolean, IsNotEmpty, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { FeatDefaultWithTemplates } from 'src/common/dto/features-default.dto';
 
-export interface GreetDto {
-  isActive: boolean;
-  welcome: FeatDefaultWithTemplates;
-  farewell: FeatDefaultWithTemplates;
+export class GreetDto {
+  @IsNotEmpty()
+  @IsBoolean()
+  public isActive: boolean;
+
+  @IsNotEmpty()
+  @Type(() => FeatDefaultWithTemplates)
+  @ValidateNested()
+  public welcome: FeatDefaultWithTemplates;
+
+  @IsNotEmpty()
+  @Type(() => FeatDefaultWithTemplates)
+  @ValidateNested()
+  public farewell: FeatDefaultWithTemplates;
 }

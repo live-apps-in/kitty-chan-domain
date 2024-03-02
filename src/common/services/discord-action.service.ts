@@ -1,10 +1,15 @@
-import { injectable } from 'inversify';
-import { discordClient } from '../../modules/app';
 import { DiscordActionTypes } from '../enum/discord-action.enum';
 import { ActionConfigDto } from '../dto/action-config.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { PROVIDER_TYPES } from 'src/common/constants/provider.types';
+import { Client } from '@live-apps/discord';
 
-@injectable()
+@Injectable()
 export class DiscordActionService {
+  constructor(
+    @Inject(PROVIDER_TYPES.DiscordClient)
+    private readonly discordClient: Client,
+  ) {}
   async actionFactory(action: DiscordActionTypes, config: any) {
     switch (action) {
       case DiscordActionTypes.MESSAGE_CREATE: {
@@ -43,11 +48,14 @@ export class DiscordActionService {
   }
 
   private async createMessage(config: any) {
-    await discordClient.message.send(config.channelId, config.plainMessage);
+    await this.discordClient.message.send(
+      config.channelId,
+      config.plainMessage,
+    );
   }
 
   private async react(config: any) {
-    await discordClient.message.react(
+    await this.discordClient.message.react(
       config.channelId,
       config.messageId,
       config.emoji,
@@ -55,7 +63,7 @@ export class DiscordActionService {
   }
 
   private async reply(config: any) {
-    await discordClient.message.reply(
+    await this.discordClient.message.reply(
       config.channelId,
       config.messageId,
       config.plainMessage,
@@ -63,6 +71,6 @@ export class DiscordActionService {
   }
 
   private async deleteMessage(config: any) {
-    await discordClient.message.delete(config.channelId, config.messageId);
+    await this.discordClient.message.delete(config.channelId, config.messageId);
   }
 }

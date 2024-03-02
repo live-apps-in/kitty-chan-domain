@@ -1,14 +1,15 @@
-import { inject, injectable } from 'inversify';
-import { ICronCreate } from '../../proto/kitty_chan/ICronCreate';
 import { CronJob, Task, ToadScheduler } from 'toad-scheduler';
-import CronModel from './model/cron.model';
-import { TYPES } from '../../core/inversify.types';
-import { RedisService } from '../../common/services/redis.service';
-import { DeploymentMode } from '../../common/enum/deployment-mode.enum';
 import { CronModuleTypes } from './enum/cron-modules.enum';
 import { AutoSailService } from '../auto-sail/auto-sail.service';
+import { RedisService } from 'src/common/services/connectivity/redis.service';
+import { Injectable, Inject } from '@nestjs/common';
+import { ICronCreate } from 'src/modules/cron/interface/cron.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Cron } from 'src/modules/cron/models/cron.model';
+import { Model } from 'mongoose';
+import { DeploymentMode } from 'src/common/enum/deployment-mode.enum';
 
-@injectable()
+@Injectable()
 export class CronService {
   private deploymentMode = process.env.DEPLOYMENT_MODE;
   private leaderProcessRedisKey = 'domain-cron-leader-process';
@@ -17,9 +18,10 @@ export class CronService {
   private scheduler: ToadScheduler;
 
   constructor(
-    @inject(TYPES.RedisService) private readonly redisService: RedisService,
-    @inject(TYPES.AutoSailService)
+    @Inject(RedisService) private readonly redisService: RedisService,
+    @Inject(AutoSailService)
     private readonly autoSailService: AutoSailService,
+    @InjectModel(Cron.name) private readonly cronModel: Model<Cron>,
   ) {
     this.scheduler = new ToadScheduler();
     this.bootstrap();
@@ -44,7 +46,7 @@ export class CronService {
   }
 
   private async handle(id: string) {
-    const getCron = await CronModel.findOne({ _id: id });
+    const getCron = await this.cronModel.findOne({ _id: id });
 
     if (!getCron) {
       this.scheduler.removeById(id);
@@ -61,7 +63,7 @@ export class CronService {
   private async bootstrap() {
     //Standalone environment
     if (this.deploymentMode === DeploymentMode.STANDALONE) {
-      this.cronJobs = await CronModel.find(
+      this.cronJobs = await this.cronModel.find(
         { isActive: true },
         { expression: 1 },
       );
@@ -86,7 +88,7 @@ export class CronService {
         20,
       );
 
-      this.cronJobs = await CronModel.find(
+      this.cronJobs = await this.cronModel.find(
         { isActive: true },
         { expression: 1 },
       );

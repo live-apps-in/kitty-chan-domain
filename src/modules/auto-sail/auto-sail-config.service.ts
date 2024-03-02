@@ -1,16 +1,18 @@
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../core/inversify.types';
-import { RedisService } from '../../common/services/redis.service';
-import autoSailModel from './model/auto-sail.model';
 import { AutoSailConfigDto } from './dto/auto-sail-config.dto';
 import { AutoSailService } from './auto-sail.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { RedisService } from 'src/common/services/connectivity/redis.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { AutoSail } from 'src/modules/auto-sail/models/auto-sail.model';
 
-@injectable()
+@Injectable()
 export class AutoSailConfigService {
   constructor(
-    @inject(TYPES.AutoSailService)
+    @Inject(AutoSailService)
     private readonly autoSailService: AutoSailService,
-    @inject(TYPES.RedisService) private readonly redisService: RedisService,
+    @Inject(RedisService) private readonly redisService: RedisService,
+    @InjectModel('auto_sail') private readonly autoSailModel: Model<AutoSail>,
   ) {}
 
   async process(payload: any, autoSailTriggerEvent: string) {
@@ -35,7 +37,7 @@ export class AutoSailConfigService {
       : [];
 
     if (!getConfigCache) {
-      const fetchConfig = await autoSailModel
+      const fetchConfig = await this.autoSailModel
         .find({ guildId, isActive: true })
         .lean()
         .then((data) => data.map((e) => e?.config));
