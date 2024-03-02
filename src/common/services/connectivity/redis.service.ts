@@ -35,6 +35,18 @@ export class RedisService {
     return this.redisClient.srem(key, value);
   }
 
+  async rightPush(key: string, value: string) {
+    return this.redisClient.rpush(key, value);
+  }
+
+  async leftPop(key: string) {
+    return this.redisClient.lpop(key);
+  }
+
+  async expire(key: string, value: number) {
+    return this.redisClient.expire(key, value);
+  }
+
   async ping() {
     return this.redisClient.ping();
   }

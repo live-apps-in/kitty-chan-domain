@@ -20,6 +20,8 @@ import { CommandsModule } from 'src/modules/commands/commands.module';
 import { LoggerModule } from 'src/modules/logger/logger.module';
 import { RolesModule } from 'src/modules/roles/roles.module';
 import { GreetModule } from 'src/modules/greet/greet.module';
+import { CronController } from 'src/handlers/cron.handler';
+import { CronModule } from 'src/modules/cron/cron.module';
 
 @Module({
   imports: [
@@ -36,8 +38,9 @@ import { GreetModule } from 'src/modules/greet/greet.module';
     LoggerModule,
     RolesModule,
     GreetModule,
+    CronModule,
   ],
-  controllers: [EventsController],
+  controllers: [EventsController, CronController],
   providers: [
     DiscordProvider,
     EsProvider,

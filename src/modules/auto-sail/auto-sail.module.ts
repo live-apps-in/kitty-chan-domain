@@ -16,6 +16,6 @@ import { AutoSailSchema } from 'src/modules/auto-sail/models/auto-sail.model';
     AutoSailConfigService,
     AutoSailConstraintsService,
   ],
-  exports: [AutoSailConfigService],
+  exports: [AutoSailService, AutoSailConfigService],
 })
 export class AutoSailModule {}
