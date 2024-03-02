@@ -28,7 +28,7 @@ jobs:
         run: |
           docker build \
             --build-arg DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }} \
-            --build-arg DISCORD_CLIENT_ID=${{ vars.DISCORD_BOT_TOKEN }} \
+            --build-arg DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} \
             --build-arg DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }} \
             --build-arg DISCORD_API=${{ vars.DISCORD_API }} \
             --build-arg GRPC_URL=${{ vars.GRPC_URL }} \
