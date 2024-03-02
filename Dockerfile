@@ -36,6 +36,5 @@ ENV LOAD_LANGUAGE_LIBS $LOAD_LANGUAGE_LIBS
 
 COPY . .
 RUN tsc
-RUN npm run build:proto
 CMD ["node","./dist/main.js"]
 EXPOSE 5030
